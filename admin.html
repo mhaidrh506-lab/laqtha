@@ -128,6 +128,7 @@
 <symbol id="icon-edit" viewBox="0 0 24 24"><path d="M4 20h4l11-11-4-4L4 16v4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.7"/></symbol>
 <symbol id="icon-trash" viewBox="0 0 24 24"><path d="M5 7h14M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m-9 0l1 13a1 1 0 001 1h8a1 1 0 001-1l1-13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></symbol>
 <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M9 21H6a2 2 0 01-2-2V5a2 2 0 012-2h3M16 17l5-5-5-5M21 12H9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="icon-external" viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="icon-mark" viewBox="0 0 24 24">
   <path d="M3 3h8.5L21 12.5 12.5 21 3 12.5V3z" fill="currentColor" opacity="0.18"/>
   <path d="M3 3h8.5L21 12.5 12.5 21 3 12.5V3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
@@ -183,8 +184,13 @@
   <div class="wrap">
     <div class="toolbar">
       <h1 style="font-size:1.2rem;">المنتجات</h1>
-      <button class="btn-primary" style="width:auto;" id="addNewBtn"><svg class="icon icon-16"><use href="#icon-plus"></use></svg> إضافة منتج</button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-ghost" style="width:auto;" id="checkPricesBtn">فحص أسعار SHEIN/Trendyol</button>
+        <button class="btn-primary" style="width:auto;" id="addNewBtn"><svg class="icon icon-16"><use href="#icon-plus"></use></svg> إضافة منتج</button>
+      </div>
     </div>
+
+    <div id="priceCheckResults"></div>
 
     <!-- form panel -->
     <div id="formPanel" hidden>
@@ -533,11 +539,24 @@ async function loadProducts(){
         <button class="avail-toggle status-${p.availability || 'available'}" data-status-toggle="${p.id}" data-current="${p.availability || 'available'}" title="اضغط لتغيير حالة التوفر">${AVAILABILITY_LABELS[p.availability || 'available']}</button>
       </div>
       <div class="product-actions">
+        <button class="btn-ghost btn-small" data-open-link="${p.id}" title="فتح رابط المنتج بالمتجر"><svg class="icon icon-16"><use href="#icon-external"></use></svg></button>
         <button class="btn-ghost btn-small" data-edit="${p.id}"><svg class="icon icon-16"><use href="#icon-edit"></use></svg></button>
         <button class="btn-danger" data-delete="${p.id}"><svg class="icon icon-16"><use href="#icon-trash"></use></svg></button>
       </div>
     </div>`).join('');
 
+  productList.querySelectorAll('[data-open-link]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const row = data.find(p => String(p.id) === btn.dataset.openLink);
+      const linkMap = { amazon: row.link_amazon, shein: row.link_shein, trendyol: row.link_trendyol };
+      const link = linkMap[row.store];
+      if(!link){
+        showToast('ما فيه رابط مضاف لمتجر ' + (STORE_LABELS[row.store] || row.store) + ' لهذا المنتج بعد.');
+        return;
+      }
+      window.open(link, '_blank', 'noopener');
+    });
+  });
   productList.querySelectorAll('[data-edit]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const row = data.find(p => String(p.id) === btn.dataset.edit);
@@ -577,6 +596,83 @@ function escapeHTML(str){
 
 function handleAdminImgError(imgEl, iconName){
   imgEl.outerHTML = '<svg class="icon"><use href="#icon-' + iconName + '"></use></svg>';
+}
+
+document.getElementById('checkPricesBtn').addEventListener('click', async ()=>{
+  const btn = document.getElementById('checkPricesBtn');
+  const resultsEl = document.getElementById('priceCheckResults');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'جارٍ الفحص...';
+  resultsEl.innerHTML = '<div class="hint" style="margin:12px 0;">جارٍ فحص المنتجات، قد يأخذ دقيقة حسب العدد...</div>';
+
+  const { data, error } = await supabaseClient.from('products').select('*').in('store', ['shein','trendyol']);
+  if(error){
+    resultsEl.innerHTML = '<div class="hint" style="margin:12px 0;">تعذر تحميل المنتجات: ' + error.message + '</div>';
+    btn.disabled = false; btn.textContent = originalText;
+    return;
+  }
+
+  const eligible = data.filter(p => (p.store === 'shein' && p.link_shein) || (p.store === 'trendyol' && p.link_trendyol));
+  if(eligible.length === 0){
+    resultsEl.innerHTML = '<div class="hint" style="margin:12px 0;">ما فيه منتجات SHEIN/Trendyol عندها رابط أفليت مضاف للفحص.</div>';
+    btn.disabled = false; btn.textContent = originalText;
+    return;
+  }
+
+  const results = [];
+  for(const p of eligible){
+    const link = p.store === 'shein' ? p.link_shein : p.link_trendyol;
+    try{
+      const res = await fetch('/api/fetch-product?url=' + encodeURIComponent(link));
+      const info = await res.json();
+      const newPrice = info.price ? parseFloat(String(info.price).replace(',', '.')) : null;
+      let status;
+      if(info.warning || (!info.title && newPrice === null)) status = 'failed';
+      else if(newPrice !== null && Math.abs(newPrice - Number(p.price)) > 0.5) status = 'mismatch';
+      else status = 'match';
+      results.push({ id:p.id, name:p.name, oldPrice:p.price, newPrice, status, warning:info.warning });
+    }catch(err){
+      results.push({ id:p.id, name:p.name, oldPrice:p.price, newPrice:null, status:'failed', warning:String(err.message||err) });
+    }
+    await new Promise(r=>setTimeout(r, 500));
+  }
+
+  renderPriceCheckResults(results);
+  btn.disabled = false; btn.textContent = originalText;
+});
+
+function renderPriceCheckResults(results){
+  const resultsEl = document.getElementById('priceCheckResults');
+  const labelMap = { match:'السعر مطابق', mismatch:'تغيّر السعر!', failed:'تعذر الفحص' };
+  const clsMap = { match:'status-available', mismatch:'status-unavailable', failed:'status-coming_soon' };
+  resultsEl.innerHTML = '<h2 style="font-size:1rem;margin:16px 0 10px;">نتيجة فحص ' + results.length + ' منتج</h2>' +
+    results.map(r => `
+      <div class="product-item">
+        <div class="product-info">
+          <div class="product-name">${escapeHTML(r.name)}</div>
+          <div class="product-meta">
+            <span>السعر المسجّل: ${r.oldPrice} ريال</span>
+            ${r.newPrice !== null ? `<span>· السعر الحالي: ${r.newPrice} ريال</span>` : ''}
+          </div>
+          ${r.warning ? `<div class="hint">${escapeHTML(r.warning)}</div>` : ''}
+        </div>
+        <span class="avail-toggle ${clsMap[r.status]}" style="cursor:default;">${labelMap[r.status]}</span>
+        ${r.status === 'mismatch' ? `<button class="btn-ghost btn-small" data-apply-price="${r.id}" data-new-price="${r.newPrice}">تحديث السعر</button>` : ''}
+      </div>
+    `).join('');
+
+  resultsEl.querySelectorAll('[data-apply-price]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.dataset.applyPrice;
+      const newPrice = parseFloat(btn.dataset.newPrice);
+      btn.disabled = true;
+      const { error } = await supabaseClient.from('products').update({ price:newPrice }).eq('id', id);
+      if(error){ showToast('فشل التحديث: ' + error.message); btn.disabled = false; return; }
+      showToast('تم تحديث السعر بنجاح');
+      btn.textContent = 'تم ✓';
+    });
+  });
 }
 
 /* ---------- form open/close ---------- */
