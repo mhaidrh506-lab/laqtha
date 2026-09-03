@@ -1,2 +1,2 @@
-name,cat,store,price,rating,reason,features,image_url,visual_icon,visual_bg,alt_amazon,alt_shein,alt_trendyol,link_amazon,link_shein,link_trendyol
-سماعة بلوتوث X200,electronics,shein,99,4.4,خيار ممتاز للاستخدام اليومي وسعره الأقل حاليًا,"[""بطارية تدوم حتى 20 ساعة"",""مقاومة للماء""]",,electronics,"linear-gradient(135deg,#1e2a3a,#0f1620)",129,99,109,https://amzn.to/example,,
+name,cat,store,price,rating,reason,features,image_url,visual_icon,visual_bg,alt_amazon,alt_shein,alt_trendyol,link_amazon,link_shein,link_trendyol,featured_today,featured_deals
+سماعة بلوتوث X200,electronics,shein,99,4.4,خيار ممتاز للاستخدام اليومي وسعره الأقل حاليًا,"[""بطارية تدوم حتى 20 ساعة"",""مقاومة للماء""]",,electronics,"linear-gradient(135deg,#1e2a3a,#0f1620)",129,99,109,https://amzn.to/example,,,false,false
