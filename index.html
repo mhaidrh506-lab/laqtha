@@ -814,7 +814,12 @@
 
 <div class="toast" id="toast" hidden></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = 'https://zyfdthowwnzjbgrfhxkr.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_myDCCzq3oHEKgKapC3yRBQ_0-A42nHo';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 const STORE_NAMES = { amazon:'Amazon', shein:'SHEIN', trendyol:'Trendyol' };
 const STORE_CLASS = { amazon:'store-amazon', shein:'store-shein', trendyol:'store-trendyol' };
 const CATEGORIES = [
@@ -833,7 +838,7 @@ const CATEGORY_COPY = {
   auto: 'إكسسوارات وأدوات سيارة عملية بأسعار منافسة — نلقطلك الأفضل قبل لا تخلص.',
 };
 
-const PRODUCTS = [
+let PRODUCTS = [
   { id:1, name:'سماعة بلوتوث X200', cat:'electronics', store:'shein', price:99, rating:4.4,
     visual:{icon:'electronics', bg:'linear-gradient(135deg,#1e2a3a,#0f1620)'},
     reason:'خيار ممتاز للاستخدام اليومي، بطارية تدوم طويل وسعرها الأقل بين المتاجر الثلاثة حاليًا.',
@@ -885,6 +890,36 @@ const PRODUCTS = [
     features:['غسول + سيروم + مرطب','مناسبة للبشرة الحساسة'],
     alt:{amazon:null, shein:129, trendyol:149} },
 ];
+
+async function loadProductsFromSupabase(){
+  try{
+    const { data, error } = await supabaseClient.from('products').select('*');
+    if(error){
+      console.warn('تعذر جلب المنتجات من Supabase، سيتم استخدام البيانات التجريبية:', error);
+      return false;
+    }
+    if(!data || data.length === 0){
+      console.warn('جدول المنتجات فارغ أو ما رجع صفوف، سيتم استخدام البيانات التجريبية.');
+      return false;
+    }
+    PRODUCTS = data.map(row => ({
+      id: row.id,
+      name: row.name,
+      cat: row.cat,
+      store: row.store,
+      price: Number(row.price),
+      rating: Number(row.rating),
+      visual: { icon: row.visual_icon, bg: row.visual_bg },
+      reason: row.reason || '',
+      features: row.features || [],
+      alt: { amazon: row.alt_amazon, shein: row.alt_shein, trendyol: row.alt_trendyol },
+    }));
+    return true;
+  }catch(err){
+    console.warn('خطأ أثناء الاتصال بـ Supabase:', err);
+    return false;
+  }
+}
 
 function maxStorePrice(p){
   const vals = Object.values(p.alt).filter(v=>v!==null);
@@ -1331,11 +1366,22 @@ document.getElementById('headerSearchBtn').addEventListener('click', ()=>{
   searchInput.focus();
 });
 
-renderToday();
-initCompareSearch();
-renderCategories();
-refreshGrid();
-renderDeals();
+function renderAll(){
+  renderToday();
+  initCompareSearch();
+  renderCategories();
+  refreshGrid();
+  renderDeals();
+}
+
+async function initApp(){
+  renderAll();
+  const loaded = await loadProductsFromSupabase();
+  if(loaded){
+    renderAll();
+  }
+}
+initApp();
 </script>
 </body>
 </html>
