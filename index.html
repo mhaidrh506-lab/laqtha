@@ -400,7 +400,7 @@
     border-radius:var(--radius);overflow:hidden;aspect-ratio:16/10;margin-bottom:16px;background:#000;
     display:flex;align-items:center;justify-content:center;
   }
-  .modal-img img{width:100%;height:100%;object-fit:cover;}
+  .modal-img img{width:100%;height:100%;object-fit:contain;}
   .modal-thumbs{display:flex;gap:8px;margin:-8px 0 16px;overflow-x:auto;scrollbar-width:none;}
   .modal-thumbs::-webkit-scrollbar{display:none;}
   .modal-thumb{flex:0 0 52px;width:52px;height:52px;border-radius:8px;overflow:hidden;
@@ -1272,6 +1272,8 @@ function updateTimers(){
   });
 }
 
+let modalAutoplayTimer = null;
+
 function openModal(id){
   const p = PRODUCTS.find(x=>x.id===id);
   const vals = Object.values(p.alt).filter(v=>v!==null);
@@ -1344,7 +1346,25 @@ function openModal(id){
     if(!thumb) return;
     activePhoto = Number(thumb.dataset.idx);
     galleryWrap.innerHTML = galleryHTML();
+    restartAutoplay();
   });
+
+  function advancePhoto(){
+    activePhoto = (activePhoto + 1) % photos.length;
+    galleryWrap.innerHTML = galleryHTML();
+  }
+  function startAutoplay(){
+    clearInterval(modalAutoplayTimer);
+    if(photos.length > 1){
+      modalAutoplayTimer = setInterval(advancePhoto, 3500);
+    }
+  }
+  function restartAutoplay(){ startAutoplay(); }
+
+  galleryWrap.addEventListener('mouseenter', ()=> clearInterval(modalAutoplayTimer));
+  galleryWrap.addEventListener('mouseleave', ()=> startAutoplay());
+  galleryWrap.addEventListener('touchstart', ()=> clearInterval(modalAutoplayTimer), {passive:true});
+  startAutoplay();
 
   document.getElementById('modalCompareBody').addEventListener('click', (e)=>{
     const row = e.target.closest('tr[data-store]');
@@ -1368,7 +1388,11 @@ document.getElementById('modalClose').addEventListener('click', closeModal);
 document.getElementById('modalOverlay').addEventListener('click', (e)=>{
   if(e.target.id==='modalOverlay') closeModal();
 });
-function closeModal(){ document.getElementById('modalOverlay').hidden = true; unlockScroll(); }
+function closeModal(){
+  clearInterval(modalAutoplayTimer);
+  document.getElementById('modalOverlay').hidden = true;
+  unlockScroll();
+}
 
 document.addEventListener('click', (e)=>{
   const openBtn = e.target.closest('[data-open]');
