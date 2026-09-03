@@ -212,6 +212,15 @@
     clip-path:polygon(0 0,100% 0,92% 50%,100% 100%,0 100%);
   }
   .discount-tag .icon{color:#241a02;}
+  .avail-badge{
+    position:absolute;top:10px;inset-inline-end:10px;z-index:2;
+    font-weight:700;font-size:0.76rem;padding:4px 10px;border-radius:999px;
+  }
+  .avail-badge.status-unavailable{background:#e0524a;color:#fff;}
+  .avail-badge.status-coming{background:var(--tag-yellow);color:#241a02;}
+  .card-dimmed .card-img{opacity:0.55;}
+  .card-cta.cta-unavailable{background:var(--surface-raised);color:var(--text-dim);cursor:default;}
+  .card-cta.cta-unavailable:hover{background:var(--surface-raised);}
   .card-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1;}
   .card-name{
     font-size:0.94rem;font-weight:600;min-height:2.6em;
@@ -440,6 +449,14 @@
     display:flex;align-items:center;justify-content:center;gap:8px;
   }
   .modal-cta:hover{background:var(--orange-dim);}
+  .modal-cta.cta-unavailable{background:var(--surface-raised);color:var(--text-dim);}
+  .modal-cta.cta-unavailable:hover{background:var(--surface-raised);}
+  .modal-avail-badge{
+    display:inline-block;font-weight:700;font-size:0.8rem;padding:4px 12px;
+    border-radius:999px;margin-bottom:8px;
+  }
+  .modal-avail-badge.status-unavailable{background:#e0524a;color:#fff;}
+  .modal-avail-badge.status-coming{background:var(--tag-yellow);color:#241a02;}
 
   /* toast */
   .toast{
@@ -829,6 +846,10 @@ const SUPABASE_KEY = 'sb_publishable_myDCCzq3oHEKgKapC3yRBQ_0-A42nHo';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const STORE_NAMES = { amazon:'Amazon', shein:'SHEIN', trendyol:'Trendyol' };
+const AVAILABILITY_META = {
+  unavailable: { label:'غير متوفر', cls:'status-unavailable' },
+  coming_soon: { label:'سيتوفر قريبًا', cls:'status-coming' },
+};
 const STORE_CLASS = { amazon:'store-amazon', shein:'store-shein', trendyol:'store-trendyol' };
 const CATEGORIES = [
   {key:'electronics', label:'إلكترونيات', icon:'electronics'},
@@ -926,6 +947,7 @@ async function loadProductsFromSupabase(){
       gallery: Array.isArray(row.gallery_images) ? row.gallery_images : [],
       featured_today: !!row.featured_today,
       featured_deals: !!row.featured_deals,
+      availability: row.availability || 'available',
     }));
     return true;
   }catch(err){
@@ -964,9 +986,15 @@ function cardHTML(p, extra=''){
     ? '<span class="discount-tag"><svg class="icon icon-14 icon-fill"><use href="#icon-fire"></use></svg>خصم ' + disc + '%</span>'
     : '';
   const oldPrice = disc > 0 ? `<span class="price-old">${maxStorePrice(p)} ريال</span>` : '';
+  const availMeta = AVAILABILITY_META[p.availability];
+  const availBadge = availMeta ? `<span class="avail-badge ${availMeta.cls}">${availMeta.label}</span>` : '';
+  const ctaHTML = availMeta
+    ? `<button class="card-cta cta-unavailable" data-open="${p.id}">${availMeta.label}</button>`
+    : `<button class="card-cta" data-open="${p.id}"><svg class="icon icon-16 icon-fill"><use href="#icon-cart"></use></svg>لقطها</button>`;
   return `
-    <div class="card" data-id="${p.id}" tabindex="0">
+    <div class="card${availMeta ? ' card-dimmed' : ''}" data-id="${p.id}" tabindex="0">
       ${tag}
+      ${availBadge}
       <div class="card-img" style="background:${p.visual.bg}">${productVisualHTML(p)}</div>
       <div class="card-body">
         <div class="card-name">${p.name}</div>
@@ -976,7 +1004,7 @@ function cardHTML(p, extra=''){
           <span class="price-block">${oldPrice}<span class="card-price">${p.price} ريال</span></span>
           <span class="store-chip ${STORE_CLASS[p.store]}">${STORE_NAMES[p.store]}</span>
         </div>
-        <button class="card-cta" data-open="${p.id}"><svg class="icon icon-16 icon-fill"><use href="#icon-cart"></use></svg>لقطها</button>
+        ${ctaHTML}
       </div>
     </div>`;
 }
@@ -1281,6 +1309,7 @@ function openModal(id){
   let selectedStore = p.store;
   const photos = [p.image_url, ...(p.gallery||[])].filter(Boolean);
   let activePhoto = 0;
+  const availMeta = AVAILABILITY_META[p.availability];
 
   function galleryHTML(){
     const mainSrc = photos[activePhoto];
@@ -1326,6 +1355,7 @@ function openModal(id){
   document.getElementById('modalBody').innerHTML = `
     <div id="modalGalleryWrap">${galleryHTML()}</div>
     <h3 id="modalTitle">${p.name}</h3>
+    ${availMeta ? `<div class="modal-avail-badge ${availMeta.cls}">${availMeta.label}</div>` : ''}
     <div class="card-rating">${starRating(p.rating)}</div>
     <div class="modal-price-row" id="modalPriceBlock">${priceBlockHTML(selectedStore)}</div>
     <div class="modal-reason"><b><svg class="icon icon-16"><use href="#icon-spark"></use></svg>ليش اخترناها لك؟</b>${p.reason}</div>
@@ -1335,7 +1365,7 @@ function openModal(id){
       <thead><tr><th>المتجر</th><th>السعر</th></tr></thead>
       <tbody id="modalCompareBody">${renderRows()}</tbody>
     </table>
-    <button class="modal-cta" id="modalCta"><svg class="icon icon-18 icon-fill"><use href="#icon-cart"></use></svg><span id="modalCtaText">اشترِ الآن من ${STORE_NAMES[selectedStore]}</span></button>
+    <button class="modal-cta${availMeta ? ' cta-unavailable' : ''}" id="modalCta"><svg class="icon icon-18 icon-fill"><use href="#icon-cart"></use></svg><span id="modalCtaText">${availMeta ? availMeta.label : 'اشترِ الآن من ' + STORE_NAMES[selectedStore]}</span></button>
   `;
   document.getElementById('modalOverlay').hidden = false;
   lockScroll();
@@ -1372,10 +1402,16 @@ function openModal(id){
     selectedStore = row.dataset.store;
     document.getElementById('modalCompareBody').innerHTML = renderRows();
     document.getElementById('modalPriceBlock').innerHTML = priceBlockHTML(selectedStore);
-    document.getElementById('modalCtaText').textContent = 'اشترِ الآن من ' + STORE_NAMES[selectedStore];
+    if(!availMeta){
+      document.getElementById('modalCtaText').textContent = 'اشترِ الآن من ' + STORE_NAMES[selectedStore];
+    }
   });
 
   document.getElementById('modalCta').addEventListener('click', ()=>{
+    if(availMeta){
+      showToast(p.availability === 'coming_soon' ? 'هذا المنتج سيتوفر قريبًا.' : 'هذا المنتج غير متوفر حاليًا.');
+      return;
+    }
     const link = p.links && p.links[selectedStore];
     if(link){
       window.open(link, '_blank', 'noopener');

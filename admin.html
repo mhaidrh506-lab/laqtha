@@ -86,6 +86,13 @@
   .product-name{font-weight:700;font-size:0.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .product-meta{color:var(--text-dim);font-size:0.82rem;display:flex;gap:8px;flex-wrap:wrap;margin-top:2px;}
   .product-actions{display:flex;gap:8px;flex-shrink:0;}
+  .avail-toggle{
+    margin-top:6px;border:none;border-radius:999px;padding:3px 10px;font-size:0.76rem;font-weight:700;
+    cursor:pointer;width:fit-content;
+  }
+  .avail-toggle.status-available{background:rgba(255,90,31,0.15);color:var(--orange);}
+  .avail-toggle.status-unavailable{background:#e0524a;color:#fff;}
+  .avail-toggle.status-coming_soon{background:var(--tag-yellow);color:#241a02;}
   .empty-state{color:var(--text-dim);text-align:center;padding:40px 20px;border:1px dashed var(--border);border-radius:12px;}
 
   /* ---- form panel ---- */
@@ -218,6 +225,15 @@
             </select>
           </div>
         </div>
+        <div class="field">
+          <label for="f_availability">حالة التوفر</label>
+          <select id="f_availability">
+            <option value="available">متوفر</option>
+            <option value="unavailable">غير متوفر</option>
+            <option value="coming_soon">سيتوفر قريبًا</option>
+          </select>
+          <div class="hint">تقدر تغيّرها بسرعة من قائمة المنتجات تحت بدون فتح هذا الفورم أصلًا.</div>
+        </div>
         <div class="row2">
           <div class="field">
             <label for="f_price">السعر (ريال)</label>
@@ -329,6 +345,8 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const CAT_LABELS = { electronics:'إلكترونيات', fashion:'الموضة', home:'المنزل', beauty:'الجمال', auto:'السيارات' };
 const STORE_LABELS = { amazon:'Amazon', shein:'SHEIN', trendyol:'Trendyol' };
 const ICONS = ['electronics','fashion','home','beauty','auto','airfryer','smartwatch','backpack','shoe','perfume','chair','charger','sunglasses','skincare'];
+const AVAILABILITY_LABELS = { available:'متوفر', unavailable:'غير متوفر', coming_soon:'سيتوفر قريبًا' };
+const AVAILABILITY_ORDER = ['available','unavailable','coming_soon'];
 
 const loginView = document.getElementById('loginView');
 const adminView = document.getElementById('adminView');
@@ -512,6 +530,7 @@ async function loadProducts(){
           <span>·</span>
           <span>${p.rating} ★</span>
         </div>
+        <button class="avail-toggle status-${p.availability || 'available'}" data-status-toggle="${p.id}" data-current="${p.availability || 'available'}" title="اضغط لتغيير حالة التوفر">${AVAILABILITY_LABELS[p.availability || 'available']}</button>
       </div>
       <div class="product-actions">
         <button class="btn-ghost btn-small" data-edit="${p.id}"><svg class="icon icon-16"><use href="#icon-edit"></use></svg></button>
@@ -531,6 +550,20 @@ async function loadProducts(){
       const { error } = await supabaseClient.from('products').delete().eq('id', btn.dataset.delete);
       if(error){ showToast('فشل الحذف: ' + error.message); return; }
       showToast('تم حذف المنتج');
+      loadProducts();
+    });
+  });
+  productList.querySelectorAll('[data-status-toggle]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.dataset.statusToggle;
+      const current = btn.dataset.current;
+      const nextIdx = (AVAILABILITY_ORDER.indexOf(current) + 1) % AVAILABILITY_ORDER.length;
+      const next = AVAILABILITY_ORDER[nextIdx];
+      btn.disabled = true;
+      const { error } = await supabaseClient.from('products').update({ availability: next }).eq('id', id);
+      btn.disabled = false;
+      if(error){ showToast('فشل تحديث الحالة: ' + error.message); return; }
+      showToast('الحالة الآن: ' + AVAILABILITY_LABELS[next]);
       loadProducts();
     });
   });
@@ -620,6 +653,7 @@ function openForm(product){
   document.getElementById('f_name').value = product ? product.name : '';
   document.getElementById('f_cat').value = product ? product.cat : 'electronics';
   document.getElementById('f_store').value = product ? product.store : 'amazon';
+  document.getElementById('f_availability').value = product ? (product.availability || 'available') : 'available';
   document.getElementById('f_price').value = product ? product.price : '';
   document.getElementById('f_rating').value = product ? product.rating : '';
   document.getElementById('f_reason').value = product ? (product.reason || '') : '';
@@ -686,6 +720,7 @@ productForm.addEventListener('submit', async (e)=>{
     link_trendyol: document.getElementById('f_link_trendyol').value.trim() || null,
     featured_today: document.getElementById('f_featured_today').checked,
     featured_deals: document.getElementById('f_featured_deals').checked,
+    availability: document.getElementById('f_availability').value,
     gallery_images: galleryImages.filter(Boolean),
   };
 
