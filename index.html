@@ -1507,11 +1507,8 @@ function renderAll(){
 }
 
 async function initApp(){
+  await loadProductsFromSupabase();
   renderAll();
-  const loaded = await loadProductsFromSupabase();
-  if(loaded){
-    renderAll();
-  }
   subscribeToProductChanges();
 }
 
