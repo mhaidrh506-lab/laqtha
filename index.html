@@ -195,9 +195,15 @@
     transition:border-color .15s ease, transform .15s ease, box-shadow .15s ease;
   }
   .card:hover{border-color:var(--orange);transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,0.4);}
-  .card-img{aspect-ratio:1/1;overflow:hidden;background:#000;}
-  .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease;}
-  .card:hover .card-img img{transform:scale(1.06);}
+  .card-img{
+    aspect-ratio:1/1;overflow:hidden;background:#000;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .product-icon{
+    width:38%;height:38%;color:var(--text);opacity:0.9;
+    transition:transform .35s ease;
+  }
+  .card:hover .product-icon{transform:scale(1.08);}
   .discount-tag{
     position:absolute;top:10px;inset-inline-start:10px;z-index:2;
     background:var(--tag-yellow);color:#241a02;font-weight:700;font-size:0.78rem;
@@ -389,8 +395,11 @@
     border:1px solid var(--border);color:var(--text);width:34px;height:34px;border-radius:999px;
     display:flex;align-items:center;justify-content:center;
   }
-  .modal-img{border-radius:var(--radius);overflow:hidden;aspect-ratio:16/10;margin-bottom:16px;background:#000;}
-  .modal-img img{width:100%;height:100%;object-fit:cover;}
+  .modal-img{
+    border-radius:var(--radius);overflow:hidden;aspect-ratio:16/10;margin-bottom:16px;background:#000;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .modal-img .product-icon{width:26%;height:26%;}
   .modal h3{font-size:1.25rem;margin-bottom:6px;}
   .modal-price-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:10px 0 16px;}
   .modal-price{font-family:var(--font-display);font-weight:800;font-size:1.6rem;color:var(--orange);}
@@ -533,6 +542,50 @@
   <path d="M3 16h18M5 16v2M19 16v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
   <circle cx="7.5" cy="16" r="1.6" fill="currentColor"/>
   <circle cx="16.5" cy="16" r="1.6" fill="currentColor"/>
+</symbol>
+<symbol id="icon-airfryer" viewBox="0 0 24 24">
+  <path d="M5 9a7 7 0 0114 0v8a2 2 0 01-2 2H7a2 2 0 01-2-2V9z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+  <circle cx="12" cy="9" r="1.5" fill="currentColor"/>
+  <path d="M8 13.5h8M8 16.5h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+</symbol>
+<symbol id="icon-smartwatch" viewBox="0 0 24 24">
+  <rect x="7" y="7" width="10" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="1.7"/>
+  <path d="M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3M9 17v3a1 1 0 001 1h4a1 1 0 001-1v-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="M12 9.5v2.5l1.6 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+<symbol id="icon-backpack" viewBox="0 0 24 24">
+  <path d="M7 9a5 5 0 0110 0v9a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+  <path d="M9 9V6a3 3 0 016 0v3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+  <rect x="9.5" y="12.5" width="5" height="4" rx="1" fill="none" stroke="currentColor" stroke-width="1.4"/>
+</symbol>
+<symbol id="icon-shoe" viewBox="0 0 24 24">
+  <path d="M3 16.5c0-1.8 1.4-2.8 2.8-3.3L11 9.3c1-.6 2-.2 2.3.8.3.9 1.1 1.5 2.1 1.5H19a2 2 0 012 2v2.2a1 1 0 01-1 1H4a1 1 0 01-1-1v-.8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="M7 13.5v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+</symbol>
+<symbol id="icon-perfume" viewBox="0 0 24 24">
+  <rect x="8" y="10" width="8" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/>
+  <rect x="10" y="6" width="4" height="4" fill="none" stroke="currentColor" stroke-width="1.6"/>
+  <path d="M11 4h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+</symbol>
+<symbol id="icon-chair" viewBox="0 0 24 24">
+  <path d="M7 4h10l-1 8H8L7 4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="M8 12h8l1 4H7l1-4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="M12 16v3M9 21l3-2 3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+<symbol id="icon-charger" viewBox="0 0 24 24">
+  <rect x="7" y="3" width="10" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/>
+  <path d="M13 8l-3 4h3l-1 4 4-5h-3l1-3z" fill="currentColor"/>
+  <path d="M9 21h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+</symbol>
+<symbol id="icon-sunglasses" viewBox="0 0 24 24">
+  <circle cx="7" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="1.7"/>
+  <circle cx="17" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="1.7"/>
+  <path d="M10.5 12h3M3.5 12l1-2M20.5 12l-1-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+</symbol>
+<symbol id="icon-skincare" viewBox="0 0 24 24">
+  <rect x="6" y="9" width="12" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/>
+  <rect x="7" y="5" width="10" height="4" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+  <path d="M9 14h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
 </symbol>
 </defs>
 </svg>
@@ -782,52 +835,52 @@ const CATEGORY_COPY = {
 
 const PRODUCTS = [
   { id:1, name:'سماعة بلوتوث X200', cat:'electronics', store:'shein', price:99, rating:4.4,
-    img:'https://picsum.photos/seed/laqtha1/500/500',
+    visual:{icon:'electronics', bg:'linear-gradient(135deg,#1e2a3a,#0f1620)'},
     reason:'خيار ممتاز للاستخدام اليومي، بطارية تدوم طويل وسعرها الأقل بين المتاجر الثلاثة حاليًا.',
     features:['بطارية تدوم حتى 20 ساعة','مقاومة للماء (IPX5)'],
     alt:{amazon:129, shein:99, trendyol:109} },
   { id:2, name:'مقلاة هوائية 5.5 لتر', cat:'home', store:'shein', price:259, rating:4.5,
-    img:'https://picsum.photos/seed/laqtha2/500/500',
+    visual:{icon:'airfryer', bg:'linear-gradient(135deg,#3a2410,#1f1409)'},
     reason:'سعة مناسبة لعائلة صغيرة، وتحكم رقمي سهل. توفر وقت مقارنة بالفرن التقليدي.',
     features:['سعة 5.5 لتر','8 برامج طبخ جاهزة'],
     alt:{amazon:299, shein:259, trendyol:279} },
   { id:3, name:'ساعة ذكية رياضية', cat:'electronics', store:'trendyol', price:179, rating:4.5,
-    img:'https://picsum.photos/seed/laqtha3/500/500',
+    visual:{icon:'smartwatch', bg:'linear-gradient(135deg,#241a3a,#120d1f)'},
     reason:'تتبّع دقيق للنبض والخطوات، وشاشة تعمل بوضوح تحت الشمس — مناسبة لمن يمشي أو يمارس رياضة خفيفة.',
     features:['قياس النبض والأكسجين','بطارية تدوم 7 أيام'],
     alt:{amazon:219, shein:189, trendyol:179} },
   { id:4, name:'شنطة ظهر مقاومة للماء', cat:'fashion', store:'shein', price:89, rating:4.3,
-    img:'https://picsum.photos/seed/laqtha4/500/500',
+    visual:{icon:'backpack', bg:'linear-gradient(135deg,#1a2e1f,#0d1810)'},
     reason:'قماش متين ومقاوم للماء، مقاس مناسب للجامعة أو الشغل، وأرخص خيار متوفر الآن.',
     features:['جيب مخصص للابتوب','خامة مقاومة للماء'],
     alt:{amazon:129, shein:89, trendyol:99} },
   { id:5, name:'حذاء رياضي للجري', cat:'fashion', store:'amazon', price:149, rating:4.6,
-    img:'https://picsum.photos/seed/laqtha5/500/500',
+    visual:{icon:'shoe', bg:'linear-gradient(135deg,#3a1616,#1f0c0c)'},
     reason:'تقييمه الأعلى بين الخيارات المشابهة، ومناسب للجري اليومي على الأسفلت.',
     features:['نعل مرن ماص للصدمات','تهوية جيدة'],
     alt:{amazon:149, shein:139, trendyol:159} },
   { id:6, name:'عطر رجالي 100 مل', cat:'beauty', store:'amazon', price:219, rating:4.4,
-    img:'https://picsum.photos/seed/laqtha6/500/500',
+    visual:{icon:'perfume', bg:'linear-gradient(135deg,#3a2c10,#1f170a)'},
     reason:'ثبات جيد طوال اليوم، ومتوفر في المتاجر الثلاثة بفروقات سعر بسيطة.',
     features:['ثبات يتجاوز 8 ساعات','علبة هدية جاهزة'],
     alt:{amazon:219, shein:229, trendyol:239} },
   { id:7, name:'كرسي مكتب مريح', cat:'home', store:'amazon', price:399, rating:4.5,
-    img:'https://picsum.photos/seed/laqtha7/500/500',
+    visual:{icon:'chair', bg:'linear-gradient(135deg,#1c2530,#0e1318)'},
     reason:'دعم جيد لأسفل الظهر، مناسب لساعات العمل الطويلة، ومتوفر حاليًا بمتجر واحد فقط.',
     features:['مسند قابل للتعديل','ضمان سنتين'],
     alt:{amazon:399, shein:null, trendyol:null} },
   { id:8, name:'شاحن سيارة سريع 65 واط', cat:'auto', store:'shein', price:59, rating:4.2,
-    img:'https://picsum.photos/seed/laqtha8/500/500',
+    visual:{icon:'charger', bg:'linear-gradient(135deg,#10283a,#081420)'},
     reason:'شحن سريع لمنفذين في نفس الوقت، خيار عملي وسعره منافس جدًا.',
     features:['منفذين USB-C وUSB-A','شحن سريع 65 واط'],
     alt:{amazon:79, shein:59, trendyol:69} },
   { id:9, name:'نظارة شمس بولارايز', cat:'fashion', store:'trendyol', price:69, rating:4.1,
-    img:'https://picsum.photos/seed/laqtha9/500/500',
+    visual:{icon:'sunglasses', bg:'linear-gradient(135deg,#3a2f18,#1f190d)'},
     reason:'عدسات بولارايز تقلل الوهج، وتصميم خفيف مناسب للاستخدام اليومي.',
     features:['حماية UV400','عدسة بولارايز مضادة للوهج'],
     alt:{amazon:null, shein:79, trendyol:69} },
   { id:10, name:'مجموعة عناية بالبشرة', cat:'beauty', store:'shein', price:129, rating:4.3,
-    img:'https://picsum.photos/seed/laqtha10/500/500',
+    visual:{icon:'skincare', bg:'linear-gradient(135deg,#3a1c28,#1f0f15)'},
     reason:'مجموعة متكاملة لروتين بسيط، وخصم كبير عليها حاليًا مقارنة بسعرها المعتاد.',
     features:['غسول + سيروم + مرطب','مناسبة للبشرة الحساسة'],
     alt:{amazon:null, shein:129, trendyol:149} },
@@ -855,7 +908,7 @@ function cardHTML(p, extra=''){
   return `
     <div class="card" data-id="${p.id}" tabindex="0">
       ${tag}
-      <div class="card-img"><img src="${p.img}" alt="${p.name}" loading="lazy"></div>
+      <div class="card-img" style="background:${p.visual.bg}"><svg class="icon product-icon"><use href="#icon-${p.visual.icon}"></use></svg></div>
       <div class="card-body">
         <div class="card-name">${p.name}</div>
         <div class="card-rating">${starRating(p.rating)}</div>
@@ -1175,7 +1228,7 @@ function openModal(id){
   }
 
   document.getElementById('modalBody').innerHTML = `
-    <div class="modal-img"><img src="${p.img}" alt="${p.name}"></div>
+    <div class="modal-img" style="background:${p.visual.bg}"><svg class="icon product-icon"><use href="#icon-${p.visual.icon}"></use></svg></div>
     <h3 id="modalTitle">${p.name}</h3>
     <div class="card-rating">${starRating(p.rating)}</div>
     <div class="modal-price-row" id="modalPriceBlock">${priceBlockHTML(selectedStore)}</div>
