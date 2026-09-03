@@ -186,7 +186,7 @@
     scrollbar-width:none;-ms-overflow-style:none;
   }
   .shelf-scroll::-webkit-scrollbar{display:none;}
-  .shelf-scroll .card{min-width:190px;scroll-snap-align:start;}
+  .shelf-scroll .card{min-width:190px;max-width:190px;flex:0 0 190px;scroll-snap-align:start;}
 
   /* product card */
   .card{
@@ -917,6 +917,8 @@ async function loadProductsFromSupabase(){
       features: row.features || [],
       alt: { amazon: row.alt_amazon, shein: row.alt_shein, trendyol: row.alt_trendyol },
       links: { amazon: row.link_amazon || null, shein: row.link_shein || null, trendyol: row.link_trendyol || null },
+      featured_today: !!row.featured_today,
+      featured_deals: !!row.featured_deals,
     }));
     return true;
   }catch(err){
@@ -973,7 +975,17 @@ function cardHTML(p, extra=''){
 }
 
 function renderToday(){
-  const top = [...PRODUCTS].sort((a,b)=>discountPct(b)-discountPct(a)).slice(0,5);
+  const manual = PRODUCTS.filter(p=>p.featured_today);
+  let top;
+  if(manual.length > 0){
+    top = manual.slice(0,5);
+    if(top.length < 5){
+      const rest = [...PRODUCTS].filter(p=>!p.featured_today).sort((a,b)=>discountPct(b)-discountPct(a));
+      top = top.concat(rest.slice(0, 5-top.length));
+    }
+  } else {
+    top = [...PRODUCTS].sort((a,b)=>discountPct(b)-discountPct(a)).slice(0,5);
+  }
   document.getElementById('todayShelf').innerHTML = top.map(p=>cardHTML(p)).join('');
 }
 
@@ -1223,7 +1235,17 @@ function refreshGrid(){
 }
 
 function renderDeals(){
-  const deals = PRODUCTS.filter(p=>discountPct(p)>=20).slice(0,4);
+  const manual = PRODUCTS.filter(p=>p.featured_deals);
+  let deals;
+  if(manual.length > 0){
+    deals = manual.slice(0,4);
+    if(deals.length < 4){
+      const rest = [...PRODUCTS].filter(p=>!p.featured_deals && discountPct(p)>=20);
+      deals = deals.concat(rest.slice(0, 4-deals.length));
+    }
+  } else {
+    deals = PRODUCTS.filter(p=>discountPct(p)>=20).slice(0,4);
+  }
   const el = document.getElementById('dealsGrid');
   el.innerHTML = deals.map((p,i)=>{
     const timer = `<div class="deal-timer"><svg class="icon icon-14 icon-fill"><use href="#icon-clock"></use></svg><span class="timer-digits" data-end="${Date.now() + (i+1)*45*60*1000}">--:--:--</span></div>`;
