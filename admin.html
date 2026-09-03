@@ -91,6 +91,8 @@
   /* ---- form panel ---- */
   #formPanel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;}
   #formPanel h2{font-size:1.1rem;margin-bottom:16px;}
+  .import-box{background:var(--bg-soft);border:1px dashed var(--border);border-radius:10px;padding:14px;margin-bottom:20px;}
+  .import-box label{margin-bottom:8px;}
   .icon-picker{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px;}
   .icon-opt{aspect-ratio:1;border:1px solid var(--border);border-radius:8px;background:var(--bg-soft);
     display:flex;align-items:center;justify-content:center;color:var(--text-dim);}
@@ -175,6 +177,16 @@
     <!-- form panel -->
     <div id="formPanel" hidden>
       <h2 id="formTitle">إضافة منتج جديد</h2>
+
+      <div class="import-box">
+        <label for="importUrl">استيراد من رابط المنتج (اختياري — يجرب يجيب الاسم والصورة والسعر تلقائيًا)</label>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="importUrl" placeholder="https://...">
+          <button type="button" class="btn-ghost btn-small" id="importBtn" style="white-space:nowrap;">استيراد البيانات</button>
+        </div>
+        <div class="hint" id="importStatus">يشتغل غالبًا مع SHEIN وTrendyol. أمازون يحظر هذا النوع من الطلبات غالبًا، فراح تحتاج تكمل بياناته يدويًا.</div>
+      </div>
+
       <form id="productForm">
         <input type="hidden" id="productId">
         <div class="field">
@@ -224,6 +236,11 @@
           <div class="icon-picker" id="iconPicker"></div>
         </div>
         <div class="field">
+          <label for="f_image">رابط صورة المنتج (اختياري)</label>
+          <input type="text" id="f_image" placeholder="https://...">
+          <div class="hint">افتح صفحة المنتج بالمتجر، اضغط يمين على الصورة → "نسخ عنوان الصورة"، والصقه هنا. لو تركته فاضي، تظهر الأيقونة والخلفية بدلها.</div>
+        </div>
+        <div class="field">
           <label for="f_bg">خلفية البطاقة (تدرج CSS)</label>
           <input type="text" id="f_bg" placeholder="linear-gradient(135deg,#1e2a3a,#0f1620)">
           <div class="hint">انسخ أحد التدرجات من منتج مشابه بالموقع، أو اترك القيمة الافتراضية.</div>
@@ -243,6 +260,26 @@
           </div>
         </div>
         <div class="hint">هذي الأسعار تُستخدم بجدول المقارنة بين المتاجر. سعر المتجر المعروض أعلاه يُنسخ تلقائيًا هنا عند الحفظ لو تركته فاضي.</div>
+
+        <div class="field" style="margin-top:16px;">
+          <label>روابط الأفليت (اختياري — لكل متجر رابطه الخاص)</label>
+        </div>
+        <div class="row3">
+          <div class="field">
+            <label for="f_link_amazon">رابط Amazon</label>
+            <input type="text" id="f_link_amazon" placeholder="https://amzn.to/...">
+          </div>
+          <div class="field">
+            <label for="f_link_shein">رابط SHEIN</label>
+            <input type="text" id="f_link_shein" placeholder="https://...">
+          </div>
+          <div class="field">
+            <label for="f_link_trendyol">رابط Trendyol</label>
+            <input type="text" id="f_link_trendyol" placeholder="https://...">
+          </div>
+        </div>
+        <div class="hint">رابط Amazon تولّده من أداة SiteStripe (شريط أدوات Amazon Associates) وأنت بصفحة المنتج. رابط SHEIN وTrendyol راح تقدر تضيفهم بعد ما توافق الشبكات (Involve Asia / Awin) على طلبك. لو تركت أي متجر بدون رابط، زر "اشترِ الآن" يعرض رسالة إنه ما توفر بعد بدل ما يوديك لصفحة فاضية.</div>
+
         <div class="form-actions">
           <button type="submit" class="btn-primary" id="saveBtn">حفظ المنتج</button>
           <button type="button" class="btn-ghost" id="cancelFormBtn">إلغاء</button>
@@ -347,7 +384,7 @@ async function loadProducts(){
   }
   productList.innerHTML = data.map(p => `
     <div class="product-item">
-      <div class="product-icon-wrap"><svg class="icon"><use href="#icon-${p.visual_icon || 'electronics'}"></use></svg></div>
+      <div class="product-icon-wrap">${p.image_url ? `<img src="${escapeHTML(p.image_url)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" onerror="handleAdminImgError(this,'${p.visual_icon || 'electronics'}')">` : `<svg class="icon"><use href="#icon-${p.visual_icon || 'electronics'}"></use></svg>`}</div>
       <div class="product-info">
         <div class="product-name">${escapeHTML(p.name)}</div>
         <div class="product-meta">
@@ -389,12 +426,50 @@ function escapeHTML(str){
   return div.innerHTML;
 }
 
+function handleAdminImgError(imgEl, iconName){
+  imgEl.outerHTML = '<svg class="icon"><use href="#icon-' + iconName + '"></use></svg>';
+}
+
 /* ---------- form open/close ---------- */
 document.getElementById('addNewBtn').addEventListener('click', ()=>openForm(null));
 document.getElementById('cancelFormBtn').addEventListener('click', closeForm);
 
+document.getElementById('importBtn').addEventListener('click', async ()=>{
+  const urlInput = document.getElementById('importUrl');
+  const statusEl = document.getElementById('importStatus');
+  const btn = document.getElementById('importBtn');
+  const url = urlInput.value.trim();
+  if(!url){ statusEl.textContent = 'الصق رابط المنتج أول.'; return; }
+
+  btn.disabled = true; btn.textContent = 'جارٍ الاستيراد...';
+  statusEl.textContent = 'جارٍ محاولة قراءة الصفحة...';
+
+  try{
+    const res = await fetch('/api/fetch-product?url=' + encodeURIComponent(url));
+    const data = await res.json();
+
+    if(data.title) document.getElementById('f_name').value = data.title;
+    if(data.image) document.getElementById('f_image').value = data.image;
+    if(data.price) document.getElementById('f_price').value = parseFloat(data.price);
+
+    if(data.warning){
+      statusEl.textContent = data.warning;
+    } else if(!data.title && !data.image && !data.price){
+      statusEl.textContent = 'ما قدرنا نطلع أي بيانات من هذا الرابط. كمّل الحقول يدويًا.';
+    } else {
+      statusEl.textContent = 'تم الاستيراد! راجع الحقول تحت وعدّل إذا يلزم، وكمّل الفئة والتقييم يدويًا.';
+    }
+  }catch(err){
+    statusEl.textContent = 'تعذر الاستيراد: ' + err.message;
+  }
+
+  btn.disabled = false; btn.textContent = 'استيراد البيانات';
+});
+
 function openForm(product){
   formError.style.display = 'none';
+  document.getElementById('importUrl').value = '';
+  document.getElementById('importStatus').textContent = 'يشتغل غالبًا مع SHEIN وTrendyol. أمازون يحظر هذا النوع من الطلبات غالبًا، فراح تحتاج تكمل بياناته يدويًا.';
   document.getElementById('formTitle').textContent = product ? 'تعديل منتج' : 'إضافة منتج جديد';
   document.getElementById('productId').value = product ? product.id : '';
   document.getElementById('f_name').value = product ? product.name : '';
@@ -404,10 +479,14 @@ function openForm(product){
   document.getElementById('f_rating').value = product ? product.rating : '';
   document.getElementById('f_reason').value = product ? (product.reason || '') : '';
   document.getElementById('f_features').value = product && Array.isArray(product.features) ? product.features.join('\n') : '';
+  document.getElementById('f_image').value = product ? (product.image_url || '') : '';
   document.getElementById('f_bg').value = product ? (product.visual_bg || '') : '';
   document.getElementById('f_alt_amazon').value = product && product.alt_amazon != null ? product.alt_amazon : '';
   document.getElementById('f_alt_shein').value = product && product.alt_shein != null ? product.alt_shein : '';
   document.getElementById('f_alt_trendyol').value = product && product.alt_trendyol != null ? product.alt_trendyol : '';
+  document.getElementById('f_link_amazon').value = product ? (product.link_amazon || '') : '';
+  document.getElementById('f_link_shein').value = product ? (product.link_shein || '') : '';
+  document.getElementById('f_link_trendyol').value = product ? (product.link_trendyol || '') : '';
   selectedIcon = product ? (product.visual_icon || 'electronics') : 'electronics';
   renderIconPicker();
   formPanel.hidden = false;
@@ -446,10 +525,14 @@ productForm.addEventListener('submit', async (e)=>{
     reason: document.getElementById('f_reason').value.trim() || null,
     features: features,
     visual_icon: selectedIcon,
+    image_url: document.getElementById('f_image').value.trim() || null,
     visual_bg: document.getElementById('f_bg').value.trim() || 'linear-gradient(135deg,#1e2a3a,#0f1620)',
     alt_amazon: altVals.alt_amazon === '' ? null : parseFloat(altVals.alt_amazon),
     alt_shein: altVals.alt_shein === '' ? null : parseFloat(altVals.alt_shein),
     alt_trendyol: altVals.alt_trendyol === '' ? null : parseFloat(altVals.alt_trendyol),
+    link_amazon: document.getElementById('f_link_amazon').value.trim() || null,
+    link_shein: document.getElementById('f_link_shein').value.trim() || null,
+    link_trendyol: document.getElementById('f_link_trendyol').value.trim() || null,
   };
 
   const saveBtn = document.getElementById('saveBtn');
