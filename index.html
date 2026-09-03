@@ -1287,7 +1287,7 @@ function openModal(id){
     const mainHTML = mainSrc
       ? `<img src="${mainSrc}" alt="${p.name}" loading="lazy" onerror="handleProductImgError(this,'${p.visual.icon}')">`
       : productVisualHTML(p);
-    const bgStyle = mainSrc ? '' : ` style="background:${p.visual.bg}"`;
+    const bgStyle = mainSrc ? ' style="background:#fff"' : ` style="background:${p.visual.bg}"`;
     const thumbsHTML = photos.length > 1 ? `
       <div class="modal-thumbs">
         ${photos.map((url,i)=>`<button type="button" class="modal-thumb ${i===activePhoto?'active':''}" data-idx="${i}"><img src="${url}" alt="" loading="lazy"></button>`).join('')}
