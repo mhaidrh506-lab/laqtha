@@ -103,6 +103,8 @@
   .checkbox-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:6px;}
   .checkbox-opt{display:flex;align-items:center;gap:8px;font-size:0.9rem;color:var(--text);cursor:pointer;}
   .checkbox-opt input{width:16px;height:16px;accent-color:var(--orange);cursor:pointer;}
+  .gallery-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+  .gallery-row input[type=text]{flex:1;}
   .hint{color:var(--text-dim);font-size:0.78rem;margin-top:4px;}
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--surface-raised);
     border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:999px;font-size:0.88rem;
@@ -239,9 +241,9 @@
           <div class="icon-picker" id="iconPicker"></div>
         </div>
         <div class="field">
-          <label for="f_image">رابط صورة المنتج (اختياري)</label>
+          <label for="f_image">الصورة الرئيسية للمنتج (اختياري)</label>
           <input type="text" id="f_image" placeholder="https://...">
-          <div class="hint">افتح صفحة المنتج بالمتجر، اضغط يمين على الصورة → "نسخ عنوان الصورة"، والصقه هنا. لو تركته فاضي، تظهر الأيقونة والخلفية بدلها.</div>
+          <div class="hint">افتح صفحة المنتج بالمتجر، اضغط يمين على الصورة → "نسخ عنوان الصورة"، والصقه هنا. لو تركته فاضي، تظهر الأيقونة والخلفية بدلها. هذي الصورة تظهر بالبطاقة وبأول معرض التفاصيل.</div>
           <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
             <label class="btn-ghost btn-small" style="cursor:pointer;">
               رفع صورة من الجهاز
@@ -249,6 +251,11 @@
             </label>
             <span class="hint" id="uploadStatus" style="margin-top:0;"></span>
           </div>
+        </div>
+        <div class="field">
+          <label>صور إضافية (اختياري — تظهر بمعرض الصور عند فتح تفاصيل المنتج)</label>
+          <div id="galleryList"></div>
+          <button type="button" class="btn-ghost btn-small" id="addGalleryBtn" style="margin-top:6px;">+ إضافة صورة</button>
         </div>
         <div class="field">
           <label for="f_bg">خلفية البطاقة (تدرج CSS)</label>
@@ -336,6 +343,7 @@ const iconPicker = document.getElementById('iconPicker');
 const toastEl = document.getElementById('toast');
 
 let selectedIcon = 'electronics';
+let galleryImages = [];
 
 function showToast(msg){
   toastEl.textContent = msg;
@@ -388,6 +396,69 @@ function renderIconPicker(){
   });
 }
 renderIconPicker();
+
+function escapeAttr(str){
+  return (str || '').replace(/"/g, '&quot;');
+}
+
+function renderGalleryList(){
+  const container = document.getElementById('galleryList');
+  if(galleryImages.length === 0){
+    container.innerHTML = '<div class="hint">لا توجد صور إضافية بعد.</div>';
+    return;
+  }
+  container.innerHTML = galleryImages.map((url, i) => `
+    <div class="gallery-row" data-idx="${i}">
+      <input type="text" class="gallery-url-input" data-idx="${i}" value="${escapeAttr(url)}" placeholder="https://...">
+      <label class="btn-ghost btn-small" style="cursor:pointer;white-space:nowrap;">
+        رفع
+        <input type="file" class="gallery-file-input" data-idx="${i}" accept="image/*" style="display:none;">
+      </label>
+      <button type="button" class="btn-danger gallery-remove-btn" data-idx="${i}">✕</button>
+    </div>`).join('');
+}
+
+document.getElementById('addGalleryBtn').addEventListener('click', ()=>{
+  galleryImages.push('');
+  renderGalleryList();
+});
+
+document.getElementById('galleryList').addEventListener('input', (e)=>{
+  if(e.target.classList.contains('gallery-url-input')){
+    galleryImages[Number(e.target.dataset.idx)] = e.target.value.trim();
+  }
+});
+
+document.getElementById('galleryList').addEventListener('click', (e)=>{
+  const removeBtn = e.target.closest('.gallery-remove-btn');
+  if(removeBtn){
+    galleryImages.splice(Number(removeBtn.dataset.idx), 1);
+    renderGalleryList();
+  }
+});
+
+document.getElementById('galleryList').addEventListener('change', async (e)=>{
+  if(!e.target.classList.contains('gallery-file-input')) return;
+  const idx = Number(e.target.dataset.idx);
+  const file = e.target.files[0];
+  if(!file) return;
+  if(file.size > 5 * 1024 * 1024){
+    showToast('الصورة كبيرة أكثر من اللازم (الحد الأقصى 5MB).');
+    return;
+  }
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  const fileName = 'product-' + Date.now() + '-' + Math.random().toString(36).slice(2,8) + '.' + ext;
+  try{
+    const { error } = await supabaseClient.storage.from('product-images').upload(fileName, file, { upsert:true });
+    if(error){ showToast('فشل الرفع: ' + error.message); return; }
+    const { data } = supabaseClient.storage.from('product-images').getPublicUrl(fileName);
+    galleryImages[idx] = data.publicUrl;
+    renderGalleryList();
+    showToast('تم رفع الصورة بنجاح');
+  }catch(err){
+    showToast('تعذر الرفع: ' + err.message);
+  }
+});
 
 /* ---------- product list ---------- */
 async function loadProducts(){
@@ -538,6 +609,8 @@ function openForm(product){
   document.getElementById('f_featured_deals').checked = !!(product && product.featured_deals);
   document.getElementById('uploadStatus').textContent = '';
   document.getElementById('f_image_file').value = '';
+  galleryImages = product && Array.isArray(product.gallery_images) ? [...product.gallery_images] : [];
+  renderGalleryList();
   selectedIcon = product ? (product.visual_icon || 'electronics') : 'electronics';
   renderIconPicker();
   formPanel.hidden = false;
@@ -586,6 +659,7 @@ productForm.addEventListener('submit', async (e)=>{
     link_trendyol: document.getElementById('f_link_trendyol').value.trim() || null,
     featured_today: document.getElementById('f_featured_today').checked,
     featured_deals: document.getElementById('f_featured_deals').checked,
+    gallery_images: galleryImages.filter(Boolean),
   };
 
   const saveBtn = document.getElementById('saveBtn');

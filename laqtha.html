@@ -401,6 +401,12 @@
     display:flex;align-items:center;justify-content:center;
   }
   .modal-img img{width:100%;height:100%;object-fit:cover;}
+  .modal-thumbs{display:flex;gap:8px;margin:-8px 0 16px;overflow-x:auto;scrollbar-width:none;}
+  .modal-thumbs::-webkit-scrollbar{display:none;}
+  .modal-thumb{flex:0 0 52px;width:52px;height:52px;border-radius:8px;overflow:hidden;
+    border:2px solid transparent;padding:0;background:#000;cursor:pointer;}
+  .modal-thumb.active{border-color:var(--orange);}
+  .modal-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
   .modal-img .product-icon{width:26%;height:26%;}
   .modal h3{font-size:1.25rem;margin-bottom:6px;}
   .modal-price-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:10px 0 16px;}
@@ -917,6 +923,7 @@ async function loadProductsFromSupabase(){
       features: row.features || [],
       alt: { amazon: row.alt_amazon, shein: row.alt_shein, trendyol: row.alt_trendyol },
       links: { amazon: row.link_amazon || null, shein: row.link_shein || null, trendyol: row.link_trendyol || null },
+      gallery: Array.isArray(row.gallery_images) ? row.gallery_images : [],
       featured_today: !!row.featured_today,
       featured_deals: !!row.featured_deals,
     }));
@@ -1270,6 +1277,21 @@ function openModal(id){
   const vals = Object.values(p.alt).filter(v=>v!==null);
   const min = Math.min(...vals);
   let selectedStore = p.store;
+  const photos = [p.image_url, ...(p.gallery||[])].filter(Boolean);
+  let activePhoto = 0;
+
+  function galleryHTML(){
+    const mainSrc = photos[activePhoto];
+    const mainHTML = mainSrc
+      ? `<img src="${mainSrc}" alt="${p.name}" loading="lazy" onerror="handleProductImgError(this,'${p.visual.icon}')">`
+      : productVisualHTML(p);
+    const bgStyle = mainSrc ? '' : ` style="background:${p.visual.bg}"`;
+    const thumbsHTML = photos.length > 1 ? `
+      <div class="modal-thumbs">
+        ${photos.map((url,i)=>`<button type="button" class="modal-thumb ${i===activePhoto?'active':''}" data-idx="${i}"><img src="${url}" alt="" loading="lazy"></button>`).join('')}
+      </div>` : '';
+    return `<div class="modal-img"${bgStyle}>${mainHTML}</div>${thumbsHTML}`;
+  }
 
   function rowHTML(store, price){
     const isCheapest = price===min;
@@ -1300,7 +1322,7 @@ function openModal(id){
   }
 
   document.getElementById('modalBody').innerHTML = `
-    <div class="modal-img" style="background:${p.visual.bg}">${productVisualHTML(p)}</div>
+    <div id="modalGalleryWrap">${galleryHTML()}</div>
     <h3 id="modalTitle">${p.name}</h3>
     <div class="card-rating">${starRating(p.rating)}</div>
     <div class="modal-price-row" id="modalPriceBlock">${priceBlockHTML(selectedStore)}</div>
@@ -1315,6 +1337,14 @@ function openModal(id){
   `;
   document.getElementById('modalOverlay').hidden = false;
   lockScroll();
+
+  const galleryWrap = document.getElementById('modalGalleryWrap');
+  galleryWrap.addEventListener('click', (e)=>{
+    const thumb = e.target.closest('.modal-thumb');
+    if(!thumb) return;
+    activePhoto = Number(thumb.dataset.idx);
+    galleryWrap.innerHTML = galleryHTML();
+  });
 
   document.getElementById('modalCompareBody').addEventListener('click', (e)=>{
     const row = e.target.closest('tr[data-store]');
@@ -1422,7 +1452,24 @@ async function initApp(){
   if(loaded){
     renderAll();
   }
+  subscribeToProductChanges();
 }
+
+let realtimeRefreshTimer = null;
+function subscribeToProductChanges(){
+  supabaseClient
+    .channel('products-realtime')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, ()=>{
+      // debounce: if several changes land close together, refresh once
+      clearTimeout(realtimeRefreshTimer);
+      realtimeRefreshTimer = setTimeout(async ()=>{
+        const loaded = await loadProductsFromSupabase();
+        if(loaded) renderAll();
+      }, 400);
+    })
+    .subscribe();
+}
+
 initApp();
 </script>
 </body>
