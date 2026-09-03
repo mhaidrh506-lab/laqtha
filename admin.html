@@ -401,6 +401,31 @@ function escapeAttr(str){
   return (str || '').replace(/"/g, '&quot;');
 }
 
+function resizeImageForUpload(file, maxDim, quality){
+  maxDim = maxDim || 1600;
+  quality = quality || 0.82;
+  return new Promise((resolve, reject)=>{
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = ()=>{
+      let { width, height } = img;
+      if(width > maxDim || height > maxDim){
+        if(width > height){ height = Math.round(height * (maxDim / width)); width = maxDim; }
+        else { width = Math.round(width * (maxDim / height)); height = maxDim; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      URL.revokeObjectURL(url);
+      canvas.toBlob((blob)=>{
+        if(blob) resolve(blob); else reject(new Error('تعذرت معالجة الصورة'));
+      }, 'image/jpeg', quality);
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('تعذرت قراءة هذا الملف كصورة')); };
+    img.src = url;
+  });
+}
+
 function renderGalleryList(){
   const container = document.getElementById('galleryList');
   if(galleryImages.length === 0){
@@ -442,14 +467,15 @@ document.getElementById('galleryList').addEventListener('change', async (e)=>{
   const idx = Number(e.target.dataset.idx);
   const file = e.target.files[0];
   if(!file) return;
-  if(file.size > 5 * 1024 * 1024){
-    showToast('الصورة كبيرة أكثر من اللازم (الحد الأقصى 5MB).');
+  if(file.size > 20 * 1024 * 1024){
+    showToast('الصورة كبيرة جدًا (الحد الأقصى 20MB قبل الضغط).');
     return;
   }
-  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-  const fileName = 'product-' + Date.now() + '-' + Math.random().toString(36).slice(2,8) + '.' + ext;
+  const fileName = 'product-' + Date.now() + '-' + Math.random().toString(36).slice(2,8) + '.jpg';
   try{
-    const { error } = await supabaseClient.storage.from('product-images').upload(fileName, file, { upsert:true });
+    showToast('جارٍ تجهيز الصورة...');
+    const resized = await resizeImageForUpload(file);
+    const { error } = await supabaseClient.storage.from('product-images').upload(fileName, resized, { upsert:true, contentType:'image/jpeg' });
     if(error){ showToast('فشل الرفع: ' + error.message); return; }
     const { data } = supabaseClient.storage.from('product-images').getPublicUrl(fileName);
     galleryImages[idx] = data.publicUrl;
@@ -561,17 +587,18 @@ document.getElementById('f_image_file').addEventListener('change', async (e)=>{
   const statusEl = document.getElementById('uploadStatus');
   if(!file) return;
 
-  if(file.size > 5 * 1024 * 1024){
-    statusEl.textContent = 'الصورة كبيرة أكثر من اللازم (الحد الأقصى 5MB).';
+  if(file.size > 20 * 1024 * 1024){
+    statusEl.textContent = 'الصورة كبيرة جدًا (الحد الأقصى 20MB قبل الضغط).';
     return;
   }
 
-  statusEl.textContent = 'جارٍ الرفع...';
-  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-  const fileName = 'product-' + Date.now() + '-' + Math.random().toString(36).slice(2,8) + '.' + ext;
+  statusEl.textContent = 'جارٍ تجهيز الصورة...';
+  const fileName = 'product-' + Date.now() + '-' + Math.random().toString(36).slice(2,8) + '.jpg';
 
   try{
-    const { error } = await supabaseClient.storage.from('product-images').upload(fileName, file, { upsert:true });
+    const resized = await resizeImageForUpload(file);
+    statusEl.textContent = 'جارٍ الرفع...';
+    const { error } = await supabaseClient.storage.from('product-images').upload(fileName, resized, { upsert:true, contentType:'image/jpeg' });
     if(error){
       statusEl.textContent = 'فشل الرفع: ' + error.message;
       return;
