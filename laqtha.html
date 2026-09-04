@@ -219,6 +219,13 @@
     padding:2px 7px;border-radius:999px;display:flex;align-items:center;gap:3px;
   }
   .rating-badge .icon{color:var(--tag-yellow);width:11px;height:11px;}
+  .share-badge{
+    position:absolute;bottom:8px;inset-inline-end:8px;z-index:2;
+    background:rgba(20,17,16,0.72);color:#fff;width:26px;height:26px;border-radius:999px;
+    border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .share-badge:hover{background:rgba(20,17,16,0.9);}
+  .share-badge .icon{width:13px;height:13px;}
   .avail-badge{
     position:absolute;top:8px;inset-inline-end:8px;z-index:2;
     font-weight:700;font-size:0.7rem;padding:3px 8px;border-radius:6px;
@@ -512,6 +519,12 @@
   .modal-cta:hover{background:var(--orange-dim);}
   .modal-cta.cta-unavailable{background:var(--surface-raised);color:var(--text-dim);}
   .modal-cta.cta-unavailable:hover{background:var(--surface-raised);}
+  .modal-share-btn{
+    width:100%;background:none;border:1px solid var(--border);color:var(--text-dim);
+    padding:11px;border-radius:10px;font-weight:600;font-size:0.88rem;margin-top:10px;
+    display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;
+  }
+  .modal-share-btn:hover{border-color:var(--orange);color:var(--orange);}
   .modal-avail-badge{
     display:inline-block;font-weight:700;font-size:0.8rem;padding:4px 12px;
     border-radius:999px;margin-bottom:8px;
@@ -580,6 +593,12 @@
 </symbol>
 <symbol id="icon-bolt" viewBox="0 0 24 24">
   <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" fill="currentColor"/>
+</symbol>
+<symbol id="icon-share" viewBox="0 0 24 24">
+  <circle cx="18" cy="5" r="2.6" fill="none" stroke="currentColor" stroke-width="1.7"/>
+  <circle cx="6" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.7"/>
+  <circle cx="18" cy="19" r="2.6" fill="none" stroke="currentColor" stroke-width="1.7"/>
+  <path d="M8.2 10.6l7.6-4.3M8.2 13.4l7.6 4.3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
 </symbol>
 <symbol id="icon-cart" viewBox="0 0 24 24">
   <path d="M3 4h2l2.4 12.2A2 2 0 009.35 18H18a2 2 0 001.96-1.6L21.5 9H6.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1132,6 +1151,7 @@ function cardHTML(p, extra=''){
         ${availBadge}
         ${productVisualHTML(p)}
         <span class="rating-badge">${starRating(p.rating)}</span>
+        <button type="button" class="share-badge" data-share="${p.id}" title="مشاركة"><svg class="icon"><use href="#icon-share"></use></svg></button>
       </div>
       <div class="card-body">
         <div class="card-name">${p.name}</div>
@@ -1625,9 +1645,12 @@ function openModal(id){
       <tbody id="modalCompareBody">${renderRows()}</tbody>
     </table>
     <button class="modal-cta${availMeta ? ' cta-unavailable' : ''}" id="modalCta"><svg class="icon icon-18 icon-fill"><use href="#icon-cart"></use></svg><span id="modalCtaText">${availMeta ? availMeta.label : 'اشترِ الآن من ' + STORE_NAMES[selectedStore]}</span></button>
+    <button class="modal-share-btn" id="modalShareBtn"><svg class="icon icon-16"><use href="#icon-share"></use></svg>مشاركة المنتج</button>
   `;
   document.getElementById('modalOverlay').hidden = false;
   lockScroll();
+  history.replaceState(null, '', location.pathname + '#p' + id);
+  document.getElementById('modalShareBtn').addEventListener('click', ()=>shareProduct(p));
 
   const galleryWrap = document.getElementById('modalGalleryWrap');
   galleryWrap.addEventListener('click', (e)=>{
@@ -1688,9 +1711,19 @@ function closeModal(){
   clearInterval(modalAutoplayTimer);
   document.getElementById('modalOverlay').hidden = true;
   unlockScroll();
+  if(location.hash.startsWith('#p')){
+    history.replaceState(null, '', location.pathname);
+  }
 }
 
 document.addEventListener('click', (e)=>{
+  const shareBtn = e.target.closest('[data-share]');
+  if(shareBtn){
+    e.stopPropagation();
+    const p = PRODUCTS.find(x => x.id === Number(shareBtn.dataset.share));
+    if(p) shareProduct(p);
+    return;
+  }
   const openBtn = e.target.closest('[data-open]');
   if(openBtn){ openModal(Number(openBtn.dataset.open)); return; }
   const card = e.target.closest('.card[data-id]');
@@ -1701,6 +1734,51 @@ document.addEventListener('keydown', (e)=>{
   const card = e.target.closest('.card[data-id]');
   if(card){ e.preventDefault(); openModal(Number(card.dataset.id)); }
 });
+
+async function shareProduct(p){
+  const shareUrl = location.origin + location.pathname + '#p' + p.id;
+  const disc = discountPct(p);
+  let text = p.name + '\n' + p.price + ' ريال';
+  if(disc > 0) text += ' (خصم ' + disc + '%)';
+  text += '\n\nقارن السعر بين المتاجر على لقطها:\n' + shareUrl;
+
+  let files = [];
+  if(p.image_url && window.navigator.canShare){
+    try{
+      const res = await fetch(p.image_url);
+      const blob = await res.blob();
+      const file = new File([blob], 'product.jpg', { type: blob.type || 'image/jpeg' });
+      if(navigator.canShare({ files: [file] })) files = [file];
+    }catch(err){ /* couldn't fetch the image, share without it */ }
+  }
+
+  if(navigator.share){
+    try{
+      const shareData = { title: p.name, text: text, url: shareUrl };
+      if(files.length) shareData.files = files;
+      await navigator.share(shareData);
+      return;
+    }catch(err){
+      if(err.name === 'AbortError') return;
+    }
+  }
+
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast('تم نسخ تفاصيل المنتج، الصقها بأي تطبيق تواصل تبيه.');
+  }catch(err){
+    showToast('تعذرت المشاركة التلقائية. انسخ الرابط يدويًا: ' + shareUrl);
+  }
+}
+
+function checkUrlForProduct(){
+  const match = location.hash.match(/^#p(\d+)$/);
+  if(match){
+    const id = Number(match[1]);
+    if(PRODUCTS.some(p => p.id === id)) openModal(id);
+  }
+}
+window.addEventListener('hashchange', checkUrlForProduct);
 
 let toastTimer;
 function showToast(msg){
@@ -1774,6 +1852,7 @@ function renderAll(){
 async function initApp(){
   await Promise.all([loadProductsFromSupabase(), loadCategoriesFromSupabase()]);
   renderAll();
+  checkUrlForProduct();
   subscribeToProductChanges();
   subscribeToCategoryChanges();
 }
