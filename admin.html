@@ -610,7 +610,7 @@ function renderTicketsList(tickets){
       <div class="ticket-reply-box" id="replyBox-${t.id}" hidden style="margin-top:12px;">
         <textarea id="replyText-${t.id}" rows="3" placeholder="اكتب ردك هنا..." style="width:100%;background:var(--bg-soft);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:inherit;">${t.reply ? escapeHTML(t.reply) : ''}</textarea>
         <div style="display:flex;gap:8px;margin-top:8px;">
-          <button class="btn-primary" style="width:auto;" data-send-reply="${t.id}">إرسال الرد</button>
+          <button class="btn-primary" style="width:auto;" data-send-reply="${t.id}">فتح البريد للرد</button>
           <button class="btn-ghost" style="width:auto;" data-cancel-reply="${t.id}">إلغاء</button>
         </div>
       </div>
@@ -633,31 +633,19 @@ function renderTicketsList(tickets){
       const ticket = tickets.find(t => String(t.id) === id);
       const replyText = document.getElementById('replyText-' + id).value.trim();
       if(!replyText){ showToast('اكتب ردك أول.'); return; }
-      btn.disabled = true;
-      btn.textContent = 'جارٍ الإرسال...';
-      try{
-        const emailRes = await fetch('/api/send-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ to: ticket.email, subject: 'رد على رسالتك - لقطها', message: replyText })
-        });
-        const emailData = await emailRes.json();
-        if(!emailRes.ok){
-          showToast('فشل إرسال البريد: ' + (emailData.error || 'خطأ غير معروف'));
-          btn.disabled = false; btn.textContent = 'إرسال الرد';
-          return;
-        }
-        const { error } = await supabaseClient.from('support_tickets').update({
-          reply: replyText, replied_at: new Date().toISOString(), status: 'closed'
-        }).eq('id', id);
-        if(error){ showToast('تم إرسال البريد لكن فشل تحديث السجل: ' + error.message); }
-        else { showToast('تم إرسال الرد بنجاح'); }
-        loadTickets();
-        updateTicketsBadge();
-      }catch(err){
-        showToast('تعذر إرسال الرد: ' + err.message);
-        btn.disabled = false; btn.textContent = 'إرسال الرد';
-      }
+
+      const mailtoLink = 'mailto:' + encodeURIComponent(ticket.email)
+        + '?subject=' + encodeURIComponent('رد على رسالتك - لقطها')
+        + '&body=' + encodeURIComponent(replyText);
+      window.location.href = mailtoLink;
+
+      const { error } = await supabaseClient.from('support_tickets').update({
+        reply: replyText, replied_at: new Date().toISOString(), status: 'closed'
+      }).eq('id', id);
+      if(error){ showToast('فُتح بريدك، لكن فشل حفظ نسخة الرد بالسجل: ' + error.message); }
+      else { showToast('فُتح برنامج البريد عندك — أرسل الرسالة من هناك.'); }
+      loadTickets();
+      updateTicketsBadge();
     });
   });
   el.querySelectorAll('[data-toggle-ticket]').forEach(btn=>{
