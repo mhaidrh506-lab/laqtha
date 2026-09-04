@@ -385,7 +385,7 @@ function enterAdmin(){ loginView.hidden = true; adminView.hidden = false; loadPr
 
 function checkPrefillFromURL(){
   const params = new URLSearchParams(window.location.search);
-  const hasAny = ['prefill_name','prefill_price','prefill_rating','prefill_image','prefill_cat'].some(k => params.has(k));
+  const hasAny = ['prefill_name','prefill_price','prefill_rating','prefill_image','prefill_cat','prefill_gallery','prefill_features'].some(k => params.has(k));
   if(!hasAny) return;
   openForm(null);
   if(params.has('prefill_name')) document.getElementById('f_name').value = params.get('prefill_name');
@@ -393,7 +393,24 @@ function checkPrefillFromURL(){
   if(params.has('prefill_price')) document.getElementById('f_price').value = params.get('prefill_price');
   if(params.has('prefill_rating')) document.getElementById('f_rating').value = params.get('prefill_rating');
   if(params.has('prefill_image')) document.getElementById('f_image').value = params.get('prefill_image');
-  document.getElementById('importStatus').textContent = 'تم تعبئة الاسم والسعر والتقييم والصورة تلقائيًا من صفحة أمازون. راجعها، اختر المتجر (Amazon) وكمّل رابط SiteStripe والفئة.';
+  if(params.has('prefill_features')){
+    try{
+      const feats = JSON.parse(params.get('prefill_features'));
+      if(Array.isArray(feats)) document.getElementById('f_features').value = feats.join('\n');
+    }catch(e){ /* ignore malformed features data */ }
+  }
+  let galleryCount = 0;
+  if(params.has('prefill_gallery')){
+    try{
+      const parsed = JSON.parse(params.get('prefill_gallery'));
+      if(Array.isArray(parsed)){
+        galleryImages = parsed.filter(Boolean);
+        galleryCount = galleryImages.length;
+        renderGalleryList();
+      }
+    }catch(e){ /* ignore malformed gallery data */ }
+  }
+  document.getElementById('importStatus').textContent = 'تم تعبئة الاسم والسعر والتقييم والصورة الرئيسية والمميزات' + (galleryCount ? ' و' + galleryCount + ' صورة إضافية' : '') + ' تلقائيًا من صفحة أمازون. راجعها، اختر المتجر (Amazon) وكمّل رابط SiteStripe والفئة.';
   history.replaceState({}, '', window.location.pathname);
 }
 
