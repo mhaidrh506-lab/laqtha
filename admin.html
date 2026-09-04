@@ -112,6 +112,18 @@
   .checkbox-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:6px;}
   .checkbox-opt{display:flex;align-items:center;gap:8px;font-size:0.9rem;color:var(--text);cursor:pointer;}
   .checkbox-opt input{width:16px;height:16px;accent-color:var(--orange);cursor:pointer;}
+  .quick-access-bar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;}
+  .quick-access-btn{
+    display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);
+    border-radius:10px;padding:12px 18px;color:var(--text);font-weight:600;font-size:0.92rem;
+    cursor:pointer;position:relative;
+  }
+  .quick-access-btn:hover{border-color:var(--orange);}
+  .quick-access-btn.active{border-color:var(--orange);color:var(--orange);}
+  .qa-badge{
+    background:#e0524a;color:#fff;font-size:0.72rem;font-weight:700;
+    border-radius:999px;min-width:20px;text-align:center;padding:1px 6px;
+  }
   .gallery-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
   .gallery-row input[type=text]{flex:1;}
   .hint{color:var(--text-dim);font-size:0.78rem;margin-top:4px;}
@@ -131,6 +143,8 @@
 <symbol id="icon-trash" viewBox="0 0 24 24"><path d="M5 7h14M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m-9 0l1 13a1 1 0 001 1h8a1 1 0 001-1l1-13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></symbol>
 <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M9 21H6a2 2 0 01-2-2V5a2 2 0 012-2h3M16 17l5-5-5-5M21 12H9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="icon-external" viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="icon-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M4 6.5l8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="icon-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
 <symbol id="icon-mark" viewBox="0 0 24 24">
   <path d="M3 3h8.5L21 12.5 12.5 21 3 12.5V3z" fill="currentColor" opacity="0.18"/>
   <path d="M3 3h8.5L21 12.5 12.5 21 3 12.5V3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
@@ -184,15 +198,24 @@
   </header>
 
   <div class="wrap">
-    <div id="categoryManageBox" style="margin-bottom:24px;">
+    <div class="quick-access-bar">
+      <button class="quick-access-btn" id="qaCategories">
+        <svg class="icon icon-20"><use href="#icon-grid"></use></svg>
+        <span>الفئات</span>
+      </button>
+      <button class="quick-access-btn" id="qaTickets">
+        <svg class="icon icon-20"><use href="#icon-mail"></use></svg>
+        <span>التذاكر</span>
+        <span class="qa-badge" id="ticketsBadge" hidden>0</span>
+      </button>
+    </div>
+
+    <div id="categoryManageBox" hidden style="margin-bottom:24px;">
       <div class="toolbar" style="margin:0 0 10px;">
         <h1 style="font-size:1.1rem;">الفئات</h1>
-        <div style="display:flex;gap:8px;">
-          <button class="btn-ghost" style="width:auto;" id="toggleCatListBtn">عرض الفئات</button>
-          <button class="btn-ghost" style="width:auto;" id="toggleCatFormBtn">+ إضافة فئة</button>
-        </div>
+        <button class="btn-ghost" style="width:auto;" id="toggleCatFormBtn">+ إضافة فئة</button>
       </div>
-      <div id="catManageList" hidden></div>
+      <div id="catManageList"></div>
       <div id="catAddForm" hidden style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:10px;">
         <div class="row2">
           <div class="field">
@@ -238,12 +261,11 @@
       </div>
     </div>
 
-    <div id="ticketsManageBox" style="margin-bottom:24px;">
+    <div id="ticketsManageBox" hidden style="margin-bottom:24px;">
       <div class="toolbar" style="margin:0 0 10px;">
         <h1 style="font-size:1.1rem;">التذاكر والرسائل</h1>
-        <button class="btn-ghost" style="width:auto;" id="toggleTicketsBtn">عرض التذاكر</button>
       </div>
-      <div id="ticketsList" hidden></div>
+      <div id="ticketsList"></div>
     </div>
 
     <div class="toolbar">
@@ -464,7 +486,7 @@ async function checkSession(){
   if(session){ enterAdmin(); } else { showLogin(); }
 }
 function showLogin(){ loginView.hidden = false; adminView.hidden = true; }
-function enterAdmin(){ loginView.hidden = true; adminView.hidden = false; loadProducts(); loadCategories(); checkPrefillFromURL(); }
+function enterAdmin(){ loginView.hidden = true; adminView.hidden = false; loadProducts(); loadCategories(); updateTicketsBadge(); checkPrefillFromURL(); }
 
 async function loadCategories(){
   const { data, error } = await supabaseClient.from('categories').select('*').order('sort_order', { ascending:true });
@@ -514,18 +536,40 @@ function renderCategoryManageList(){
   });
 }
 
-document.getElementById('toggleCatListBtn').addEventListener('click', ()=>{
-  const list = document.getElementById('catManageList');
-  list.hidden = !list.hidden;
-  document.getElementById('toggleCatListBtn').textContent = list.hidden ? 'عرض الفئات' : 'إخفاء الفئات';
+document.getElementById('qaCategories').addEventListener('click', ()=>{
+  const box = document.getElementById('categoryManageBox');
+  box.hidden = !box.hidden;
+  document.getElementById('qaCategories').classList.toggle('active', !box.hidden);
+  if(!box.hidden){
+    document.getElementById('ticketsManageBox').hidden = true;
+    document.getElementById('qaTickets').classList.remove('active');
+  }
 });
 
-document.getElementById('toggleTicketsBtn').addEventListener('click', ()=>{
-  const list = document.getElementById('ticketsList');
-  list.hidden = !list.hidden;
-  document.getElementById('toggleTicketsBtn').textContent = list.hidden ? 'عرض التذاكر' : 'إخفاء التذاكر';
-  if(!list.hidden) loadTickets();
+document.getElementById('qaTickets').addEventListener('click', ()=>{
+  const box = document.getElementById('ticketsManageBox');
+  box.hidden = !box.hidden;
+  document.getElementById('qaTickets').classList.toggle('active', !box.hidden);
+  if(!box.hidden){
+    document.getElementById('categoryManageBox').hidden = true;
+    document.getElementById('qaCategories').classList.remove('active');
+    loadTickets();
+  }
 });
+
+async function updateTicketsBadge(){
+  const badge = document.getElementById('ticketsBadge');
+  const { count, error } = await supabaseClient
+    .from('support_tickets')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'open');
+  if(error || !count){
+    badge.hidden = true;
+    return;
+  }
+  badge.textContent = count;
+  badge.hidden = false;
+}
 
 async function loadTickets(){
   const el = document.getElementById('ticketsList');
@@ -545,22 +589,77 @@ function renderTicketsList(tickets){
     return;
   }
   el.innerHTML = tickets.map(t => `
-    <div class="product-item">
-      <div class="product-info">
-        <div class="product-name">${escapeHTML(t.name || 'بدون اسم')} — <span style="color:var(--text-dim);font-weight:400;">${escapeHTML(t.email)}</span></div>
-        <div class="product-meta">
-          <span>${escapeHTML(t.category || 'استفسار')}</span>
-          <span>·</span>
-          <span>${new Date(t.created_at).toLocaleString('ar-SA')}</span>
+    <div class="product-item" style="flex-direction:column;align-items:stretch;">
+      <div style="display:flex;gap:12px;">
+        <div class="product-info">
+          <div class="product-name">${escapeHTML(t.name || 'بدون اسم')} — <span style="color:var(--text-dim);font-weight:400;">${escapeHTML(t.email)}</span></div>
+          <div class="product-meta">
+            <span>${escapeHTML(t.category || 'استفسار')}</span>
+            <span>·</span>
+            <span>${new Date(t.created_at).toLocaleString('ar-SA')}</span>
+          </div>
+          <div class="hint" style="margin-top:6px;color:var(--text);">${escapeHTML(t.message)}</div>
+          ${t.reply ? `<div class="hint" style="margin-top:8px;color:var(--orange);border-inline-start:2px solid var(--orange);padding-inline-start:8px;">ردّك: ${escapeHTML(t.reply)}</div>` : ''}
+          <button class="avail-toggle ${t.status === 'closed' ? 'status-available' : 'status-unavailable'}" data-toggle-ticket="${t.id}" data-current="${t.status || 'open'}" style="margin-top:8px;">${t.status === 'closed' ? 'مغلقة' : 'مفتوحة'}</button>
         </div>
-        <div class="hint" style="margin-top:6px;color:var(--text);">${escapeHTML(t.message)}</div>
-        <button class="avail-toggle ${t.status === 'closed' ? 'status-available' : 'status-unavailable'}" data-toggle-ticket="${t.id}" data-current="${t.status || 'open'}" style="margin-top:8px;">${t.status === 'closed' ? 'مغلقة' : 'مفتوحة'}</button>
+        <div class="product-actions">
+          <button class="btn-ghost btn-small" data-open-ticket="${t.id}" title="فتح / رد"><svg class="icon icon-16"><use href="#icon-edit"></use></svg></button>
+          <button class="btn-danger" data-delete-ticket="${t.id}"><svg class="icon icon-16"><use href="#icon-trash"></use></svg></button>
+        </div>
       </div>
-      <div class="product-actions">
-        <button class="btn-danger" data-delete-ticket="${t.id}"><svg class="icon icon-16"><use href="#icon-trash"></use></svg></button>
+      <div class="ticket-reply-box" id="replyBox-${t.id}" hidden style="margin-top:12px;">
+        <textarea id="replyText-${t.id}" rows="3" placeholder="اكتب ردك هنا..." style="width:100%;background:var(--bg-soft);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:inherit;">${t.reply ? escapeHTML(t.reply) : ''}</textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button class="btn-primary" style="width:auto;" data-send-reply="${t.id}">إرسال الرد</button>
+          <button class="btn-ghost" style="width:auto;" data-cancel-reply="${t.id}">إلغاء</button>
+        </div>
       </div>
     </div>`).join('');
 
+  el.querySelectorAll('[data-open-ticket]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const box = document.getElementById('replyBox-' + btn.dataset.openTicket);
+      box.hidden = !box.hidden;
+    });
+  });
+  el.querySelectorAll('[data-cancel-reply]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.getElementById('replyBox-' + btn.dataset.cancelReply).hidden = true;
+    });
+  });
+  el.querySelectorAll('[data-send-reply]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.dataset.sendReply;
+      const ticket = tickets.find(t => String(t.id) === id);
+      const replyText = document.getElementById('replyText-' + id).value.trim();
+      if(!replyText){ showToast('اكتب ردك أول.'); return; }
+      btn.disabled = true;
+      btn.textContent = 'جارٍ الإرسال...';
+      try{
+        const emailRes = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ to: ticket.email, subject: 'رد على رسالتك - لقطها', message: replyText })
+        });
+        const emailData = await emailRes.json();
+        if(!emailRes.ok){
+          showToast('فشل إرسال البريد: ' + (emailData.error || 'خطأ غير معروف'));
+          btn.disabled = false; btn.textContent = 'إرسال الرد';
+          return;
+        }
+        const { error } = await supabaseClient.from('support_tickets').update({
+          reply: replyText, replied_at: new Date().toISOString(), status: 'closed'
+        }).eq('id', id);
+        if(error){ showToast('تم إرسال البريد لكن فشل تحديث السجل: ' + error.message); }
+        else { showToast('تم إرسال الرد بنجاح'); }
+        loadTickets();
+        updateTicketsBadge();
+      }catch(err){
+        showToast('تعذر إرسال الرد: ' + err.message);
+        btn.disabled = false; btn.textContent = 'إرسال الرد';
+      }
+    });
+  });
   el.querySelectorAll('[data-toggle-ticket]').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
       const id = btn.dataset.toggleTicket;
@@ -568,6 +667,7 @@ function renderTicketsList(tickets){
       const { error } = await supabaseClient.from('support_tickets').update({ status: next }).eq('id', id);
       if(error){ showToast('فشل التحديث: ' + error.message); return; }
       loadTickets();
+      updateTicketsBadge();
     });
   });
   el.querySelectorAll('[data-delete-ticket]').forEach(btn=>{
@@ -577,6 +677,7 @@ function renderTicketsList(tickets){
       if(error){ showToast('فشل الحذف: ' + error.message); return; }
       showToast('تم الحذف');
       loadTickets();
+      updateTicketsBadge();
     });
   });
 }

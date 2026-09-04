@@ -1263,9 +1263,17 @@ document.getElementById('contactForm').addEventListener('submit', async (e)=>{
       statusEl.textContent = 'تعذر إرسال رسالتك، حاول مرة ثانية. (' + error.message + ')';
       statusEl.classList.add('error');
     } else {
-      statusEl.textContent = 'تم استلام رسالتك بنجاح، بنرد عليك على بريدك الإلكتروني قريبًا.';
-      statusEl.classList.add('success');
       document.getElementById('contactForm').reset();
+      showTicketConfirmation();
+      fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: 'laqtha.sa@gmail.com',
+          subject: 'رسالة جديدة من موقع لقطها (' + category + ')',
+          message: 'الاسم: ' + (name || 'بدون اسم') + '\nالبريد: ' + email + '\nالنوع: ' + category + '\n\nالرسالة:\n' + message
+        })
+      }).catch(()=>{});
     }
   }catch(err){
     statusEl.textContent = 'تعذر إرسال رسالتك، تأكد من اتصالك بالإنترنت وحاول مرة ثانية.';
@@ -1275,6 +1283,19 @@ document.getElementById('contactForm').addEventListener('submit', async (e)=>{
   btn.disabled = false;
   btn.textContent = 'إرسال';
 });
+
+function showTicketConfirmation(){
+  document.getElementById('modalBody').innerHTML = `
+    <div style="text-align:center;padding:24px 8px;">
+      <svg class="icon icon-32" style="color:#4caf7d;margin-bottom:14px;"><use href="#icon-check"></use></svg>
+      <h3 style="margin-bottom:8px;">تم استلام رسالتك</h3>
+      <p style="color:var(--text-dim);line-height:1.8;">نسعى لحل موضوعك والرد عليك على بريدك الإلكتروني في أقرب وقت ممكن.</p>
+      <button class="modal-cta" id="ticketConfirmCloseBtn" style="margin-top:22px;">تمام</button>
+    </div>`;
+  document.getElementById('modalOverlay').hidden = false;
+  lockScroll();
+  document.getElementById('ticketConfirmCloseBtn').addEventListener('click', closeModal);
+}
 
 function goHome(e){
   pulseLogo(e.currentTarget);
