@@ -144,6 +144,7 @@
 <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M9 21H6a2 2 0 01-2-2V5a2 2 0 012-2h3M16 17l5-5-5-5M21 12H9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="icon-external" viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 5H7a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="icon-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M4 6.5l8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="icon-box" viewBox="0 0 24 24"><path d="M3 8l9-4.5L21 8v8l-9 4.5L3 16z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 8l9 4.5L21 8M12 12.5V21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
 <symbol id="icon-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
 <symbol id="icon-mark" viewBox="0 0 24 24">
   <path d="M3 3h8.5L21 12.5 12.5 21 3 12.5V3z" fill="currentColor" opacity="0.18"/>
@@ -199,6 +200,10 @@
 
   <div class="wrap">
     <div class="quick-access-bar">
+      <button class="quick-access-btn active" id="qaProducts">
+        <svg class="icon icon-20"><use href="#icon-box"></use></svg>
+        <span>المنتجات</span>
+      </button>
       <button class="quick-access-btn" id="qaCategories">
         <svg class="icon icon-20"><use href="#icon-grid"></use></svg>
         <span>الفئات</span>
@@ -207,6 +212,14 @@
         <svg class="icon icon-20"><use href="#icon-mail"></use></svg>
         <span>التذاكر</span>
         <span class="qa-badge" id="ticketsBadge" hidden>0</span>
+      </button>
+      <button class="quick-access-btn" id="qaAddProduct">
+        <svg class="icon icon-20"><use href="#icon-plus"></use></svg>
+        <span>إضافة منتج</span>
+      </button>
+      <button class="quick-access-btn" id="qaPriceCheck">
+        <svg class="icon icon-20"><use href="#icon-external"></use></svg>
+        <span>فحص الأسعار</span>
       </button>
     </div>
 
@@ -268,15 +281,12 @@
       <div id="ticketsList"></div>
     </div>
 
-    <div class="toolbar">
-      <h1 style="font-size:1.2rem;">المنتجات</h1>
-      <div style="display:flex;gap:8px;">
-        <button class="btn-ghost" style="width:auto;" id="checkPricesBtn">فحص أسعار SHEIN/Trendyol</button>
-        <button class="btn-primary" style="width:auto;" id="addNewBtn"><svg class="icon icon-16"><use href="#icon-plus"></use></svg> إضافة منتج</button>
+    <div id="productsSection">
+      <div class="toolbar">
+        <h1 style="font-size:1.2rem;">المنتجات</h1>
       </div>
-    </div>
 
-    <div id="priceCheckResults"></div>
+      <div id="priceCheckResults"></div>
 
     <!-- form panel -->
     <div id="formPanel" hidden>
@@ -438,6 +448,7 @@
     </div>
 
     <div id="productList"></div>
+    </div>
   </div>
 </div>
 
@@ -536,25 +547,43 @@ function renderCategoryManageList(){
   });
 }
 
+const QA_SECTIONS = [
+  { btn: 'qaProducts', box: 'productsSection' },
+  { btn: 'qaCategories', box: 'categoryManageBox' },
+  { btn: 'qaTickets', box: 'ticketsManageBox' },
+];
+
+function showQaSection(targetBoxId){
+  QA_SECTIONS.forEach(({btn, box})=>{
+    const boxEl = document.getElementById(box);
+    const btnEl = document.getElementById(btn);
+    const isTarget = box === targetBoxId;
+    boxEl.hidden = !isTarget;
+    btnEl.classList.toggle('active', isTarget);
+  });
+}
+
+document.getElementById('qaProducts').addEventListener('click', ()=>{
+  const box = document.getElementById('productsSection');
+  if(box.hidden){ showQaSection('productsSection'); }
+  else { box.hidden = true; document.getElementById('qaProducts').classList.remove('active'); }
+});
+
 document.getElementById('qaCategories').addEventListener('click', ()=>{
   const box = document.getElementById('categoryManageBox');
-  box.hidden = !box.hidden;
-  document.getElementById('qaCategories').classList.toggle('active', !box.hidden);
-  if(!box.hidden){
-    document.getElementById('ticketsManageBox').hidden = true;
-    document.getElementById('qaTickets').classList.remove('active');
-  }
+  if(box.hidden){ showQaSection('categoryManageBox'); }
+  else { box.hidden = true; document.getElementById('qaCategories').classList.remove('active'); }
 });
 
 document.getElementById('qaTickets').addEventListener('click', ()=>{
   const box = document.getElementById('ticketsManageBox');
-  box.hidden = !box.hidden;
-  document.getElementById('qaTickets').classList.toggle('active', !box.hidden);
-  if(!box.hidden){
-    document.getElementById('categoryManageBox').hidden = true;
-    document.getElementById('qaCategories').classList.remove('active');
-    loadTickets();
-  }
+  if(box.hidden){ showQaSection('ticketsManageBox'); loadTickets(); }
+  else { box.hidden = true; document.getElementById('qaTickets').classList.remove('active'); }
+});
+
+document.getElementById('qaAddProduct').addEventListener('click', ()=>{
+  showQaSection('productsSection');
+  openForm(null);
 });
 
 async function updateTicketsBadge(){
@@ -988,25 +1017,27 @@ function handleAdminImgError(imgEl, iconName){
   imgEl.outerHTML = '<svg class="icon"><use href="#icon-' + iconName + '"></use></svg>';
 }
 
-document.getElementById('checkPricesBtn').addEventListener('click', async ()=>{
-  const btn = document.getElementById('checkPricesBtn');
+document.getElementById('qaPriceCheck').addEventListener('click', async ()=>{
+  showQaSection('productsSection');
+  const btn = document.getElementById('qaPriceCheck');
+  const label = btn.querySelector('span');
   const resultsEl = document.getElementById('priceCheckResults');
-  const originalText = btn.textContent;
+  const originalText = label.textContent;
   btn.disabled = true;
-  btn.textContent = 'جارٍ الفحص...';
+  label.textContent = 'جارٍ الفحص...';
   resultsEl.innerHTML = '<div class="hint" style="margin:12px 0;">جارٍ فحص المنتجات، قد يأخذ دقيقة حسب العدد...</div>';
 
   const { data, error } = await supabaseClient.from('products').select('*').in('store', ['shein','trendyol']);
   if(error){
     resultsEl.innerHTML = '<div class="hint" style="margin:12px 0;">تعذر تحميل المنتجات: ' + error.message + '</div>';
-    btn.disabled = false; btn.textContent = originalText;
+    btn.disabled = false; label.textContent = originalText;
     return;
   }
 
   const eligible = data.filter(p => (p.store === 'shein' && p.link_shein) || (p.store === 'trendyol' && p.link_trendyol));
   if(eligible.length === 0){
     resultsEl.innerHTML = '<div class="hint" style="margin:12px 0;">ما فيه منتجات SHEIN/Trendyol عندها رابط أفليت مضاف للفحص.</div>';
-    btn.disabled = false; btn.textContent = originalText;
+    btn.disabled = false; label.textContent = originalText;
     return;
   }
 
@@ -1029,7 +1060,7 @@ document.getElementById('checkPricesBtn').addEventListener('click', async ()=>{
   }
 
   renderPriceCheckResults(results);
-  btn.disabled = false; btn.textContent = originalText;
+  btn.disabled = false; label.textContent = originalText;
 });
 
 function renderPriceCheckResults(results){
@@ -1066,7 +1097,6 @@ function renderPriceCheckResults(results){
 }
 
 /* ---------- form open/close ---------- */
-document.getElementById('addNewBtn').addEventListener('click', ()=>openForm(null));
 document.getElementById('cancelFormBtn').addEventListener('click', closeForm);
 
 document.getElementById('importBtn').addEventListener('click', async ()=>{
