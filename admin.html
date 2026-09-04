@@ -698,6 +698,14 @@ document.getElementById('galleryList').addEventListener('change', async (e)=>{
 });
 
 /* ---------- product list ---------- */
+async function loadClickCounts(){
+  const { data, error } = await supabaseClient.from('click_events').select('product_id');
+  if(error || !data) return {};
+  const counts = {};
+  data.forEach(row => { counts[row.product_id] = (counts[row.product_id] || 0) + 1; });
+  return counts;
+}
+
 async function loadProducts(){
   productList.innerHTML = '<div class="empty-state">جارٍ التحميل...</div>';
   const { data, error } = await supabaseClient.from('products').select('*').order('id', { ascending:false });
@@ -709,6 +717,9 @@ async function loadProducts(){
     productList.innerHTML = '<div class="empty-state">لا يوجد منتجات بعد. اضغط "إضافة منتج" لتبدأ.</div>';
     return;
   }
+
+  const clickCounts = await loadClickCounts();
+
   productList.innerHTML = data.map(p => `
     <div class="product-item">
       <div class="product-icon-wrap">${p.image_url ? `<img src="${escapeHTML(p.image_url)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" onerror="handleAdminImgError(this,'${p.visual_icon || 'electronics'}')">` : `<svg class="icon"><use href="#icon-${p.visual_icon || 'electronics'}"></use></svg>`}</div>
@@ -722,6 +733,8 @@ async function loadProducts(){
           <span>${p.price} ريال</span>
           <span>·</span>
           <span>${p.rating} ★</span>
+          <span>·</span>
+          <span title="عدد الضغطات على زر اشترِ الآن">🖱️ ${clickCounts[p.id] || 0} نقرة</span>
         </div>
         <button class="avail-toggle status-${p.availability || 'available'}" data-status-toggle="${p.id}" data-current="${p.availability || 'available'}" title="اضغط لتغيير حالة التوفر">${AVAILABILITY_LABELS[p.availability || 'available']}</button>
       </div>

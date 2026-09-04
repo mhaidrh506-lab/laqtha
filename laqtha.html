@@ -1419,6 +1419,7 @@ function openModal(id){
     const link = p.links && p.links[selectedStore];
     if(link){
       window.open(link, '_blank', 'noopener');
+      supabaseClient.from('click_events').insert({ product_id: p.id, store: selectedStore }).then(()=>{});
     } else {
       showToast('رابط الأفليت مع ' + STORE_NAMES[selectedStore] + ' لسا ما انضاف لهذا المنتج.');
     }
