@@ -187,66 +187,61 @@
     scrollbar-width:none;-ms-overflow-style:none;
   }
   .shelf-scroll::-webkit-scrollbar{display:none;}
-  .shelf-scroll .card{min-width:190px;max-width:190px;flex:0 0 190px;scroll-snap-align:start;}
+  .shelf-scroll .card{min-width:160px;max-width:160px;flex:0 0 160px;scroll-snap-align:start;}
 
   /* product card */
   .card{
-    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    background:#ffffff;border:1px solid #eaeaea;border-radius:12px;
     overflow:hidden;display:flex;flex-direction:column;position:relative;
-    transition:border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+    transition:transform .15s ease, box-shadow .15s ease;
   }
-  .card:hover{border-color:var(--orange);transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,0.4);}
+  .card:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(0,0,0,0.35);}
   .card-img{
-    aspect-ratio:1/1;overflow:hidden;background:#000;
+    aspect-ratio:1/1;overflow:hidden;background:#f7f6f5;position:relative;
     display:flex;align-items:center;justify-content:center;
   }
   .card-img img{width:100%;height:100%;object-fit:cover;}
   .product-icon{
-    width:38%;height:38%;color:var(--text);opacity:0.9;
+    width:38%;height:38%;color:#c9c2ba;opacity:0.9;
     transition:transform .35s ease;
   }
   .card:hover .product-icon{transform:scale(1.08);}
   .discount-tag{
-    position:absolute;top:10px;inset-inline-start:10px;z-index:2;
-    background:var(--tag-yellow);color:#241a02;font-weight:700;font-size:0.78rem;
-    padding:4px 10px;display:flex;align-items:center;gap:4px;
-    clip-path:polygon(0 0,100% 0,92% 50%,100% 100%,0 100%);
+    position:absolute;top:8px;inset-inline-start:8px;z-index:2;
+    background:var(--tag-yellow);color:#241a02;font-weight:700;font-size:0.72rem;
+    padding:3px 8px;display:flex;align-items:center;gap:3px;border-radius:6px;
   }
   .discount-tag .icon{color:#241a02;}
+  .rating-badge{
+    position:absolute;bottom:8px;inset-inline-start:8px;z-index:2;
+    background:rgba(20,17,16,0.82);color:#fff;font-size:0.7rem;font-weight:700;
+    padding:2px 7px;border-radius:999px;display:flex;align-items:center;gap:3px;
+  }
+  .rating-badge .icon{color:var(--tag-yellow);width:11px;height:11px;}
   .avail-badge{
-    position:absolute;top:10px;inset-inline-end:10px;z-index:2;
-    font-weight:700;font-size:0.76rem;padding:4px 10px;border-radius:999px;
+    position:absolute;top:8px;inset-inline-end:8px;z-index:2;
+    font-weight:700;font-size:0.7rem;padding:3px 8px;border-radius:6px;
   }
   .avail-badge.status-unavailable{background:#e0524a;color:#fff;}
   .avail-badge.status-coming{background:var(--tag-yellow);color:#241a02;}
   .card-dimmed .card-img{opacity:0.55;}
-  .card-cta.cta-unavailable{background:var(--surface-raised);color:var(--text-dim);cursor:default;}
-  .card-cta.cta-unavailable:hover{background:var(--surface-raised);}
-  .card-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1;}
+  .card-body{padding:8px 10px 10px;display:flex;flex-direction:column;gap:4px;flex:1;}
   .card-name{
-    font-size:0.94rem;font-weight:600;min-height:2.6em;
+    color:#1a1613;font-size:0.82rem;font-weight:500;min-height:2.4em;line-height:1.3;
     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
   }
-  .card-rating{color:var(--text-dim);font-size:0.82rem;display:flex;align-items:center;gap:4px;}
-  .card-rating .icon{color:var(--tag-yellow);}
-  .card-price-row{display:flex;align-items:center;justify-content:space-between;margin-top:2px;}
-  .card-price{font-family:var(--font-display);font-weight:800;font-size:1.15rem;}
+  .card-price-row{display:flex;align-items:center;justify-content:space-between;margin-top:2px;gap:6px;}
+  .card-price{font-family:var(--font-display);font-weight:800;font-size:1.05rem;color:#1a1613;}
   .price-block{display:flex;flex-direction:column-reverse;gap:1px;}
-  .price-old{font-size:0.78rem;color:var(--text-dim);text-decoration:line-through;font-weight:500;}
+  .price-old{font-size:0.72rem;color:#9a9086;text-decoration:line-through;font-weight:500;}
   .store-chip{
-    font-size:0.72rem;padding:3px 9px;border-radius:999px;font-weight:600;
-    border:1px solid transparent;
+    font-size:0.66rem;padding:2px 7px;border-radius:6px;font-weight:700;
+    background:#f2f0ee;flex-shrink:0;border:none;
   }
-  .store-amazon{color:var(--store-amazon);border-color:var(--store-amazon);}
-  .store-shein{color:var(--store-shein);border-color:var(--store-shein);}
-  .store-trendyol{color:var(--store-trendyol);border-color:var(--store-trendyol);}
-  .store-noon{color:var(--store-noon);border-color:var(--store-noon);}
-  .card-cta{
-    margin-top:8px;background:var(--orange);color:#1a0e05;border:none;
-    padding:9px;border-radius:8px;font-weight:700;font-size:0.9rem;
-    display:flex;align-items:center;justify-content:center;gap:6px;
-  }
-  .card-cta:hover{background:var(--orange-dim);}
+  .card .store-amazon{color:#a5661f;}
+  .card .store-shein{color:#c23f5a;}
+  .card .store-trendyol{color:#1d857c;}
+  .card .store-noon{color:#6d5cd1;}
 
   /* categories drawer */
   .cat-drawer-overlay{
@@ -334,10 +329,10 @@
 
   /* product grid */
   .product-grid{
-    display:grid;grid-template-columns:repeat(2,1fr);gap:16px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
   }
-  @media(min-width:640px){ .product-grid{grid-template-columns:repeat(3,1fr);} }
-  @media(min-width:960px){ .product-grid{grid-template-columns:repeat(4,1fr);} }
+  @media(min-width:640px){ .product-grid{grid-template-columns:repeat(4,1fr);gap:16px;} }
+  @media(min-width:960px){ .product-grid{grid-template-columns:repeat(5,1fr);} }
   .empty-state{color:var(--text-dim);text-align:center;padding:30px 0;}
   .empty-state .icon{display:block;margin:0 auto 8px;}
 
@@ -363,8 +358,8 @@
   .sort-select-wrap select:focus{border-color:var(--orange);outline:none;}
 
   /* deals */
-  .deals-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
-  @media(min-width:640px){ .deals-grid{grid-template-columns:repeat(4,1fr);} }
+  .deals-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  @media(min-width:640px){ .deals-grid{grid-template-columns:repeat(5,1fr);gap:16px;} }
   .deal-timer{
     font-family:var(--font-display);font-weight:800;color:var(--orange);font-size:0.95rem;
     margin-top:6px;display:flex;align-items:center;gap:6px;
@@ -420,6 +415,8 @@
   .modal-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
   .modal-img .product-icon{width:26%;height:26%;}
   .modal h3{font-size:1.25rem;margin-bottom:6px;}
+  .modal-rating{color:var(--text-dim);font-size:0.85rem;display:flex;align-items:center;gap:4px;}
+  .modal-rating .icon{color:var(--tag-yellow);}
   .modal-price-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:10px 0 16px;}
   .modal-price{font-family:var(--font-display);font-weight:800;font-size:1.6rem;color:var(--orange);}
   .modal-price-old{font-size:1rem;}
@@ -994,23 +991,21 @@ function cardHTML(p, extra=''){
   const oldPrice = disc > 0 ? `<span class="price-old">${maxStorePrice(p)} ريال</span>` : '';
   const availMeta = AVAILABILITY_META[p.availability];
   const availBadge = availMeta ? `<span class="avail-badge ${availMeta.cls}">${availMeta.label}</span>` : '';
-  const ctaHTML = availMeta
-    ? `<button class="card-cta cta-unavailable" data-open="${p.id}">${availMeta.label}</button>`
-    : `<button class="card-cta" data-open="${p.id}"><svg class="icon icon-16 icon-fill"><use href="#icon-cart"></use></svg>لقطها</button>`;
   return `
     <div class="card${availMeta ? ' card-dimmed' : ''}" data-id="${p.id}" tabindex="0">
-      ${tag}
-      ${availBadge}
-      <div class="card-img" style="background:${p.visual.bg}">${productVisualHTML(p)}</div>
+      <div class="card-img">
+        ${tag}
+        ${availBadge}
+        ${productVisualHTML(p)}
+        <span class="rating-badge">${starRating(p.rating)}</span>
+      </div>
       <div class="card-body">
         <div class="card-name">${p.name}</div>
-        <div class="card-rating">${starRating(p.rating)}</div>
         ${extra}
         <div class="card-price-row">
           <span class="price-block">${oldPrice}<span class="card-price">${p.price} ريال</span></span>
           <span class="store-chip ${STORE_CLASS[p.store]}">${STORE_NAMES[p.store]}</span>
         </div>
-        ${ctaHTML}
       </div>
     </div>`;
 }
@@ -1362,7 +1357,7 @@ function openModal(id){
     <div id="modalGalleryWrap">${galleryHTML()}</div>
     <h3 id="modalTitle">${p.name}</h3>
     ${availMeta ? `<div class="modal-avail-badge ${availMeta.cls}">${availMeta.label}</div>` : ''}
-    <div class="card-rating">${starRating(p.rating)}</div>
+    <div class="modal-rating">${starRating(p.rating)}</div>
     <div class="modal-price-row" id="modalPriceBlock">${priceBlockHTML(selectedStore)}</div>
     <div class="modal-reason"><b><svg class="icon icon-16"><use href="#icon-spark"></use></svg>ليش اخترناها لك؟</b>${p.reason}</div>
     <ul>${p.features.map(f=>`<li>${f}</li>`).join('')}</ul>
@@ -1442,6 +1437,11 @@ document.addEventListener('click', (e)=>{
   if(openBtn){ openModal(Number(openBtn.dataset.open)); return; }
   const card = e.target.closest('.card[data-id]');
   if(card){ openModal(Number(card.dataset.id)); }
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key !== 'Enter' && e.key !== ' ') return;
+  const card = e.target.closest('.card[data-id]');
+  if(card){ e.preventDefault(); openModal(Number(card.dataset.id)); }
 });
 
 let toastTimer;
