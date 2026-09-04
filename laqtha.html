@@ -1736,27 +1736,17 @@ document.addEventListener('keydown', (e)=>{
 });
 
 async function shareProduct(p){
-  const shareUrl = location.origin + location.pathname + '#p' + p.id;
+  const shareUrl = 'https://laqtha.vercel.app/#p' + p.id;
   const disc = discountPct(p);
-  let text = p.name + '\n' + p.price + ' ريال';
+  let text = '🏷️ ' + p.name;
+  text += '\n💰 ' + p.price + ' ريال';
   if(disc > 0) text += ' (خصم ' + disc + '%)';
+  text += '\n⭐ ' + p.rating.toFixed(1);
   text += '\n\nقارن السعر بين المتاجر على لقطها:\n' + shareUrl;
-
-  let files = [];
-  if(p.image_url && window.navigator.canShare){
-    try{
-      const res = await fetch(p.image_url);
-      const blob = await res.blob();
-      const file = new File([blob], 'product.jpg', { type: blob.type || 'image/jpeg' });
-      if(navigator.canShare({ files: [file] })) files = [file];
-    }catch(err){ /* couldn't fetch the image, share without it */ }
-  }
 
   if(navigator.share){
     try{
-      const shareData = { title: p.name, text: text, url: shareUrl };
-      if(files.length) shareData.files = files;
-      await navigator.share(shareData);
+      await navigator.share({ title: p.name, text: text, url: shareUrl });
       return;
     }catch(err){
       if(err.name === 'AbortError') return;
