@@ -56,7 +56,9 @@
   textarea{resize:vertical;min-height:70px;}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
-  @media (max-width:560px){.row2,.row3{grid-template-columns:1fr;}}
+  .row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;}
+  @media (max-width:560px){.row2,.row3,.row4{grid-template-columns:1fr;}}
+  @media (min-width:561px) and (max-width:760px){.row4{grid-template-columns:1fr 1fr;}}
 
   button{cursor:pointer;border:none;border-radius:8px;font-weight:700;}
   .btn-primary{background:var(--orange);color:#1a1613;padding:11px 18px;font-size:0.95rem;width:100%;}
@@ -282,6 +284,7 @@
               <option value="amazon">Amazon</option>
               <option value="shein">SHEIN</option>
               <option value="trendyol">Trendyol</option>
+              <option value="noon">Noon</option>
             </select>
           </div>
         </div>
@@ -338,7 +341,7 @@
           <input type="text" id="f_bg" placeholder="linear-gradient(135deg,#1e2a3a,#0f1620)">
           <div class="hint">انسخ أحد التدرجات من منتج مشابه بالموقع، أو اترك القيمة الافتراضية.</div>
         </div>
-        <div class="row3">
+        <div class="row4">
           <div class="field">
             <label for="f_alt_amazon">سعر Amazon (اختياري)</label>
             <input type="number" id="f_alt_amazon" min="0" step="0.01">
@@ -351,13 +354,17 @@
             <label for="f_alt_trendyol">سعر Trendyol (اختياري)</label>
             <input type="number" id="f_alt_trendyol" min="0" step="0.01">
           </div>
+          <div class="field">
+            <label for="f_alt_noon">سعر Noon (اختياري)</label>
+            <input type="number" id="f_alt_noon" min="0" step="0.01">
+          </div>
         </div>
         <div class="hint">هذي الأسعار تُستخدم بجدول المقارنة بين المتاجر. سعر المتجر المعروض أعلاه يُنسخ تلقائيًا هنا عند الحفظ لو تركته فاضي.</div>
 
         <div class="field" style="margin-top:16px;">
           <label>روابط الأفليت (اختياري — لكل متجر رابطه الخاص)</label>
         </div>
-        <div class="row3">
+        <div class="row4">
           <div class="field">
             <label for="f_link_amazon">رابط Amazon</label>
             <input type="text" id="f_link_amazon" placeholder="https://amzn.to/...">
@@ -370,8 +377,12 @@
             <label for="f_link_trendyol">رابط Trendyol</label>
             <input type="text" id="f_link_trendyol" placeholder="https://...">
           </div>
+          <div class="field">
+            <label for="f_link_noon">رابط Noon</label>
+            <input type="text" id="f_link_noon" placeholder="https://...">
+          </div>
         </div>
-        <div class="hint">رابط Amazon تولّده من أداة SiteStripe (شريط أدوات Amazon Associates) وأنت بصفحة المنتج. رابط SHEIN وTrendyol راح تقدر تضيفهم بعد ما توافق الشبكات (Involve Asia / Awin) على طلبك. لو تركت أي متجر بدون رابط، زر "اشترِ الآن" يعرض رسالة إنه ما توفر بعد بدل ما يوديك لصفحة فاضية.</div>
+        <div class="hint">رابط Amazon تولّده من أداة SiteStripe (شريط أدوات Amazon Associates) وأنت بصفحة المنتج. رابط SHEIN وTrendyol وNoon راح تقدر تضيفهم بعد ما توافق الشبكات (Involve Asia / Awin / Admitad أو ArabClicks) على طلبك. لو تركت أي متجر بدون رابط، زر "اشترِ الآن" يعرض رسالة إنه ما توفر بعد بدل ما يوديك لصفحة فاضية.</div>
 
         <div class="field" style="margin-top:16px;">
           <label>مكان الظهور بالموقع (اختياري)</label>
@@ -407,7 +418,7 @@ function catLabel(key){
   const c = CATEGORIES.find(x => x.key === key);
   return c ? c.label : key;
 }
-const STORE_LABELS = { amazon:'Amazon', shein:'SHEIN', trendyol:'Trendyol' };
+const STORE_LABELS = { amazon:'Amazon', shein:'SHEIN', trendyol:'Trendyol', noon:'Noon' };
 const ICONS = ['electronics','fashion','home','beauty','auto','airfryer','smartwatch','backpack','shoe','perfume','chair','charger','sunglasses','skincare'];
 const AVAILABILITY_LABELS = { available:'متوفر', unavailable:'غير متوفر', coming_soon:'سيتوفر قريبًا' };
 const AVAILABILITY_ORDER = ['available','unavailable','coming_soon'];
@@ -757,7 +768,7 @@ async function loadProducts(){
   productList.querySelectorAll('[data-open-link]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const row = data.find(p => String(p.id) === btn.dataset.openLink);
-      const linkMap = { amazon: row.link_amazon, shein: row.link_shein, trendyol: row.link_trendyol };
+      const linkMap = { amazon: row.link_amazon, shein: row.link_shein, trendyol: row.link_trendyol, noon: row.link_noon };
       const link = linkMap[row.store];
       if(!link){
         showToast('ما فيه رابط مضاف لمتجر ' + (STORE_LABELS[row.store] || row.store) + ' لهذا المنتج بعد.');
@@ -968,9 +979,11 @@ function openForm(product){
   document.getElementById('f_alt_amazon').value = product && product.alt_amazon != null ? product.alt_amazon : '';
   document.getElementById('f_alt_shein').value = product && product.alt_shein != null ? product.alt_shein : '';
   document.getElementById('f_alt_trendyol').value = product && product.alt_trendyol != null ? product.alt_trendyol : '';
+  document.getElementById('f_alt_noon').value = product && product.alt_noon != null ? product.alt_noon : '';
   document.getElementById('f_link_amazon').value = product ? (product.link_amazon || '') : '';
   document.getElementById('f_link_shein').value = product ? (product.link_shein || '') : '';
   document.getElementById('f_link_trendyol').value = product ? (product.link_trendyol || '') : '';
+  document.getElementById('f_link_noon').value = product ? (product.link_noon || '') : '';
   document.getElementById('f_featured_today').checked = !!(product && product.featured_today);
   document.getElementById('f_featured_deals').checked = !!(product && product.featured_deals);
   document.getElementById('uploadStatus').textContent = '';
@@ -1001,6 +1014,7 @@ productForm.addEventListener('submit', async (e)=>{
     alt_amazon: document.getElementById('f_alt_amazon').value,
     alt_shein: document.getElementById('f_alt_shein').value,
     alt_trendyol: document.getElementById('f_alt_trendyol').value,
+    alt_noon: document.getElementById('f_alt_noon').value,
   };
   // auto-fill the selected store's alt price with the main price if left empty
   const storeAltKey = 'alt_' + store;
@@ -1020,9 +1034,11 @@ productForm.addEventListener('submit', async (e)=>{
     alt_amazon: altVals.alt_amazon === '' ? null : parseFloat(altVals.alt_amazon),
     alt_shein: altVals.alt_shein === '' ? null : parseFloat(altVals.alt_shein),
     alt_trendyol: altVals.alt_trendyol === '' ? null : parseFloat(altVals.alt_trendyol),
+    alt_noon: altVals.alt_noon === '' ? null : parseFloat(altVals.alt_noon),
     link_amazon: document.getElementById('f_link_amazon').value.trim() || null,
     link_shein: document.getElementById('f_link_shein').value.trim() || null,
     link_trendyol: document.getElementById('f_link_trendyol').value.trim() || null,
+    link_noon: document.getElementById('f_link_noon').value.trim() || null,
     featured_today: document.getElementById('f_featured_today').checked,
     featured_deals: document.getElementById('f_featured_deals').checked,
     availability: document.getElementById('f_availability').value,

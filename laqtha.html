@@ -23,6 +23,7 @@
     --store-amazon:#e8a33d;
     --store-shein:#e8637f;
     --store-trendyol:#39b3aa;
+    --store-noon:#a78bfa;
     --font-display:'Almarai', sans-serif;
     --font-body:'IBM Plex Sans Arabic', sans-serif;
     --radius:10px;
@@ -239,6 +240,7 @@
   .store-amazon{color:var(--store-amazon);border-color:var(--store-amazon);}
   .store-shein{color:var(--store-shein);border-color:var(--store-shein);}
   .store-trendyol{color:var(--store-trendyol);border-color:var(--store-trendyol);}
+  .store-noon{color:var(--store-noon);border-color:var(--store-noon);}
   .card-cta{
     margin-top:8px;background:var(--orange);color:#1a0e05;border:none;
     padding:9px;border-radius:8px;font-weight:700;font-size:0.9rem;
@@ -845,12 +847,12 @@ const SUPABASE_URL = 'https://zyfdthowwnzjbgrfhxkr.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_myDCCzq3oHEKgKapC3yRBQ_0-A42nHo';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const STORE_NAMES = { amazon:'Amazon', shein:'SHEIN', trendyol:'Trendyol' };
+const STORE_NAMES = { amazon:'Amazon', shein:'SHEIN', trendyol:'Trendyol', noon:'Noon' };
 const AVAILABILITY_META = {
   unavailable: { label:'غير متوفر', cls:'status-unavailable' },
   coming_soon: { label:'سيتوفر قريبًا', cls:'status-coming' },
 };
-const STORE_CLASS = { amazon:'store-amazon', shein:'store-shein', trendyol:'store-trendyol' };
+const STORE_CLASS = { amazon:'store-amazon', shein:'store-shein', trendyol:'store-trendyol', noon:'store-noon' };
 let CATEGORIES = [
   {key:'electronics', label:'إلكترونيات', icon:'electronics', desc:'من السماعات إلى الساعات الذكية، نلقطلك أقوى عروض الإلكترونيات من Amazon وSHEIN وTrendyol في مكان واحد. نقارن الأسعار عنك، ونختار الأفضل قيمة مقابل السعر — يبقى لك بس تضغط وتشتري.'},
   {key:'fashion', label:'الموضة', icon:'fashion', desc:'شنط، أحذية، نظارات — كل قطعة نختارها نتأكد إنها تستاهل سعرها. نتابع تخفيضات الموضة أول بأول عشان توفر بدون ما تضحي بالجودة.'},
@@ -946,8 +948,8 @@ async function loadProductsFromSupabase(){
       image_url: row.image_url || null,
       reason: row.reason || '',
       features: row.features || [],
-      alt: { amazon: row.alt_amazon, shein: row.alt_shein, trendyol: row.alt_trendyol },
-      links: { amazon: row.link_amazon || null, shein: row.link_shein || null, trendyol: row.link_trendyol || null },
+      alt: { amazon: row.alt_amazon, shein: row.alt_shein, trendyol: row.alt_trendyol, noon: row.alt_noon },
+      links: { amazon: row.link_amazon || null, shein: row.link_shein || null, trendyol: row.link_trendyol || null, noon: row.link_noon || null },
       gallery: Array.isArray(row.gallery_images) ? row.gallery_images : [],
       featured_today: !!row.featured_today,
       featured_deals: !!row.featured_deals,
