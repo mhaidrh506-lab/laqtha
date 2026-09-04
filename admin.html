@@ -185,9 +185,12 @@
     <div id="categoryManageBox" style="margin-bottom:24px;">
       <div class="toolbar" style="margin:0 0 10px;">
         <h1 style="font-size:1.1rem;">الفئات</h1>
-        <button class="btn-ghost" style="width:auto;" id="toggleCatFormBtn">+ إضافة فئة</button>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-ghost" style="width:auto;" id="toggleCatListBtn">عرض الفئات</button>
+          <button class="btn-ghost" style="width:auto;" id="toggleCatFormBtn">+ إضافة فئة</button>
+        </div>
       </div>
-      <div id="catManageList"></div>
+      <div id="catManageList" hidden></div>
       <div id="catAddForm" hidden style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:10px;">
         <div class="row2">
           <div class="field">
@@ -485,6 +488,12 @@ function renderCategoryManageList(){
     });
   });
 }
+
+document.getElementById('toggleCatListBtn').addEventListener('click', ()=>{
+  const list = document.getElementById('catManageList');
+  list.hidden = !list.hidden;
+  document.getElementById('toggleCatListBtn').textContent = list.hidden ? 'عرض الفئات' : 'إخفاء الفئات';
+});
 
 document.getElementById('toggleCatFormBtn').addEventListener('click', ()=>{
   const form = document.getElementById('catAddForm');
