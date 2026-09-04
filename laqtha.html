@@ -402,12 +402,46 @@
     background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;
   }
   .footer-links button:hover{color:var(--text);}
-  .disclosure{
-    font-size:0.82rem;color:var(--text-dim);max-width:70ch;display:flex;gap:6px;
-    border-inline-start:2px solid var(--orange);padding-inline-start:12px;
+  .disclosure-link{
+    background:none;border:none;color:var(--text-dim);font-size:0.72rem;opacity:0.7;
+    display:flex;align-items:center;gap:5px;cursor:pointer;padding:0;font-family:inherit;
   }
-  .disclosure .icon{flex-shrink:0;margin-top:2px;}
+  .disclosure-link:hover{opacity:1;color:var(--text);}
   .copyright{font-size:0.78rem;color:var(--text-dim);margin-top:18px;}
+
+  /* trust / about / newsletter section */
+  .trust-badges{margin-top:24px;}
+  .trust-badges{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:32px;
+  }
+  @media(min-width:760px){ .trust-badges{grid-template-columns:repeat(4,1fr);} }
+  .trust-badge{
+    display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;
+    background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 10px;
+  }
+  .trust-badge .icon{color:var(--orange);}
+  .trust-badge span{font-size:0.78rem;color:var(--text-dim);line-height:1.5;}
+  .trust-grid{display:grid;grid-template-columns:1fr;gap:20px;}
+  @media(min-width:760px){ .trust-grid{grid-template-columns:1fr 1fr;} }
+  .about-us,.newsletter-box{
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;
+  }
+  .about-us h3,.newsletter-box h3{font-size:1.05rem;margin-bottom:8px;}
+  .about-us p,.newsletter-box p{color:var(--text-dim);font-size:0.9rem;line-height:1.8;}
+  .newsletter-form{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+  .newsletter-form input{
+    flex:1;min-width:160px;background:var(--bg-soft);border:1px solid var(--border);border-radius:8px;
+    color:var(--text);padding:10px 12px;font-size:0.9rem;font-family:inherit;
+  }
+  .newsletter-submit{
+    background:var(--orange);color:#1a0e05;border:none;padding:10px 20px;
+    border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;white-space:nowrap;
+  }
+  .newsletter-submit:hover{background:var(--orange-dim);}
+  .newsletter-submit:disabled{opacity:0.6;cursor:default;}
+  .newsletter-status{margin-top:10px;font-size:0.82rem;}
+  .newsletter-status.success{color:#4caf7d;}
+  .newsletter-status.error{color:#e0524a;}
 
   /* modal */
   .modal-overlay{
@@ -871,12 +905,49 @@
 <footer>
   <div class="wrap">
     <button class="logo" id="logoHomeFooter" type="button"><svg class="icon icon-28"><use href="#icon-mark"></use></svg><span>لقطها<span class="logo-dot">.</span></span></button>
+
+    <div class="trust-badges">
+      <div class="trust-badge">
+        <svg class="icon icon-24"><use href="#icon-shield"></use></svg>
+        <span>روابط مباشرة من المتاجر الرسمية</span>
+      </div>
+      <div class="trust-badge">
+        <svg class="icon icon-24"><use href="#icon-cart"></use></svg>
+        <span>الدفع يتم مباشرة وبأمان عبر المتجر</span>
+      </div>
+      <div class="trust-badge">
+        <svg class="icon icon-24"><use href="#icon-scale"></use></svg>
+        <span>نقارن الأسعار بين المتاجر لأجلك</span>
+      </div>
+      <div class="trust-badge">
+        <svg class="icon icon-24"><use href="#icon-clock"></use></svg>
+        <span>تحديث مستمر للعروض والأسعار</span>
+      </div>
+    </div>
+
+    <div class="trust-grid">
+      <div class="about-us">
+        <h3>من نحن</h3>
+        <p>لقطها موقع سعودي يقارن أسعار المنتجات بين أمازون وشين وترنديول ونون بمكان واحد، عشان تشتري بأقل سعر ممكن بدون ما تضيّع وقتك بالتنقل بين المتاجر.</p>
+      </div>
+
+      <div class="newsletter-box">
+        <h3>وصلك أول بأول</h3>
+        <p>اشترك عشان توصلك أقوى العروض والخصومات الجديدة على بريدك.</p>
+        <form id="newsletterForm" class="newsletter-form">
+          <input type="email" id="newsletterEmail" placeholder="بريدك الإلكتروني" required>
+          <button type="submit" class="newsletter-submit">اشترك</button>
+        </form>
+        <p class="newsletter-status" id="newsletterStatus"></p>
+      </div>
+    </div>
+
     <nav class="footer-links">
       <button type="button" id="privacyLink" hidden>سياسة الخصوصية</button>
       <button type="button" id="termsLink" hidden>الشروط والأحكام</button>
       <button type="button" id="contactLink">تواصل معنا</button>
     </nav>
-    <p class="disclosure"><svg class="icon icon-16"><use href="#icon-info"></use></svg><span>هذا الموقع يشارك روابط تسويق بالعمولة (Affiliate) مع Amazon وSHEIN وTrendyol وNoon. عند شرائك عبر هذه الروابط قد نحصل على عمولة، بدون أي تكلفة إضافية عليك.</span></p>
+    <button type="button" class="disclosure-link" id="disclosureLink"><svg class="icon icon-14"><use href="#icon-info"></use></svg>كيف نربح من الموقع؟</button>
     <p class="copyright">© 2026 لقطها. جميع الحقوق محفوظة.</p>
   </div>
 </footer>
@@ -1296,6 +1367,53 @@ function showTicketConfirmation(){
   lockScroll();
   document.getElementById('ticketConfirmCloseBtn').addEventListener('click', closeModal);
 }
+
+document.getElementById('disclosureLink').addEventListener('click', ()=>{
+  document.getElementById('modalBody').innerHTML = `
+    <div style="padding:8px 4px;">
+      <h3 style="margin-bottom:12px;">كيف نربح من الموقع؟</h3>
+      <p style="color:var(--text-dim);line-height:1.9;">هذا الموقع يشارك روابط تسويق بالعمولة (Affiliate) مع Amazon وSHEIN وTrendyol وNoon. عند شرائك عبر هذه الروابط قد نحصل على عمولة، بدون أي تكلفة إضافية عليك.</p>
+      <button class="modal-cta" id="disclosureCloseBtn" style="margin-top:20px;">تمام</button>
+    </div>`;
+  document.getElementById('modalOverlay').hidden = false;
+  lockScroll();
+  document.getElementById('disclosureCloseBtn').addEventListener('click', closeModal);
+});
+
+document.getElementById('newsletterForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const btn = document.querySelector('#newsletterForm .newsletter-submit');
+  const statusEl = document.getElementById('newsletterStatus');
+  const email = document.getElementById('newsletterEmail').value.trim();
+  statusEl.textContent = '';
+  statusEl.className = 'newsletter-status';
+  btn.disabled = true;
+  btn.textContent = 'جارٍ الاشتراك...';
+
+  try{
+    const { error } = await supabaseClient.from('newsletter_subscribers').insert({ email });
+    if(error){
+      if(error.code === '23505'){
+        statusEl.textContent = 'أنت مشترك عندنا بالفعل، شكرًا لك!';
+        statusEl.classList.add('success');
+        document.getElementById('newsletterForm').reset();
+      } else {
+        statusEl.textContent = 'تعذر الاشتراك، حاول مرة ثانية.';
+        statusEl.classList.add('error');
+      }
+    } else {
+      statusEl.textContent = 'تم الاشتراك بنجاح، بتوصلك أقوى العروض أول بأول.';
+      statusEl.classList.add('success');
+      document.getElementById('newsletterForm').reset();
+    }
+  }catch(err){
+    statusEl.textContent = 'تعذر الاشتراك، تأكد من اتصالك بالإنترنت.';
+    statusEl.classList.add('error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'اشترك';
+});
 
 function goHome(e){
   pulseLogo(e.currentTarget);
