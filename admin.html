@@ -366,9 +366,7 @@ const formError = document.getElementById('formError');
 const iconPicker = document.getElementById('iconPicker');
 const toastEl = document.getElementById('toast');
 
-let selectedIcon = 'electronics';
-let iconManuallySet = false;
-const CAT_DEFAULT_ICON = { electronics:'electronics', fashion:'fashion', home:'home', beauty:'beauty', auto:'auto' };
+let selectedIcon = '';
 let galleryImages = [];
 
 function showToast(msg){
@@ -391,13 +389,7 @@ function checkPrefillFromURL(){
   if(!hasAny) return;
   openForm(null);
   if(params.has('prefill_name')) document.getElementById('f_name').value = params.get('prefill_name');
-  if(params.has('prefill_cat')){
-    document.getElementById('f_cat').value = params.get('prefill_cat');
-    if(!iconManuallySet){
-      selectedIcon = CAT_DEFAULT_ICON[params.get('prefill_cat')] || 'electronics';
-      renderIconPicker();
-    }
-  }
+  if(params.has('prefill_cat')) document.getElementById('f_cat').value = params.get('prefill_cat');
   if(params.has('prefill_price')) document.getElementById('f_price').value = params.get('prefill_price');
   if(params.has('prefill_rating')) document.getElementById('f_rating').value = params.get('prefill_rating');
   if(params.has('prefill_image')) document.getElementById('f_image').value = params.get('prefill_image');
@@ -453,19 +445,12 @@ function renderIconPicker(){
   iconPicker.querySelectorAll('.icon-opt').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       selectedIcon = btn.dataset.icon;
-      iconManuallySet = true;
       iconPicker.querySelectorAll('.icon-opt').forEach(b=>b.classList.remove('selected'));
       btn.classList.add('selected');
     });
   });
 }
 renderIconPicker();
-
-document.getElementById('f_cat').addEventListener('change', ()=>{
-  if(iconManuallySet) return;
-  selectedIcon = CAT_DEFAULT_ICON[document.getElementById('f_cat').value] || 'electronics';
-  renderIconPicker();
-});
 
 function escapeAttr(str){
   return (str || '').replace(/"/g, '&quot;');
@@ -814,8 +799,7 @@ function openForm(product){
   document.getElementById('f_image_file').value = '';
   galleryImages = product && Array.isArray(product.gallery_images) ? [...product.gallery_images] : [];
   renderGalleryList();
-  iconManuallySet = !!(product && product.visual_icon);
-  selectedIcon = product && product.visual_icon ? product.visual_icon : (CAT_DEFAULT_ICON[document.getElementById('f_cat').value] || 'electronics');
+  selectedIcon = product ? (product.visual_icon || '') : '';
   renderIconPicker();
   formPanel.hidden = false;
   formPanel.scrollIntoView({ behavior:'smooth', block:'start' });
@@ -852,7 +836,7 @@ productForm.addEventListener('submit', async (e)=>{
     rating: parseFloat(document.getElementById('f_rating').value),
     reason: document.getElementById('f_reason').value.trim() || null,
     features: features,
-    visual_icon: selectedIcon,
+    visual_icon: selectedIcon || 'electronics',
     image_url: document.getElementById('f_image').value.trim() || null,
     visual_bg: document.getElementById('f_bg').value.trim() || 'linear-gradient(135deg,#1e2a3a,#0f1620)',
     alt_amazon: altVals.alt_amazon === '' ? null : parseFloat(altVals.alt_amazon),
