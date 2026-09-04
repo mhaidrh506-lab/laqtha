@@ -851,21 +851,25 @@ const AVAILABILITY_META = {
   coming_soon: { label:'سيتوفر قريبًا', cls:'status-coming' },
 };
 const STORE_CLASS = { amazon:'store-amazon', shein:'store-shein', trendyol:'store-trendyol' };
-const CATEGORIES = [
-  {key:'electronics', label:'إلكترونيات', icon:'electronics'},
-  {key:'fashion', label:'الموضة', icon:'fashion'},
-  {key:'home', label:'المنزل', icon:'home'},
-  {key:'beauty', label:'الجمال', icon:'beauty'},
-  {key:'auto', label:'السيارات', icon:'auto'},
+let CATEGORIES = [
+  {key:'electronics', label:'إلكترونيات', icon:'electronics', desc:'من السماعات إلى الساعات الذكية، نلقطلك أقوى عروض الإلكترونيات من Amazon وSHEIN وTrendyol في مكان واحد. نقارن الأسعار عنك، ونختار الأفضل قيمة مقابل السعر — يبقى لك بس تضغط وتشتري.'},
+  {key:'fashion', label:'الموضة', icon:'fashion', desc:'شنط، أحذية، نظارات — كل قطعة نختارها نتأكد إنها تستاهل سعرها. نتابع تخفيضات الموضة أول بأول عشان توفر بدون ما تضحي بالجودة.'},
+  {key:'home', label:'المنزل', icon:'home', desc:'من أدوات المطبخ إلى أثاث المكتب، نلقطلك المنتجات اللي فعلاً تسهّل يومك، بأفضل سعر متوفر بين المتاجر الثلاثة.'},
+  {key:'beauty', label:'الجمال', icon:'beauty', desc:'عطور ومنتجات عناية مختارة بعناية، بأسعار نقارنها لك أول بأول عشان توفر وقتك وفلوسك.'},
+  {key:'auto', label:'السيارات', icon:'auto', desc:'إكسسوارات وأدوات سيارة عملية بأسعار منافسة — نلقطلك الأفضل قبل لا تخلص.'},
 ];
 
-const CATEGORY_COPY = {
-  electronics: 'من السماعات إلى الساعات الذكية، نلقطلك أقوى عروض الإلكترونيات من Amazon وSHEIN وTrendyol في مكان واحد. نقارن الأسعار عنك، ونختار الأفضل قيمة مقابل السعر — يبقى لك بس تضغط وتشتري.',
-  fashion: 'شنط، أحذية، نظارات — كل قطعة نختارها نتأكد إنها تستاهل سعرها. نتابع تخفيضات الموضة أول بأول عشان توفر بدون ما تضحي بالجودة.',
-  home: 'من أدوات المطبخ إلى أثاث المكتب، نلقطلك المنتجات اللي فعلاً تسهّل يومك، بأفضل سعر متوفر بين المتاجر الثلاثة.',
-  beauty: 'عطور ومنتجات عناية مختارة بعناية، بأسعار نقارنها لك أول بأول عشان توفر وقتك وفلوسك.',
-  auto: 'إكسسوارات وأدوات سيارة عملية بأسعار منافسة — نلقطلك الأفضل قبل لا تخلص.',
-};
+async function loadCategoriesFromSupabase(){
+  try{
+    const { data, error } = await supabaseClient.from('categories').select('*').order('sort_order', { ascending:true });
+    if(error || !data || data.length === 0) return false;
+    CATEGORIES = data.map(row => ({ key: row.key, label: row.label, icon: row.icon || 'electronics', desc: row.description || '' }));
+    return true;
+  }catch(err){
+    console.warn('تعذر جلب الفئات من Supabase:', err);
+    return false;
+  }
+}
 
 let PRODUCTS = [
   { id:1, name:'سماعة بلوتوث X200', cat:'electronics', store:'shein', price:99, rating:4.4,
@@ -1153,7 +1157,7 @@ function showCategoryPage(catKey){
   if(!c) return;
   document.getElementById('categoryPageIconUse').querySelector('use').setAttribute('href', '#icon-'+c.icon);
   document.getElementById('categoryPageTitle').textContent = c.label;
-  document.getElementById('categoryPageCopy').textContent = CATEGORY_COPY[catKey] || '';
+  document.getElementById('categoryPageCopy').textContent = c.desc || '';
   const list = PRODUCTS.filter(p=>p.cat===catKey);
   const grid = document.getElementById('categoryPageGrid');
   const empty = document.getElementById('categoryPageEmpty');
@@ -1507,9 +1511,10 @@ function renderAll(){
 }
 
 async function initApp(){
-  await loadProductsFromSupabase();
+  await Promise.all([loadProductsFromSupabase(), loadCategoriesFromSupabase()]);
   renderAll();
   subscribeToProductChanges();
+  subscribeToCategoryChanges();
 }
 
 let realtimeRefreshTimer = null;
@@ -1521,6 +1526,20 @@ function subscribeToProductChanges(){
       clearTimeout(realtimeRefreshTimer);
       realtimeRefreshTimer = setTimeout(async ()=>{
         const loaded = await loadProductsFromSupabase();
+        if(loaded) renderAll();
+      }, 400);
+    })
+    .subscribe();
+}
+
+let categoryRefreshTimer = null;
+function subscribeToCategoryChanges(){
+  supabaseClient
+    .channel('categories-realtime')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, ()=>{
+      clearTimeout(categoryRefreshTimer);
+      categoryRefreshTimer = setTimeout(async ()=>{
+        const loaded = await loadCategoriesFromSupabase();
         if(loaded) renderAll();
       }, 400);
     })

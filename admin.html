@@ -182,6 +182,57 @@
   </header>
 
   <div class="wrap">
+    <div id="categoryManageBox" style="margin-bottom:24px;">
+      <div class="toolbar" style="margin:0 0 10px;">
+        <h1 style="font-size:1.1rem;">الفئات</h1>
+        <button class="btn-ghost" style="width:auto;" id="toggleCatFormBtn">+ إضافة فئة</button>
+      </div>
+      <div id="catManageList"></div>
+      <div id="catAddForm" hidden style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:10px;">
+        <div class="row2">
+          <div class="field">
+            <label for="newCatLabel">اسم الفئة (عربي)</label>
+            <input type="text" id="newCatLabel" placeholder="مثال: لابتوبات">
+          </div>
+          <div class="field">
+            <label for="newCatKey">المعرف (إنجليزي، بدون مسافات)</label>
+            <input type="text" id="newCatKey" placeholder="مثال: laptops">
+          </div>
+        </div>
+        <div class="field">
+          <label for="newCatIcon">أيقونة الفئة</label>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <select id="newCatIcon" style="flex:1;">
+              <option value="electronics">إلكترونيات</option>
+              <option value="fashion">أزياء</option>
+              <option value="home">منزل</option>
+              <option value="beauty">جمال</option>
+              <option value="auto">سيارات</option>
+              <option value="airfryer">مقلاة هوائية</option>
+              <option value="smartwatch">ساعة ذكية</option>
+              <option value="backpack">شنطة ظهر</option>
+              <option value="shoe">حذاء</option>
+              <option value="perfume">عطر</option>
+              <option value="chair">كرسي</option>
+              <option value="charger">شاحن</option>
+              <option value="sunglasses">نظارة شمس</option>
+              <option value="skincare">عناية بالبشرة</option>
+            </select>
+            <div class="product-icon-wrap" style="width:40px;height:40px;flex-shrink:0;"><svg class="icon" id="newCatIconPreview"><use href="#icon-electronics"></use></svg></div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="newCatDesc">وصف قصير (اختياري)</label>
+          <textarea id="newCatDesc" rows="2" placeholder="يظهر أعلى صفحة الفئة بالموقع"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-primary" id="saveCatBtn">حفظ الفئة</button>
+          <button type="button" class="btn-ghost" id="cancelCatBtn">إلغاء</button>
+        </div>
+        <div class="error-msg" id="catFormError"></div>
+      </div>
+    </div>
+
     <div class="toolbar">
       <h1 style="font-size:1.2rem;">المنتجات</h1>
       <div style="display:flex;gap:8px;">
@@ -348,7 +399,11 @@ const SUPABASE_URL = 'https://zyfdthowwnzjbgrfhxkr.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_myDCCzq3oHEKgKapC3yRBQ_0-A42nHo';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const CAT_LABELS = { electronics:'إلكترونيات', fashion:'الموضة', home:'المنزل', beauty:'الجمال', auto:'السيارات' };
+let CATEGORIES = [];
+function catLabel(key){
+  const c = CATEGORIES.find(x => x.key === key);
+  return c ? c.label : key;
+}
 const STORE_LABELS = { amazon:'Amazon', shein:'SHEIN', trendyol:'Trendyol' };
 const ICONS = ['electronics','fashion','home','beauty','auto','airfryer','smartwatch','backpack','shoe','perfume','chair','charger','sunglasses','skincare'];
 const AVAILABILITY_LABELS = { available:'متوفر', unavailable:'غير متوفر', coming_soon:'سيتوفر قريبًا' };
@@ -381,7 +436,105 @@ async function checkSession(){
   if(session){ enterAdmin(); } else { showLogin(); }
 }
 function showLogin(){ loginView.hidden = false; adminView.hidden = true; }
-function enterAdmin(){ loginView.hidden = true; adminView.hidden = false; loadProducts(); checkPrefillFromURL(); }
+function enterAdmin(){ loginView.hidden = true; adminView.hidden = false; loadProducts(); loadCategories(); checkPrefillFromURL(); }
+
+async function loadCategories(){
+  const { data, error } = await supabaseClient.from('categories').select('*').order('sort_order', { ascending:true });
+  if(error){
+    showToast('تعذر تحميل الفئات: ' + error.message);
+    return;
+  }
+  CATEGORIES = data || [];
+  renderCategoryOptions();
+  renderCategoryManageList();
+}
+
+function renderCategoryOptions(){
+  const sel = document.getElementById('f_cat');
+  const current = sel.value;
+  sel.innerHTML = CATEGORIES.map(c => `<option value="${c.key}">${escapeHTML(c.label)}</option>`).join('');
+  if(CATEGORIES.some(c => c.key === current)) sel.value = current;
+}
+
+function renderCategoryManageList(){
+  const el = document.getElementById('catManageList');
+  if(CATEGORIES.length === 0){
+    el.innerHTML = '<div class="hint">ما فيه فئات بعد.</div>';
+    return;
+  }
+  el.innerHTML = CATEGORIES.map(c => `
+    <div class="product-item">
+      <div class="product-icon-wrap"><svg class="icon"><use href="#icon-${c.icon || 'electronics'}"></use></svg></div>
+      <div class="product-info">
+        <div class="product-name">${escapeHTML(c.label)}</div>
+        <div class="product-meta"><span>المعرف: ${escapeHTML(c.key)}</span></div>
+      </div>
+      <div class="product-actions">
+        <button class="btn-danger" data-delete-cat="${escapeAttr(c.key)}"><svg class="icon icon-16"><use href="#icon-trash"></use></svg></button>
+      </div>
+    </div>`).join('');
+
+  el.querySelectorAll('[data-delete-cat]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const key = btn.dataset.deleteCat;
+      if(!confirm('متأكد تبي تحذف هذي الفئة؟ أي منتج مرتبط فيها بيصير بدون فئة صحيحة بالموقع لحد ما تعدّله.')) return;
+      const { error } = await supabaseClient.from('categories').delete().eq('key', key);
+      if(error){ showToast('فشل الحذف: ' + error.message); return; }
+      showToast('تم حذف الفئة');
+      loadCategories();
+    });
+  });
+}
+
+document.getElementById('toggleCatFormBtn').addEventListener('click', ()=>{
+  const form = document.getElementById('catAddForm');
+  form.hidden = !form.hidden;
+});
+document.getElementById('cancelCatBtn').addEventListener('click', ()=>{
+  document.getElementById('catAddForm').hidden = true;
+  document.getElementById('catFormError').style.display = 'none';
+});
+document.getElementById('newCatIcon').addEventListener('change', ()=>{
+  const icon = document.getElementById('newCatIcon').value;
+  document.querySelector('#newCatIconPreview use').setAttribute('href', '#icon-' + icon);
+});
+
+document.getElementById('saveCatBtn').addEventListener('click', async ()=>{
+  const errorEl = document.getElementById('catFormError');
+  errorEl.style.display = 'none';
+  const label = document.getElementById('newCatLabel').value.trim();
+  let key = document.getElementById('newCatKey').value.trim().toLowerCase()
+    .replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  const icon = document.getElementById('newCatIcon').value;
+  const desc = document.getElementById('newCatDesc').value.trim();
+
+  if(!label || !key){
+    errorEl.textContent = 'لازم تكتب اسم الفئة والمعرف.';
+    errorEl.style.display = 'block';
+    return;
+  }
+  if(CATEGORIES.some(c => c.key === key)){
+    errorEl.textContent = 'فيه فئة بنفس هذا المعرف مسبقًا.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  const sortOrder = CATEGORIES.length ? Math.max(...CATEGORIES.map(c => c.sort_order || 0)) + 1 : 1;
+  const { error } = await supabaseClient.from('categories').insert({
+    key, label, icon, description: desc || null, sort_order: sortOrder
+  });
+  if(error){
+    errorEl.textContent = 'فشل الحفظ: ' + error.message;
+    errorEl.style.display = 'block';
+    return;
+  }
+  showToast('تمت إضافة الفئة');
+  document.getElementById('newCatLabel').value = '';
+  document.getElementById('newCatKey').value = '';
+  document.getElementById('newCatDesc').value = '';
+  document.getElementById('catAddForm').hidden = true;
+  loadCategories();
+});
 
 function checkPrefillFromURL(){
   const params = new URLSearchParams(window.location.search);
@@ -562,7 +715,7 @@ async function loadProducts(){
       <div class="product-info">
         <div class="product-name">${escapeHTML(p.name)}</div>
         <div class="product-meta">
-          <span>${CAT_LABELS[p.cat] || p.cat}</span>
+          <span>${catLabel(p.cat)}</span>
           <span>·</span>
           <span>${STORE_LABELS[p.store] || p.store}</span>
           <span>·</span>
@@ -781,7 +934,7 @@ function openForm(product){
   document.getElementById('formTitle').textContent = product ? 'تعديل منتج' : 'إضافة منتج جديد';
   document.getElementById('productId').value = product ? product.id : '';
   document.getElementById('f_name').value = product ? product.name : '';
-  document.getElementById('f_cat').value = product ? product.cat : 'electronics';
+  document.getElementById('f_cat').value = product ? product.cat : (CATEGORIES[0] ? CATEGORIES[0].key : 'electronics');
   document.getElementById('f_store').value = product ? product.store : 'amazon';
   document.getElementById('f_availability').value = product ? (product.availability || 'available') : 'available';
   document.getElementById('f_price').value = product ? product.price : '';
