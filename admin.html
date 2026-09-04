@@ -238,6 +238,14 @@
       </div>
     </div>
 
+    <div id="ticketsManageBox" style="margin-bottom:24px;">
+      <div class="toolbar" style="margin:0 0 10px;">
+        <h1 style="font-size:1.1rem;">التذاكر والرسائل</h1>
+        <button class="btn-ghost" style="width:auto;" id="toggleTicketsBtn">عرض التذاكر</button>
+      </div>
+      <div id="ticketsList" hidden></div>
+    </div>
+
     <div class="toolbar">
       <h1 style="font-size:1.2rem;">المنتجات</h1>
       <div style="display:flex;gap:8px;">
@@ -393,6 +401,12 @@
           <div class="hint">لو ما حددت شي، النظام يختار تلقائيًا حسب نسبة الخصم زي ما هو معتاد. تحديد الخانة يخلي المنتج يظهر بذاك القسم بغض النظر عن نسبة خصمه.</div>
         </div>
 
+        <div class="field">
+          <label for="f_deal_ends_at">وقت انتهاء العرض (اختياري)</label>
+          <input type="datetime-local" id="f_deal_ends_at">
+          <div class="hint">لو حددت وقت، يظهر عدّاد تنازلي حقيقي على البطاقة بقسم "العروض"، والمنتج يختفي تلقائيًا من العروض بعد ما ينتهي الوقت. لو تركته فاضي، ما يظهر عدّاد أصلًا (بدون وقت وهمي).</div>
+        </div>
+
         <div class="form-actions">
           <button type="submit" class="btn-primary" id="saveBtn">حفظ المنتج</button>
           <button type="button" class="btn-ghost" id="cancelFormBtn">إلغاء</button>
@@ -505,6 +519,67 @@ document.getElementById('toggleCatListBtn').addEventListener('click', ()=>{
   list.hidden = !list.hidden;
   document.getElementById('toggleCatListBtn').textContent = list.hidden ? 'عرض الفئات' : 'إخفاء الفئات';
 });
+
+document.getElementById('toggleTicketsBtn').addEventListener('click', ()=>{
+  const list = document.getElementById('ticketsList');
+  list.hidden = !list.hidden;
+  document.getElementById('toggleTicketsBtn').textContent = list.hidden ? 'عرض التذاكر' : 'إخفاء التذاكر';
+  if(!list.hidden) loadTickets();
+});
+
+async function loadTickets(){
+  const el = document.getElementById('ticketsList');
+  el.innerHTML = '<div class="empty-state">جارٍ التحميل...</div>';
+  const { data, error } = await supabaseClient.from('support_tickets').select('*').order('created_at', { ascending:false });
+  if(error){
+    el.innerHTML = '<div class="empty-state">تعذر تحميل التذاكر: ' + error.message + '</div>';
+    return;
+  }
+  renderTicketsList(data || []);
+}
+
+function renderTicketsList(tickets){
+  const el = document.getElementById('ticketsList');
+  if(tickets.length === 0){
+    el.innerHTML = '<div class="empty-state">لا توجد رسائل بعد.</div>';
+    return;
+  }
+  el.innerHTML = tickets.map(t => `
+    <div class="product-item">
+      <div class="product-info">
+        <div class="product-name">${escapeHTML(t.name || 'بدون اسم')} — <span style="color:var(--text-dim);font-weight:400;">${escapeHTML(t.email)}</span></div>
+        <div class="product-meta">
+          <span>${escapeHTML(t.category || 'استفسار')}</span>
+          <span>·</span>
+          <span>${new Date(t.created_at).toLocaleString('ar-SA')}</span>
+        </div>
+        <div class="hint" style="margin-top:6px;color:var(--text);">${escapeHTML(t.message)}</div>
+        <button class="avail-toggle ${t.status === 'closed' ? 'status-available' : 'status-unavailable'}" data-toggle-ticket="${t.id}" data-current="${t.status || 'open'}" style="margin-top:8px;">${t.status === 'closed' ? 'مغلقة' : 'مفتوحة'}</button>
+      </div>
+      <div class="product-actions">
+        <button class="btn-danger" data-delete-ticket="${t.id}"><svg class="icon icon-16"><use href="#icon-trash"></use></svg></button>
+      </div>
+    </div>`).join('');
+
+  el.querySelectorAll('[data-toggle-ticket]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.dataset.toggleTicket;
+      const next = btn.dataset.current === 'open' ? 'closed' : 'open';
+      const { error } = await supabaseClient.from('support_tickets').update({ status: next }).eq('id', id);
+      if(error){ showToast('فشل التحديث: ' + error.message); return; }
+      loadTickets();
+    });
+  });
+  el.querySelectorAll('[data-delete-ticket]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      if(!confirm('متأكد تبي تحذف هذي الرسالة؟')) return;
+      const { error } = await supabaseClient.from('support_tickets').delete().eq('id', btn.dataset.deleteTicket);
+      if(error){ showToast('فشل الحذف: ' + error.message); return; }
+      showToast('تم الحذف');
+      loadTickets();
+    });
+  });
+}
 
 document.getElementById('toggleCatFormBtn').addEventListener('click', ()=>{
   const form = document.getElementById('catAddForm');
@@ -627,6 +702,12 @@ function renderIconPicker(){
   });
 }
 renderIconPicker();
+
+function toDatetimeLocalValue(isoString){
+  const d = new Date(isoString);
+  const pad = n => String(n).padStart(2, '0');
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
 
 function escapeAttr(str){
   return (str || '').replace(/"/g, '&quot;');
@@ -986,6 +1067,7 @@ function openForm(product){
   document.getElementById('f_link_noon').value = product ? (product.link_noon || '') : '';
   document.getElementById('f_featured_today').checked = !!(product && product.featured_today);
   document.getElementById('f_featured_deals').checked = !!(product && product.featured_deals);
+  document.getElementById('f_deal_ends_at').value = product && product.deal_ends_at ? toDatetimeLocalValue(product.deal_ends_at) : '';
   document.getElementById('uploadStatus').textContent = '';
   document.getElementById('f_image_file').value = '';
   galleryImages = product && Array.isArray(product.gallery_images) ? [...product.gallery_images] : [];
@@ -1041,6 +1123,7 @@ productForm.addEventListener('submit', async (e)=>{
     link_noon: document.getElementById('f_link_noon').value.trim() || null,
     featured_today: document.getElementById('f_featured_today').checked,
     featured_deals: document.getElementById('f_featured_deals').checked,
+    deal_ends_at: document.getElementById('f_deal_ends_at').value ? new Date(document.getElementById('f_deal_ends_at').value).toISOString() : null,
     availability: document.getElementById('f_availability').value,
     gallery_images: galleryImages.filter(Boolean),
   };

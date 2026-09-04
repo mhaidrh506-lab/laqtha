@@ -29,6 +29,7 @@
     --radius:10px;
   }
   *{box-sizing:border-box;}
+  [hidden]{display:none !important;}
   html{scroll-behavior:smooth;scrollbar-color:var(--border) var(--bg);}
   body{
     margin:0;
@@ -235,6 +236,14 @@
   .price-block{display:flex;flex-direction:column-reverse;gap:1px;}
   .price-old{font-size:0.72rem;color:#9a9086;text-decoration:line-through;font-weight:500;}
   .store-chip{
+    font-size:0.72rem;padding:3px 9px;border-radius:999px;font-weight:600;
+    border:1px solid transparent;
+  }
+  .store-amazon{color:var(--store-amazon);border-color:var(--store-amazon);}
+  .store-shein{color:var(--store-shein);border-color:var(--store-shein);}
+  .store-trendyol{color:var(--store-trendyol);border-color:var(--store-trendyol);}
+  .store-noon{color:var(--store-noon);border-color:var(--store-noon);}
+  .card .store-chip{
     font-size:0.66rem;padding:2px 7px;border-radius:6px;font-weight:700;
     background:#f2f0ee;flex-shrink:0;border:none;
   }
@@ -291,6 +300,25 @@
   .legal-page h2{font-size:1.05rem;margin:26px 0 8px;display:flex;align-items:center;gap:8px;}
   .legal-page p{color:var(--text-dim);font-size:0.92rem;line-height:1.9;}
   .legal-page ul{padding-inline-start:20px;margin:6px 0;color:var(--text-dim);font-size:0.92rem;line-height:1.9;}
+
+  /* contact form */
+  .contact-form{max-width:480px;margin-top:20px;}
+  .contact-form .field{margin-bottom:16px;}
+  .contact-form label{display:block;font-size:0.85rem;color:var(--text-dim);margin-bottom:6px;}
+  .contact-form input,.contact-form select,.contact-form textarea{
+    width:100%;background:var(--bg-soft);border:1px solid var(--border);border-radius:8px;
+    color:var(--text);padding:10px 12px;font-size:0.92rem;font-family:inherit;
+  }
+  .contact-form textarea{resize:vertical;min-height:110px;}
+  .contact-submit{
+    background:var(--orange);color:#1a0e05;border:none;padding:12px 20px;
+    border-radius:8px;font-weight:700;font-size:0.95rem;cursor:pointer;
+  }
+  .contact-submit:hover{background:var(--orange-dim);}
+  .contact-submit:disabled{opacity:0.6;cursor:default;}
+  .contact-status{margin-top:12px;font-size:0.88rem;color:var(--text-dim);}
+  .contact-status.success{color:#4caf7d;}
+  .contact-status.error{color:#e0524a;}
 
   /* compare widget */
   #compare{padding-block:32px;}
@@ -705,7 +733,7 @@
   <p>قد نحدّث هذه السياسة من فترة لأخرى، وسننشر أي تعديل جوهري على هذه الصفحة مع تاريخ التحديث.</p>
 
   <h2><svg class="icon icon-20"><use href="#icon-link"></use></svg>تواصل معنا</h2>
-  <p>لأي استفسار عن هذه السياسة أو بياناتك، تقدر تتواصل معنا عبر البريد الإلكتروني الموضح في صفحة «تواصل معنا».</p>
+  <p>لأي استفسار عن هذه السياسة أو بياناتك، تقدر تتواصل معنا عبر البريد الإلكتروني: <a href="mailto:laqtha.sa@gmail.com">laqtha.sa@gmail.com</a></p>
 </section>
 
 <section id="termsPage" class="wrap legal-page" hidden>
@@ -737,7 +765,41 @@
   <p>تخضع هذه الشروط لأنظمة المملكة العربية السعودية، وأي نزاع يُحل وفق الجهات القضائية المختصة فيها.</p>
 
   <h2><svg class="icon icon-20"><use href="#icon-link"></use></svg>تواصل معنا</h2>
-  <p>لأي استفسار عن هذه الشروط، تقدر تتواصل معنا عبر البريد الإلكتروني الموضح في صفحة «تواصل معنا».</p>
+  <p>لأي استفسار عن هذه الشروط، تقدر تتواصل معنا عبر البريد الإلكتروني: <a href="mailto:laqtha.sa@gmail.com">laqtha.sa@gmail.com</a></p>
+</section>
+
+<section id="contactPage" class="wrap legal-page" hidden>
+  <button class="back-link" id="contactBackBtn"><svg class="icon icon-16"><use href="#icon-arrow-back"></use></svg>رجوع للرئيسية</button>
+  <div class="category-hero">
+    <svg class="icon icon-32" style="color:var(--orange);"><use href="#icon-link"></use></svg>
+    <h1>تواصل معنا</h1>
+    <p>عندك استفسار، شكوى، أو اقتراح؟ عبّي الفورم وبنرد عليك على بريدك الإلكتروني.</p>
+  </div>
+
+  <form class="contact-form" id="contactForm">
+    <div class="field">
+      <label for="cf_name">الاسم</label>
+      <input type="text" id="cf_name" required>
+    </div>
+    <div class="field">
+      <label for="cf_email">البريد الإلكتروني</label>
+      <input type="email" id="cf_email" required>
+    </div>
+    <div class="field">
+      <label for="cf_category">نوع الرسالة</label>
+      <select id="cf_category">
+        <option value="استفسار">استفسار</option>
+        <option value="شكوى">شكوى</option>
+        <option value="اقتراح">اقتراح</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="cf_message">رسالتك</label>
+      <textarea id="cf_message" required></textarea>
+    </div>
+    <button type="submit" class="contact-submit" id="contactSubmitBtn">إرسال</button>
+    <p class="contact-status" id="contactStatus"></p>
+  </form>
 </section>
 
 <div id="homeContent" class="wrap">
@@ -755,7 +817,7 @@
       <h2><svg class="icon icon-24 icon-fill"><use href="#icon-bolt"></use></svg>عروض محدودة</h2>
     </div>
     <div class="deals-grid" id="dealsGrid"></div>
-    <p class="deals-note"><svg class="icon icon-16"><use href="#icon-clock"></use></svg>العدّاد هنا تجريبي بوقت افتراضي — بيتربط بمصدر حقيقي لوقت انتهاء العرض قبل الإطلاق الفعلي.</p>
+    <p class="deals-note" id="dealsEmpty" hidden>ما فيه عروض محدودة الوقت حاليًا، تابعنا قريبًا.</p>
   </section>
 
   <section id="compare">
@@ -812,9 +874,9 @@
     <nav class="footer-links">
       <button type="button" id="privacyLink" hidden>سياسة الخصوصية</button>
       <button type="button" id="termsLink" hidden>الشروط والأحكام</button>
-      <a href="#">تواصل معنا</a>
+      <button type="button" id="contactLink">تواصل معنا</button>
     </nav>
-    <p class="disclosure"><svg class="icon icon-16"><use href="#icon-info"></use></svg><span>هذا الموقع يشارك روابط تسويق بالعمولة (Affiliate) مع Amazon وSHEIN وTrendyol. عند شرائك عبر هذه الروابط قد نحصل على عمولة، بدون أي تكلفة إضافية عليك.</span></p>
+    <p class="disclosure"><svg class="icon icon-16"><use href="#icon-info"></use></svg><span>هذا الموقع يشارك روابط تسويق بالعمولة (Affiliate) مع Amazon وSHEIN وTrendyol وNoon. عند شرائك عبر هذه الروابط قد نحصل على عمولة، بدون أي تكلفة إضافية عليك.</span></p>
     <p class="copyright">© 2026 لقطها. جميع الحقوق محفوظة.</p>
   </div>
 </footer>
@@ -950,6 +1012,7 @@ async function loadProductsFromSupabase(){
       gallery: Array.isArray(row.gallery_images) ? row.gallery_images : [],
       featured_today: !!row.featured_today,
       featured_deals: !!row.featured_deals,
+      deal_ends_at: row.deal_ends_at || null,
       availability: row.availability || 'available',
     }));
     return true;
@@ -1119,7 +1182,7 @@ function crossFade(hideEls, showEls){
   }, 150);
 }
 
-const ALT_PAGES = ['categoryPage', 'privacyPage', 'termsPage'];
+const ALT_PAGES = ['categoryPage', 'privacyPage', 'termsPage', 'contactPage'];
 
 function currentAltPage(){
   return ALT_PAGES.map(id=>document.getElementById(id)).find(el=>!el.hidden) || null;
@@ -1174,6 +1237,44 @@ document.getElementById('privacyBackBtn').addEventListener('click', returnHome);
 document.getElementById('termsBackBtn').addEventListener('click', returnHome);
 document.getElementById('privacyLink').addEventListener('click', ()=>showAltPage('privacyPage'));
 document.getElementById('termsLink').addEventListener('click', ()=>showAltPage('termsPage'));
+document.getElementById('contactLink').addEventListener('click', ()=>showAltPage('contactPage'));
+document.getElementById('contactBackBtn').addEventListener('click', returnHome);
+
+document.getElementById('contactForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const btn = document.getElementById('contactSubmitBtn');
+  const statusEl = document.getElementById('contactStatus');
+  statusEl.textContent = '';
+  statusEl.className = 'contact-status';
+
+  const name = document.getElementById('cf_name').value.trim();
+  const email = document.getElementById('cf_email').value.trim();
+  const category = document.getElementById('cf_category').value;
+  const message = document.getElementById('cf_message').value.trim();
+
+  btn.disabled = true;
+  btn.textContent = 'جارٍ الإرسال...';
+
+  try{
+    const { error } = await supabaseClient.from('support_tickets').insert({
+      name, email, category, message
+    });
+    if(error){
+      statusEl.textContent = 'تعذر إرسال رسالتك، حاول مرة ثانية. (' + error.message + ')';
+      statusEl.classList.add('error');
+    } else {
+      statusEl.textContent = 'تم استلام رسالتك بنجاح، بنرد عليك على بريدك الإلكتروني قريبًا.';
+      statusEl.classList.add('success');
+      document.getElementById('contactForm').reset();
+    }
+  }catch(err){
+    statusEl.textContent = 'تعذر إرسال رسالتك، تأكد من اتصالك بالإنترنت وحاول مرة ثانية.';
+    statusEl.classList.add('error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'إرسال';
+});
 
 function goHome(e){
   pulseLogo(e.currentTarget);
@@ -1271,29 +1372,47 @@ function refreshGrid(){
 }
 
 function renderDeals(){
-  const manual = PRODUCTS.filter(p=>p.featured_deals);
+  const now = Date.now();
+  const notExpired = p => !p.deal_ends_at || new Date(p.deal_ends_at).getTime() > now;
+  const manual = PRODUCTS.filter(p=>p.featured_deals && notExpired(p));
   let deals;
   if(manual.length > 0){
     deals = manual.slice(0,4);
     if(deals.length < 4){
-      const rest = [...PRODUCTS].filter(p=>!p.featured_deals && discountPct(p)>=20);
+      const rest = [...PRODUCTS].filter(p=>!p.featured_deals && discountPct(p)>=20 && notExpired(p));
       deals = deals.concat(rest.slice(0, 4-deals.length));
     }
   } else {
-    deals = PRODUCTS.filter(p=>discountPct(p)>=20).slice(0,4);
+    deals = PRODUCTS.filter(p=>discountPct(p)>=20 && notExpired(p)).slice(0,4);
   }
   const el = document.getElementById('dealsGrid');
-  el.innerHTML = deals.map((p,i)=>{
-    const timer = `<div class="deal-timer"><svg class="icon icon-14 icon-fill"><use href="#icon-clock"></use></svg><span class="timer-digits" data-end="${Date.now() + (i+1)*45*60*1000}">--:--:--</span></div>`;
+  const empty = document.getElementById('dealsEmpty');
+  if(deals.length === 0){
+    el.innerHTML = '';
+    if(empty) empty.hidden = false;
+    return;
+  }
+  if(empty) empty.hidden = true;
+  el.innerHTML = deals.map((p)=>{
+    const timer = p.deal_ends_at
+      ? `<div class="deal-timer"><svg class="icon icon-14 icon-fill"><use href="#icon-clock"></use></svg><span class="timer-digits" data-end="${new Date(p.deal_ends_at).getTime()}">--:--:--</span></div>`
+      : '';
     return cardHTML(p, timer);
   }).join('');
   updateTimers();
-  setInterval(updateTimers, 1000);
+  clearInterval(dealsTimerInterval);
+  dealsTimerInterval = setInterval(updateTimers, 1000);
 }
+let dealsTimerInterval = null;
 function updateTimers(){
   document.querySelectorAll('.timer-digits').forEach(t=>{
     const end = Number(t.dataset.end);
     let diff = Math.max(0, end - Date.now());
+    if(diff <= 0){
+      const card = t.closest('.card');
+      if(card) card.remove();
+      return;
+    }
     const h = String(Math.floor(diff/3600000)).padStart(2,'0');
     const m = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
     const s = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
