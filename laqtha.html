@@ -3,9 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لقطها — قبل لا تخلص!</title>
+<title>لقطها | قارن أسعار أمازون وشي إن وترنديول ونون في السعودية</title>
+<link rel="canonical" href="https://laqtha.vercel.app/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#141110">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://laqtha.vercel.app/#website",
+      "url": "https://laqtha.vercel.app/",
+      "name": "لقطها",
+      "alternateName": "Laqtha",
+      "description": "موقع سعودي يقارن أسعار نفس المنتج بين أمازون وشي إن وترنديول ونون بمكان واحد.",
+      "inLanguage": "ar-SA",
+      "publisher": { "@id": "https://laqtha.vercel.app/#org" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://laqtha.vercel.app/#org",
+      "name": "لقطها",
+      "url": "https://laqtha.vercel.app/",
+      "logo": "https://laqtha.vercel.app/og-image.png",
+      "sameAs": [
+        "https://www.facebook.com/profile.php?id=61593989074766",
+        "https://www.tiktok.com/@laqtha.sa",
+        "https://www.instagram.com/laqtha.sa",
+        "https://www.snapchat.com/add/laqtha.sa"
+      ]
+    }
+  ]
+}
+</script>
 <meta name="description" content="نقارن لك أسعار نفس المنتج بين Amazon وSHEIN وTrendyol وNoon بمكان واحد، عشان تشتري بأقل سعر ممكن.">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="لقطها">
 <meta property="og:url" content="https://laqtha.vercel.app/">
 <meta property="og:title" content="لقطها — قبل لا تخلص!">
 <meta property="og:description" content="نقارن لك أسعار نفس المنتج بين Amazon وSHEIN وTrendyol وNoon بمكان واحد، عشان تشتري بأقل سعر ممكن.">
@@ -1253,7 +1287,7 @@ function renderCategories(){
     btn.addEventListener('click', ()=>{
       document.querySelectorAll('.cat-item').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
-      showCategoryPage(btn.dataset.cat);
+      navigate('#cat/' + btn.dataset.cat);
       closeCatPanel();
     });
   });
@@ -1337,13 +1371,54 @@ function showCategoryPage(catKey){
   showAltPage('categoryPage');
 }
 
-document.getElementById('categoryBackBtn').addEventListener('click', returnHome);
-document.getElementById('privacyBackBtn').addEventListener('click', returnHome);
-document.getElementById('termsBackBtn').addEventListener('click', returnHome);
-document.getElementById('privacyLink').addEventListener('click', ()=>showAltPage('privacyPage'));
-document.getElementById('termsLink').addEventListener('click', ()=>showAltPage('termsPage'));
-document.getElementById('contactLink').addEventListener('click', ()=>showAltPage('contactPage'));
-document.getElementById('contactBackBtn').addEventListener('click', returnHome);
+// ===== التنقل عبر الرابط (يخلي زر الرجوع بالجوال يرجع داخل الموقع بدل ما يطلع منه) =====
+const PAGE_ROUTES = { '#privacy':'privacyPage', '#terms':'termsPage', '#contact':'contactPage' };
+
+function baseUrl(){ return location.pathname + location.search; }
+
+function navigate(hash){
+  if(location.hash === hash || (!hash && !location.hash)) { route(); return; }
+  history.pushState({ laqtha:true }, '', hash ? baseUrl() + hash : baseUrl());
+  route();
+}
+
+// زر "رجوع" داخل الصفحات: لو جاي من داخل الموقع نرجع خطوة، وإلا نروح للرئيسية
+function goBack(){
+  if(history.state && history.state.laqtha){ history.back(); }
+  else { history.replaceState(null, '', baseUrl()); route(); }
+}
+
+function route(){
+  const h = location.hash;
+
+  // نافذة المنتج تفتح فوق الصفحة الحالية بدون ما تغيّرها
+  const pm = h.match(/^#p(\d+)$/);
+  if(pm){
+    const id = Number(pm[1]);
+    if(PRODUCTS.some(p => p.id === id) && currentModalId !== id){
+      if(currentModalId !== null) closeModalUI();
+      openModal(id);
+    }
+    return;
+  }
+  if(currentModalId !== null) closeModalUI();
+
+  if(PAGE_ROUTES[h]){ showAltPage(PAGE_ROUTES[h]); return; }
+  const cm = h.match(/^#cat\/(.+)$/);
+  if(cm){ showCategoryPage(decodeURIComponent(cm[1])); return; }
+  returnHome();
+}
+
+window.addEventListener('popstate', route);
+window.addEventListener('hashchange', route);
+
+document.getElementById('categoryBackBtn').addEventListener('click', goBack);
+document.getElementById('privacyBackBtn').addEventListener('click', goBack);
+document.getElementById('termsBackBtn').addEventListener('click', goBack);
+document.getElementById('privacyLink').addEventListener('click', ()=>navigate('#privacy'));
+document.getElementById('termsLink').addEventListener('click', ()=>navigate('#terms'));
+document.getElementById('contactLink').addEventListener('click', ()=>navigate('#contact'));
+document.getElementById('contactBackBtn').addEventListener('click', goBack);
 
 document.getElementById('contactForm').addEventListener('submit', async (e)=>{
   e.preventDefault();
@@ -1451,7 +1526,7 @@ document.getElementById('newsletterForm').addEventListener('submit', async (e)=>
 
 function goHome(e){
   pulseLogo(e.currentTarget);
-  returnHome();
+  navigate('');
   closeCatPanel();
 }
 document.getElementById('logoHome').addEventListener('click', goHome);
@@ -1663,7 +1738,7 @@ function openModal(id){
   `;
   document.getElementById('modalOverlay').hidden = false;
   lockScroll();
-  history.replaceState(null, '', location.pathname + '#p' + id);
+  currentModalId = id;
   document.getElementById('modalShareBtn').addEventListener('click', ()=>shareProduct(p));
 
   const galleryWrap = document.getElementById('modalGalleryWrap');
@@ -1721,13 +1796,20 @@ document.getElementById('modalClose').addEventListener('click', closeModal);
 document.getElementById('modalOverlay').addEventListener('click', (e)=>{
   if(e.target.id==='modalOverlay') closeModal();
 });
-function closeModal(){
+let currentModalId = null;
+function closeModalUI(){
   clearInterval(modalAutoplayTimer);
   document.getElementById('modalOverlay').hidden = true;
   unlockScroll();
-  if(location.hash.startsWith('#p')){
-    history.replaceState(null, '', location.pathname);
+  currentModalId = null;
+}
+function closeModal(){
+  if(/^#p\d+$/.test(location.hash)){
+    // لو النافذة انفتحت من داخل الموقع نرجع خطوة (نفس زر الرجوع)، ولو من رابط مشاركة نمسح الرابط
+    if(history.state && history.state.laqtha){ history.back(); return; }
+    history.replaceState(null, '', baseUrl());
   }
+  closeModalUI();
 }
 
 document.addEventListener('click', (e)=>{
@@ -1739,14 +1821,14 @@ document.addEventListener('click', (e)=>{
     return;
   }
   const openBtn = e.target.closest('[data-open]');
-  if(openBtn){ openModal(Number(openBtn.dataset.open)); return; }
+  if(openBtn){ navigate('#p' + openBtn.dataset.open); return; }
   const card = e.target.closest('.card[data-id]');
-  if(card){ openModal(Number(card.dataset.id)); }
+  if(card){ navigate('#p' + card.dataset.id); }
 });
 document.addEventListener('keydown', (e)=>{
   if(e.key !== 'Enter' && e.key !== ' ') return;
   const card = e.target.closest('.card[data-id]');
-  if(card){ e.preventDefault(); openModal(Number(card.dataset.id)); }
+  if(card){ e.preventDefault(); navigate('#p' + card.dataset.id); }
 });
 
 async function shareProduct(p){
@@ -1775,14 +1857,6 @@ async function shareProduct(p){
   }
 }
 
-function checkUrlForProduct(){
-  const match = location.hash.match(/^#p(\d+)$/);
-  if(match){
-    const id = Number(match[1]);
-    if(PRODUCTS.some(p => p.id === id)) openModal(id);
-  }
-}
-window.addEventListener('hashchange', checkUrlForProduct);
 
 let toastTimer;
 function showToast(msg){
@@ -1855,7 +1929,7 @@ function renderAll(){
 async function initApp(){
   await Promise.all([loadProductsFromSupabase(), loadCategoriesFromSupabase()]);
   renderAll();
-  checkUrlForProduct();
+  route();
   subscribeToProductChanges();
   subscribeToCategoryChanges();
 }
