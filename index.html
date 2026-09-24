@@ -1126,7 +1126,7 @@ async function loadProductsFromSupabase(){
 }
 
 function maxStorePrice(p){
-  const vals = Object.values(p.alt).filter(v=>v!==null);
+  const vals = Object.values(p.alt).filter(v=>v!=null);
   return Math.max(...vals);
 }
 function discountPct(p){
@@ -1193,7 +1193,7 @@ function renderToday(){
 }
 
 function renderCompare(p){
-  const entries = Object.entries(p.alt).filter(([,v])=>v!==null);
+  const entries = Object.entries(p.alt).filter(([,v])=>v!=null);
   const max = Math.max(...entries.map(([,v])=>v));
   const min = Math.min(...entries.map(([,v])=>v));
   const rows = entries.map(([store,price])=>{
@@ -1219,7 +1219,8 @@ function initCompareSearch(){
   const datalist = document.getElementById('compareProductsList');
   datalist.innerHTML = PRODUCTS.map(p=>`<option value="${p.name}">`).join('');
   const input = document.getElementById('compareSearchInput');
-  const defaultProduct = PRODUCTS.find(x=>x.id===1);
+  const defaultProduct = PRODUCTS.find(x=>x.id===1) || PRODUCTS[0];
+  if(!defaultProduct) return;
   input.value = defaultProduct.name;
   renderCompare(defaultProduct);
 
@@ -1596,7 +1597,7 @@ let modalAutoplayTimer = null;
 
 function openModal(id){
   const p = PRODUCTS.find(x=>x.id===id);
-  const vals = Object.values(p.alt).filter(v=>v!==null);
+  const vals = Object.values(p.alt).filter(v=>v!=null);
   const min = Math.min(...vals);
   let selectedStore = p.store;
   const photos = [p.image_url, ...(p.gallery||[])].filter(Boolean);
@@ -1845,11 +1846,10 @@ document.getElementById('headerSearchBtn').addEventListener('click', ()=>{
 });
 
 function renderAll(){
-  renderToday();
-  initCompareSearch();
-  renderCategories();
-  refreshGrid();
-  renderDeals();
+  // كل قسم يشتغل لحاله: لو صار خطأ في قسم، باقي الأقسام تكمل عادي
+  [renderToday, initCompareSearch, renderCategories, refreshGrid, renderDeals].forEach(fn=>{
+    try{ fn(); }catch(err){ console.error('خطأ في ' + fn.name + ':', err); }
+  });
 }
 
 async function initApp(){
