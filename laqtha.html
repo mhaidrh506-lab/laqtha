@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لقطها | قارن أسعار أمازون وشي إن وترنديول ونون في السعودية</title>
+<title>لقطها | أفضل العروض من أمازون وشي إن في السعودية</title>
 <link rel="canonical" href="https://laqtha.vercel.app/">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#141110">
@@ -17,7 +17,7 @@
       "url": "https://laqtha.vercel.app/",
       "name": "لقطها",
       "alternateName": "Laqtha",
-      "description": "موقع سعودي يقارن أسعار نفس المنتج بين أمازون وشي إن وترنديول ونون بمكان واحد.",
+      "description": "موقع سعودي يجمع أفضل العروض من أمازون وشي إن بمكان واحد، مرتبة حسب القسم.",
       "inLanguage": "ar-SA",
       "publisher": { "@id": "https://laqtha.vercel.app/#org" }
     },
@@ -37,19 +37,19 @@
   ]
 }
 </script>
-<meta name="description" content="نقارن لك أسعار نفس المنتج بين Amazon وSHEIN وTrendyol وNoon بمكان واحد، عشان تشتري بأقل سعر ممكن.">
+<meta name="description" content="أفضل اللقطات والعروض من Amazon وSHEIN بمكان واحد، مرتبة حسب القسم عشان تلقى اللي تبيه بسرعة.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="لقطها">
 <meta property="og:url" content="https://laqtha.vercel.app/">
 <meta property="og:title" content="لقطها — قبل لا تخلص!">
-<meta property="og:description" content="نقارن لك أسعار نفس المنتج بين Amazon وSHEIN وTrendyol وNoon بمكان واحد، عشان تشتري بأقل سعر ممكن.">
+<meta property="og:description" content="أفضل اللقطات والعروض من Amazon وSHEIN بمكان واحد، مرتبة حسب القسم عشان تلقى اللي تبيه بسرعة.">
 <meta property="og:image" content="https://laqtha.vercel.app/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="ar_SA">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="لقطها — قبل لا تخلص!">
-<meta name="twitter:description" content="نقارن لك أسعار نفس المنتج بين Amazon وSHEIN وTrendyol وNoon بمكان واحد، عشان تشتري بأقل سعر ممكن.">
+<meta name="twitter:description" content="أفضل اللقطات والعروض من Amazon وSHEIN بمكان واحد، مرتبة حسب القسم عشان تلقى اللي تبيه بسرعة.">
 <meta name="twitter:image" content="https://laqtha.vercel.app/og-image.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ff5a1f'/%3E%3Cpath d='M10 8h7l5 5-9 11-8-8z' fill='none' stroke='%23141110' stroke-width='2' stroke-linejoin='round'/%3E%3Ccircle cx='15' cy='12' r='1.5' fill='%23141110'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -190,6 +190,206 @@
     display:inline-flex;align-items:center;gap:6px;color:var(--text-dim);font-size:0.82rem;font-weight:500;
   }
   .trust-bar .icon{color:var(--orange);}
+
+
+  /* ===== واجهة المتجر الجديدة ===== */
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+
+  .cat-strip{border-top:1px solid var(--border);}
+  .cat-strip-inner{
+    max-width:1120px;margin-inline:auto;padding:0 20px;
+    display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;
+  }
+  .cat-strip-inner::-webkit-scrollbar{display:none;}
+  .cat-strip button{
+    flex:0 0 auto;background:none;border:none;color:var(--text-dim);
+    font-size:0.88rem;font-weight:600;padding:10px 12px;position:relative;white-space:nowrap;
+  }
+  .cat-strip button:hover{color:var(--text);}
+  .cat-strip button.active{color:var(--orange);}
+  .cat-strip button.active::after{
+    content:'';position:absolute;inset-inline:12px;bottom:0;height:2px;background:var(--orange);border-radius:2px;
+  }
+
+  .hero.hero-v2{padding:20px 20px 8px;text-align:start;background:none;}
+  .hero-v2 .search-wrap{max-width:none;margin:0;display:none;}
+  .hero-v2 .search-wrap.open{display:block;margin:0 0 14px;animation:search-in .28s cubic-bezier(.2,.8,.2,1);}
+  @keyframes search-in{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:none;}}
+  #headerSearchBtn.active{border-color:var(--orange);color:var(--orange);}
+  .hero-v2 .search-wrap input{padding-block:13px;}
+
+  .promo{position:relative;border-radius:16px;overflow:hidden;background:var(--surface);border:1px solid var(--border);}
+  .promo-track{display:flex;transition:transform .55s cubic-bezier(.2,.7,.2,1);}
+  .promo-slide{
+    flex:0 0 100%;position:relative;cursor:pointer;overflow:hidden;
+    display:grid;grid-template-columns:1fr 44%;min-height:200px;
+    background:radial-gradient(ellipse 420px 240px at 90% 0%, rgba(255,90,31,0.24), transparent 70%), var(--surface);
+  }
+  .promo-overlay{grid-column:1;grid-row:1;display:flex;flex-direction:column;justify-content:center;padding:16px 16px 30px;min-width:0;}
+  .promo-media{grid-column:2;grid-row:1;display:grid;grid-template-columns:1fr;gap:3px;background:#efeceb;}
+  .promo-media.two{grid-template-columns:1fr 1fr;}
+  .promo-media > div{background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .promo-media img{width:100%;height:100%;object-fit:contain;padding:10px;transition:transform .6s ease;}
+  .promo-media .product-icon{width:36%;height:36%;color:#c9c2ba;}
+  .promo-slide:hover .promo-media img{transform:scale(1.05);}
+  @media(max-width:640px){ .promo-media.two{grid-template-columns:1fr;} .promo-media.two > div + div{display:none;} }
+  .promo-text{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;}
+  .promo-kicker{
+    display:inline-flex;align-items:center;gap:5px;font-size:0.68rem;font-weight:800;color:#fff;
+    background:var(--orange);padding:3px 10px;border-radius:999px;
+  }
+  .promo-kicker .icon{width:12px;height:12px;color:#fff;}
+  .promo-name{
+    font-family:var(--font-display);font-weight:800;font-size:clamp(0.92rem,2.2vw,1.35rem);line-height:1.35;color:var(--text);
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .promo-price-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+  .promo-price{font-family:var(--font-display);font-weight:800;font-size:clamp(1.1rem,3vw,1.6rem);color:var(--tag-yellow);}
+  .promo-old{color:var(--text-dim);text-decoration:line-through;font-size:0.8rem;}
+  .promo-off{background:var(--tag-yellow);color:#241a02;font-weight:800;font-size:0.7rem;padding:2px 8px;border-radius:6px;}
+  .promo-cta{
+    margin-top:2px;background:var(--orange);color:#fff;border:none;border-radius:999px;
+    padding:8px 16px;font-weight:800;font-size:0.82rem;display:inline-flex;align-items:center;gap:6px;
+    box-shadow:0 8px 22px -8px rgba(255,90,31,0.6);
+  }
+  .promo-cta:hover{background:var(--orange-dim);}
+  @media(min-width:760px){
+    .promo-slide{min-height:250px;grid-template-columns:1fr 48%;}
+    .promo-overlay{padding:22px 60px 34px 24px;}
+    .promo-text{gap:8px;}
+  }
+  @media(max-width:400px){ .promo-slide{min-height:180px;} .promo-name{-webkit-line-clamp:2;font-size:0.88rem;} .promo-cta{padding:7px 12px;font-size:0.76rem;} }
+  .promo-dots{position:absolute;bottom:10px;inset-inline-start:16px;display:flex;justify-content:flex-start;gap:6px;}
+  @media(min-width:760px){ .promo-dots{inset-inline-start:60px;} }
+  .promo-dots button{width:8px;height:8px;border-radius:999px;border:none;padding:0;background:var(--border);transition:width .25s ease, background .25s ease;}
+  .promo-dots button.active{width:22px;background:var(--orange);}
+  .promo-nav{
+    position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:36px;height:36px;border-radius:999px;
+    background:rgba(20,17,16,0.7);border:1px solid var(--border);color:var(--text);display:none;align-items:center;justify-content:center;
+  }
+  .promo-nav.prev{inset-inline-start:10px;}
+  .promo-nav.next{inset-inline-end:10px;}
+  @media(min-width:760px){ .promo-nav{display:flex;} }
+  @media(prefers-reduced-motion:reduce){ .promo-track{transition:none;} }
+
+  .cat-tiles{
+    display:flex;gap:14px;overflow-x:auto;padding:20px 2px 6px;scrollbar-width:none;scroll-snap-type:x mandatory;
+  }
+  .cat-tiles::-webkit-scrollbar{display:none;}
+  .cat-tile{
+    flex:0 0 auto;width:92px;background:none;border:none;color:var(--text);padding:0;
+    display:flex;flex-direction:column;align-items:center;gap:8px;scroll-snap-align:start;
+  }
+  .cat-tile-img{
+    width:92px;height:92px;border-radius:18px;background:#fff;overflow:hidden;border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;transition:transform .15s ease, border-color .15s ease;
+  }
+  .cat-tile-img img{width:100%;height:100%;object-fit:cover;}
+  .cat-tile-img.no-img{background:var(--surface);}
+  .cat-tile-img .icon{width:36px;height:36px;color:var(--orange);}
+  .cat-tile:hover .cat-tile-img{transform:translateY(-2px);border-color:var(--orange);}
+  .cat-tile span{font-size:0.82rem;font-weight:600;text-align:center;line-height:1.3;}
+  @media(min-width:760px){ .cat-tiles{justify-content:center;flex-wrap:wrap;overflow:visible;} .cat-tile{width:104px;} .cat-tile-img{width:104px;height:104px;} }
+
+  .store-badge{
+    position:absolute;bottom:8px;inset-inline-end:8px;z-index:2;
+    background:rgba(20,17,16,0.82);font-size:0.66rem;font-weight:800;padding:2px 8px;border-radius:6px;border:none;
+  }
+
+  .bottom-nav{
+    position:fixed;bottom:0;inset-inline:0;z-index:40;
+    display:flex;justify-content:space-around;align-items:center;
+    height:62px;padding-bottom:env(safe-area-inset-bottom,0px);
+    background:rgba(20,17,16,0.96);backdrop-filter:blur(14px);border-top:1px solid var(--border);
+  }
+  .bn-tab{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    background:none;border:none;color:var(--text-dim);font-size:0.68rem;font-weight:700;padding:6px 0;
+  }
+  .bn-tab .icon{width:20px;height:20px;}
+  .bn-tab.active{color:var(--orange);}
+  body{padding-bottom:calc(62px + env(safe-area-inset-bottom,0px));}
+  body .toast{bottom:calc(76px + env(safe-area-inset-bottom,0px));}
+  @media(min-width:760px){ .bottom-nav{display:none;} body{padding-bottom:0;} body .toast{bottom:20px;} }
+
+
+  /* ===== تحسينات الواجهة v3 ===== */
+  body{background:
+    radial-gradient(900px 500px at 100% -10%, rgba(255,90,31,0.07), transparent 60%),
+    radial-gradient(700px 400px at -10% 30%, rgba(255,90,31,0.04), transparent 60%),
+    var(--bg);}
+  .fav-badge{
+    position:absolute;top:8px;inset-inline-end:8px;z-index:3;
+    width:30px;height:30px;border-radius:999px;border:none;
+    background:rgba(255,255,255,0.92);color:#7a6f66;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.18);transition:transform .15s ease, color .15s ease;
+  }
+  .fav-badge .icon{width:16px;height:16px;}
+  .fav-badge:hover{transform:scale(1.08);color:#e0245e;}
+  .fav-badge.on{color:#e0245e;}
+  .fav-badge.pop{animation:fav-pop .45s cubic-bezier(.2,.9,.3,1.4);}
+  @keyframes fav-pop{0%{transform:scale(1);}30%{transform:scale(.7);}70%{transform:scale(1.25);}100%{transform:scale(1);}}
+  .card .share-badge{top:44px;}
+  .avail-badge{top:auto !important;bottom:34px;inset-inline-end:8px;}
+  .fav-head-btn{position:relative;}
+  .fav-dot{
+    position:absolute;top:-4px;inset-inline-end:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;
+    background:#e0245e;color:#fff;font-size:0.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;
+    border:2px solid var(--bg);
+  }
+  .bn-ico{position:relative;display:inline-flex;}
+  .bn-ico .fav-dot{top:-6px;inset-inline-end:-10px;}
+  .fav-hero-icon{color:#e0245e !important;}
+  .fav-empty{text-align:center;padding:40px 16px 60px;color:var(--text-dim);}
+  .fav-empty > .icon{width:56px;height:56px;color:var(--border);margin:0 auto 12px;display:block;}
+  .fav-empty p{margin:0 0 18px;line-height:1.9;}
+
+  .value-strip{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;
+  }
+  .value-strip > div{
+    display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;
+    background:var(--surface);border:1px solid var(--border);
+  }
+  .value-strip .icon{color:var(--orange);flex:none;}
+  .value-strip span{display:flex;flex-direction:column;font-size:0.72rem;color:var(--text-dim);line-height:1.4;}
+  .value-strip b{color:var(--text);font-size:0.82rem;}
+  @media(max-width:560px){
+    .value-strip > div{flex-direction:column;text-align:center;gap:6px;padding:10px 6px;}
+    .value-strip span{align-items:center;}
+  }
+
+  .see-all{
+    margin-inline-start:auto;background:none;border:1px solid var(--border);color:var(--text-dim);
+    padding:6px 14px;border-radius:999px;font-size:0.8rem;font-weight:700;display:inline-flex;align-items:center;gap:6px;
+  }
+  .see-all:hover{border-color:var(--orange);color:var(--orange);}
+  .shelf-sec{padding-block:20px;}
+  .shelf-sec .section-head{align-items:center;}
+  .shelf-sec h2 .chip-dot{display:inline-block;width:12px;height:12px;margin-inline-end:8px;vertical-align:middle;}
+
+  /* skeleton */
+  .sk{position:relative;overflow:hidden;background:var(--surface);border-radius:12px;}
+  .sk::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    animation:sk-move 1.2s infinite;transform:translateX(100%);
+  }
+  @keyframes sk-move{to{transform:translateX(-100%);}}
+  .sk-card{aspect-ratio:3/4;}
+  .shelf-scroll .sk-card{min-width:160px;flex:0 0 160px;}
+  .sk-banner{height:200px;border-radius:16px;}
+  @media(min-width:760px){ .sk-banner{height:250px;} }
+  @media(prefers-reduced-motion:reduce){ .sk::after{animation:none;} }
+
+  /* scroll reveal */
+  .reveal-ready .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s cubic-bezier(.2,.7,.2,1);}
+  .reveal-ready .reveal.in{opacity:1;transform:none;}
+  @media(prefers-reduced-motion:reduce){ .reveal-ready .reveal{opacity:1;transform:none;transition:none;} }
+
+  /* card polish */
+  .card-img img{transition:transform .5s cubic-bezier(.2,.7,.2,1);}
+  .card:hover .card-img img{transform:scale(1.06);}
 
   /* ticker */
   .ticker{
@@ -375,7 +575,6 @@
   .contact-status.error{color:#e0524a;}
 
   /* compare widget */
-  #compare{padding-block:32px;}
   .compare-search-wrap{position:relative;max-width:270px;margin-bottom:12px;}
   .compare-search-wrap .search-icon{
     position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);
@@ -438,6 +637,101 @@
     padding-block:7px;padding-inline-start:32px;padding-inline-end:12px;
   }
   .sort-select-wrap select:focus{border-color:var(--orange);outline:none;}
+
+
+  /* ===== الفلترة الحديثة (لوحة منبثقة) ===== */
+  .filter-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;}
+  .filter-open-btn{
+    display:inline-flex;align-items:center;gap:8px;position:relative;
+    background:var(--surface);border:1px solid var(--border);color:var(--text);
+    padding:9px 16px;border-radius:999px;font-weight:700;font-size:0.86rem;
+    transition:border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+  }
+  .filter-open-btn .icon{color:var(--orange);}
+  .filter-open-btn:hover{border-color:var(--orange);transform:translateY(-1px);box-shadow:0 8px 20px -10px rgba(255,90,31,0.6);}
+  .filter-open-btn.has-active{border-color:var(--orange);}
+  .filter-count{
+    min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--orange);color:#fff;
+    font-size:0.72rem;font-weight:800;display:inline-flex;align-items:center;justify-content:center;
+    animation:count-pop .3s ease;
+  }
+  @keyframes count-pop{0%{transform:scale(.4);}70%{transform:scale(1.15);}100%{transform:scale(1);}}
+  .active-pills{display:flex;gap:6px;flex-wrap:wrap;}
+  .active-pill{
+    display:inline-flex;align-items:center;gap:6px;background:rgba(255,90,31,0.12);color:var(--orange);
+    border:1px solid rgba(255,90,31,0.35);padding:5px 8px 5px 12px;border-radius:999px;font-size:0.78rem;font-weight:700;
+    animation:pill-in .25s ease;
+  }
+  .active-pill button{
+    width:18px;height:18px;border-radius:999px;border:none;background:rgba(255,90,31,0.25);color:var(--orange);
+    display:inline-flex;align-items:center;justify-content:center;padding:0;
+  }
+  .active-pill button .icon{width:10px;height:10px;}
+  @keyframes pill-in{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+  .fsheet-overlay{
+    position:fixed;inset:0;z-index:58;background:rgba(10,8,7,0);
+    display:flex;align-items:flex-end;justify-content:center;transition:background .28s ease;
+  }
+  .fsheet-overlay.open{background:rgba(10,8,7,0.62);backdrop-filter:blur(3px);}
+  .fsheet{
+    width:100%;max-width:560px;max-height:86vh;display:flex;flex-direction:column;
+    background:var(--surface);border:1px solid var(--border);border-bottom:none;
+    border-radius:24px 24px 0 0;box-shadow:0 -20px 50px rgba(0,0,0,0.5);
+    transform:translateY(100%);transition:transform .34s cubic-bezier(.2,.8,.2,1);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .fsheet-overlay.open .fsheet{transform:none;}
+  @media(min-width:760px){
+    .fsheet-overlay{align-items:stretch;justify-content:flex-end;}
+    .fsheet{max-width:400px;max-height:none;height:100%;border-radius:0;border:none;border-inline-start:1px solid var(--border);
+      transform:translateX(-100%);}
+    .fsheet-handle{display:none;}
+  }
+  @media(prefers-reduced-motion:reduce){ .fsheet,.fsheet-overlay{transition:none;} }
+  .fsheet-handle{padding:10px 0 2px;display:flex;justify-content:center;cursor:grab;touch-action:none;}
+  .fsheet-handle span{width:44px;height:5px;border-radius:999px;background:var(--border);}
+  .fsheet-head{display:flex;align-items:center;gap:10px;padding:10px 20px 14px;border-bottom:1px solid var(--border);}
+  .fsheet-head h3{font-size:1.05rem;display:flex;align-items:center;gap:8px;margin-inline-end:auto;}
+  .fsheet-head h3 .icon{color:var(--orange);}
+  .fsheet-reset{background:none;border:none;color:var(--text-dim);font-weight:700;font-size:0.82rem;padding:6px 8px;}
+  .fsheet-reset:hover{color:var(--orange);}
+  .fsheet-close{width:34px;height:34px;border-radius:999px;background:var(--bg);border:1px solid var(--border);color:var(--text);display:flex;align-items:center;justify-content:center;}
+  .fsheet-body{padding:6px 20px 10px;overflow-y:auto;flex:1;}
+  .fsheet-group{padding:16px 0;}
+  .fsheet-group + .fsheet-group{border-top:1px dashed var(--border);}
+  .fsheet-label{font-weight:800;font-size:0.9rem;margin-bottom:12px;}
+
+  .seg{position:relative;display:grid;grid-template-columns:repeat(3,1fr);background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:4px;}
+  .seg button{position:relative;z-index:1;background:none;border:none;color:var(--text-dim);font-weight:700;font-size:0.84rem;padding:10px 4px;border-radius:10px;transition:color .2s ease;}
+  .seg button.active{color:#fff;}
+  .seg-thumb{
+    position:absolute;top:4px;bottom:4px;inset-inline-start:4px;width:calc((100% - 8px) / 3);
+    background:var(--orange);border-radius:10px;box-shadow:0 6px 16px -6px rgba(255,90,31,0.7);
+    transition:transform .3s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .tile-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .tile-chips .filter-chip{
+    display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 8px;border-radius:14px;
+    background:var(--bg);font-size:0.86rem;transition:all .2s ease;
+  }
+  .tile-chips .filter-chip.active{background:rgba(255,90,31,0.14);border-color:var(--orange);color:var(--text);box-shadow:inset 0 0 0 1px var(--orange);}
+  .price-tiles{grid-template-columns:repeat(2,1fr);}
+  .price-tiles .filter-chip{flex-direction:column;gap:2px;padding:14px 8px;}
+  .price-tiles .filter-chip b{font-family:var(--font-display);font-size:0.98rem;}
+  .price-tiles .filter-chip small{color:var(--text-dim);font-size:0.72rem;font-weight:600;}
+  .chip-dot{width:9px;height:9px;border-radius:999px;flex:none;}
+  .dot-all{background:linear-gradient(135deg,var(--store-amazon),var(--store-shein));}
+  .dot-amazon{background:var(--store-amazon);}
+  .dot-shein{background:var(--store-shein);}
+
+  .fsheet-apply{
+    margin:8px 20px 16px;padding:14px;border:none;border-radius:14px;background:var(--orange);color:#fff;
+    font-weight:800;font-size:0.95rem;box-shadow:0 10px 24px -10px rgba(255,90,31,0.8);
+  }
+  .fsheet-apply:hover{background:var(--orange-dim);}
+  .fsheet-apply b{font-family:var(--font-display);}
 
   /* deals */
   .deals-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
@@ -600,6 +894,12 @@
   <circle cx="7.2" cy="7.2" r="1.3" fill="currentColor"/>
   <path d="M14 8l-4.5 8h3l-1 4 5-8h-3z" fill="currentColor"/>
 </symbol>
+<symbol id="icon-chevron" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="icon-sliders" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></g></symbol>
+<symbol id="icon-heart" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9.4C1.4 7.6 3.6 4 7.2 4c2 0 3.5 1.1 4.8 2.8C13.3 5.1 14.8 4 16.8 4c3.6 0 5.8 3.6 4.5 7.1-1.8 4.8-9.3 9.4-9.3 9.4z" fill="currentColor"/></symbol>
+<symbol id="icon-heart-line" viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-9.3-9.4C1.4 7.6 3.6 4 7.2 4c2 0 3.5 1.1 4.8 2.8C13.3 5.1 14.8 4 16.8 4c3.6 0 5.8 3.6 4.5 7.1-1.8 4.8-9.3 9.4-9.3 9.4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+<symbol id="icon-eye" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></g></symbol>
+<symbol id="icon-tag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8L3 12z"/><circle cx="7.5" cy="8.5" r="1.5"/></g></symbol>
 <symbol id="icon-search" viewBox="0 0 24 24">
   <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/>
   <line x1="15.5" y1="15.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -750,43 +1050,65 @@
       <a href="#today">لقطات اليوم</a>
     </nav>
     <div class="header-actions">
+      <button class="icon-btn fav-head-btn" aria-label="المفضلة" id="headerFavBtn"><svg class="icon icon-20"><use href="#icon-heart-line"></use></svg><span class="fav-dot" id="headerFavCount" hidden>0</span></button>
       <button class="icon-btn" aria-label="بحث" id="headerSearchBtn"><svg class="icon icon-20"><use href="#icon-search"></use></svg></button>
       <button class="icon-btn" id="categoriesToggle" aria-haspopup="true" aria-expanded="false" aria-label="تصفح الأقسام">
         <svg class="icon icon-20"><use href="#icon-menu"></use></svg>
       </button>
     </div>
   </div>
+  <nav class="cat-strip" aria-label="الأقسام">
+    <div class="cat-strip-inner" id="catStrip"></div>
+  </nav>
 </header>
 
-<section class="hero" id="home">
-  <h1 class="hero-title">لقطها<span class="accent">قبل لا تخلص!</span></h1>
-  <p class="hero-sub">دورنا نلقى لك اللقطة، والاختيار لك — من Amazon وSHEIN وTrendyol في مكان واحد.</p>
+<section class="hero hero-v2 wrap" id="home">
+  <h1 class="sr-only">لقطها — أفضل العروض من أمازون وشي إن بمكان واحد</h1>
   <div class="search-wrap">
     <svg class="icon icon-20 search-icon"><use href="#icon-search"></use></svg>
     <input id="searchInput" type="search" name="laqtha_q_9f2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore data-form-type="other" placeholder="وش تدور عليه؟ سماعة، شنطة، عطر...">
   </div>
-  <div class="quick-chips">
-    <button data-q="سماعة"><svg class="icon icon-16"><use href="#icon-electronics"></use></svg>سماعة</button>
-    <button data-q="شنطة"><svg class="icon icon-16"><use href="#icon-fashion"></use></svg>شنطة</button>
-    <button data-q="كرسي"><svg class="icon icon-16"><use href="#icon-home"></use></svg>كرسي</button>
-    <button data-q="عطر"><svg class="icon icon-16"><use href="#icon-beauty"></use></svg>عطر</button>
-    <button data-q="مقلاة"><svg class="icon icon-16"><use href="#icon-home"></use></svg>مقلاة هوائية</button>
+  <div class="promo" id="promo" aria-roledescription="carousel" aria-label="لقطات مختارة" hidden>
+    <div class="promo-track" id="promoTrack"></div>
+    <button type="button" class="promo-nav prev" id="promoPrev" aria-label="السابق"><svg class="icon icon-16" style="transform:scaleX(-1)"><use href="#icon-chevron"></use></svg></button>
+    <button type="button" class="promo-nav next" id="promoNext" aria-label="التالي"><svg class="icon icon-16"><use href="#icon-chevron"></use></svg></button>
+    <div class="promo-dots" id="promoDots"></div>
   </div>
-  <div class="trust-bar">
-    <span><svg class="icon icon-16"><use href="#icon-cart"></use></svg>3 متاجر بمكان واحد</span>
-    <span><svg class="icon icon-16 icon-fill"><use href="#icon-fire"></use></svg>عروض تتحدث يوميًا</span>
-    <span><svg class="icon icon-16"><use href="#icon-scale"></use></svg>مقارنة أسعار فورية</span>
+  <div class="cat-tiles" id="catTiles"></div>
+  <div class="value-strip">
+    <div><svg class="icon icon-20"><use href="#icon-shield"></use></svg><span><b>روابط رسمية</b>مباشرة من المتجر</span></div>
+    <div><svg class="icon icon-20"><use href="#icon-cart"></use></svg><span><b>الدفع والشحن</b>من المتجر نفسه</span></div>
+    <div><svg class="icon icon-20 icon-fill"><use href="#icon-fire"></use></svg><span><b>لقطات جديدة</b>تنضاف باستمرار</span></div>
   </div>
 </section>
 
 <div class="ticker" aria-hidden="true">
   <div class="ticker-track">
-    <span><svg class="icon icon-14 icon-fill"><use href="#icon-fire"></use></svg>لقطها.. قبل لا تخلص!</span><span>Amazon</span><span>SHEIN</span><span>Trendyol</span>
-    <span><svg class="icon icon-14 icon-fill"><use href="#icon-fire"></use></svg>عروض تتحدث يوميًا</span><span>مقارنة أسعار فورية</span>
-    <span><svg class="icon icon-14 icon-fill"><use href="#icon-fire"></use></svg>لقطها.. قبل لا تخلص!</span><span>Amazon</span><span>SHEIN</span><span>Trendyol</span>
-    <span><svg class="icon icon-14 icon-fill"><use href="#icon-fire"></use></svg>عروض تتحدث يوميًا</span><span>مقارنة أسعار فورية</span>
+    <span><svg class="icon icon-14 icon-fill"><use href="#icon-fire"></use></svg>لقطها.. قبل لا تخلص!</span><span>Amazon</span><span>SHEIN</span>
+    <span><svg class="icon icon-14 icon-fill"><use href="#icon-fire"></use></svg>عروض تتحدث يوميًا</span><span>كل اللقطات بمكان واحد</span>
+    <span><svg class="icon icon-14 icon-fill"><use href="#icon-fire"></use></svg>لقطها.. قبل لا تخلص!</span><span>Amazon</span><span>SHEIN</span>
+    <span><svg class="icon icon-14 icon-fill"><use href="#icon-fire"></use></svg>عروض تتحدث يوميًا</span><span>كل اللقطات بمكان واحد</span>
   </div>
 </div>
+
+<section id="favPage" class="wrap" hidden>
+  <button class="back-link" id="favBackBtn"><svg class="icon icon-16"><use href="#icon-arrow-back"></use></svg>رجوع للرئيسية</button>
+  <div class="category-hero">
+    <svg class="icon icon-32 fav-hero-icon"><use href="#icon-heart"></use></svg>
+    <h1>مفضلتي</h1>
+    <p>اللقطات اللي حفظتها تبقى هنا على جهازك، ترجع لها متى ما بغيت.</p>
+  </div>
+  <div class="section-head">
+    <h2><svg class="icon icon-24 fav-hero-icon"><use href="#icon-heart"></use></svg>المحفوظة</h2>
+    <span class="result-count" id="favCount"></span>
+  </div>
+  <div class="product-grid" id="favGrid"></div>
+  <div class="fav-empty" id="favEmpty" hidden>
+    <svg class="icon"><use href="#icon-heart-line"></use></svg>
+    <p>ما حفظت أي لقطة للحين.<br>اضغط ♡ على أي منتج يعجبك وبيطلع هنا.</p>
+    <button type="button" class="promo-cta" id="favBrowseBtn">تصفّح اللقطات</button>
+  </div>
+</section>
 
 <section id="categoryPage" class="wrap" hidden>
   <button class="back-link" id="categoryBackBtn"><svg class="icon icon-16"><use href="#icon-arrow-back"></use></svg>رجوع للرئيسية</button>
@@ -816,7 +1138,8 @@
   <h2><svg class="icon icon-20"><use href="#icon-grid"></use></svg>البيانات اللي نجمعها</h2>
   <ul>
     <li>بيانات تصفح عامة وملفات تعريف ارتباط (Cookies) لأغراض تحليل الزيارات وتحسين تجربة الاستخدام.</li>
-    <li>بيانات تتبع النقرات على روابط المتاجر (Amazon، SHEIN، Trendyol) لأغراض التسويق بالعمولة.</li>
+    <li>بيانات تتبع النقرات على روابط المتاجر (Amazon وSHEIN) لأغراض التسويق بالعمولة.</li>
+        <li>قائمة «المفضلة» و«شاهدتها مؤخرًا» تنحفظ على جهازك فقط (التخزين المحلي بالمتصفح) ولا تنرسل لنا، وتقدر تمسحها من إعدادات المتصفح.</li>
     <li>أي بيانات تزودنا بها مباشرة لو تواصلت معنا، أو لاحقًا لو أنشأت حساب مستخدم.</li>
   </ul>
 
@@ -824,7 +1147,7 @@
   <p>نستخدم البيانات لتحسين الموقع، عرض منتجات وعروض أقرب لاهتماماتك، وقياس أداء الروابط التسويقية. ما نبيع بياناتك لأي طرف ثالث.</p>
 
   <h2><svg class="icon icon-20"><use href="#icon-cart"></use></svg>مشاركة البيانات مع أطراف ثالثة</h2>
-  <p>نشارك بيانات محدودة (مثل نقرات الروابط) مع شبكات التسويق بالعمولة الخاصة بـ Amazon وSHEIN وTrendyol لأغراض احتساب العمولة، وهذه جهات خارج السعودية فقد تُنقل البيانات المرتبطة بها خارج المملكة.</p>
+  <p>نشارك بيانات محدودة (مثل نقرات الروابط) مع شبكات التسويق بالعمولة الخاصة بـ Amazon وSHEIN لأغراض احتساب العمولة، وهذه جهات خارج السعودية فقد تُنقل البيانات المرتبطة بها خارج المملكة.</p>
 
   <h2><svg class="icon icon-20"><use href="#icon-check"></use></svg>حقوقك</h2>
   <p>يحق لك طلب الاطلاع على بياناتك، تصحيحها، أو حذفها، بما يتوافق مع نظام حماية البيانات الشخصية السعودي (PDPL). للتواصل بخصوص أي طلب، راجع قسم «تواصل معنا» أدناه.</p>
@@ -844,7 +1167,7 @@
   </div>
 
   <h2><svg class="icon icon-20"><use href="#icon-mark"></use></svg>طبيعة الموقع</h2>
-  <p>«لقطها» منصة اكتشاف ومقارنة أسعار تجمع منتجات وعروض من Amazon وSHEIN وTrendyol، وتحوّلك للمتجر الأصلي عبر رابط تسويق بالعمولة. الموقع ليس متجرًا يبيع المنتجات مباشرة، ولا طرف في عملية الشراء نفسها.</p>
+  <p>«لقطها» منصة اكتشاف عروض تجمع منتجات وعروض من Amazon وSHEIN، وتحوّلك للمتجر الأصلي عبر رابط تسويق بالعمولة. الموقع ليس متجرًا يبيع المنتجات مباشرة، ولا طرف في عملية الشراء نفسها.</p>
 
   <h2><svg class="icon icon-20"><use href="#icon-fire"></use></svg>الإفصاح عن التسويق بالعمولة</h2>
   <p>يحتوي الموقع على روابط تسويق بالعمولة (Affiliate). عند شرائك عبر هذه الروابط قد نحصل على عمولة من المتجر، بدون أي تكلفة إضافية عليك.</p>
@@ -853,7 +1176,7 @@
   <p>نبذل جهدنا لعرض أسعار ومعلومات محدّثة، لكن الأسعار والتوفر قد يتغيران في أي وقت من جهة المتجر الأصلي دون إشعار مسبق منا. السعر والتوفر النهائي هو اللي يظهر لك بصفحة المتجر وقت الشراء.</p>
 
   <h2><svg class="icon icon-20"><use href="#icon-cart"></use></svg>عملية الشراء</h2>
-  <p>عملية الشراء، الشحن، الإرجاع، وخدمة ما بعد البيع تتم بالكامل مع المتجر الأصلي (Amazon أو SHEIN أو Trendyol) وتخضع لشروطه الخاصة، وليست مسؤولية «لقطها».</p>
+  <p>عملية الشراء، الشحن، الإرجاع، وخدمة ما بعد البيع تتم بالكامل مع المتجر الأصلي (Amazon أو SHEIN) وتخضع لشروطه الخاصة، وليست مسؤولية «لقطها».</p>
 
   <h2><svg class="icon icon-20"><use href="#icon-shield"></use></svg>حدود المسؤولية</h2>
   <p>يقدَّم الموقع «كما هو» دون أي ضمانات. لا نتحمل مسؤولية أي ضرر ناتج عن استخدام الموقع أو الاعتماد على المعلومات المعروضة فيه.</p>
@@ -904,7 +1227,7 @@
 
 <div id="homeContent" class="wrap">
 
-  <section id="today">
+  <section id="today" class="reveal">
     <div class="section-head">
       <h2><svg class="icon icon-24 icon-fill"><use href="#icon-fire"></use></svg>لقطات اليوم</h2>
       <p class="section-sub">أعلى الخصومات المتاحة الآن</p>
@@ -912,7 +1235,18 @@
     <div class="shelf-scroll" id="todayShelf"></div>
   </section>
 
-  <section id="deals">
+  <div id="extraShelves">
+    <section class="shelf-sec" id="recentSec" hidden>
+      <div class="section-head">
+        <h2><svg class="icon icon-24"><use href="#icon-eye"></use></svg>شاهدتها مؤخرًا</h2>
+        <button type="button" class="see-all" id="recentClear">مسح</button>
+      </div>
+      <div class="shelf-scroll" id="recentShelf"></div>
+    </section>
+    <div id="curatedShelves"></div>
+  </div>
+
+  <section id="deals" class="reveal">
     <div class="section-head">
       <h2><svg class="icon icon-24 icon-fill"><use href="#icon-bolt"></use></svg>عروض محدودة</h2>
     </div>
@@ -920,48 +1254,69 @@
     <p class="deals-note" id="dealsEmpty" hidden>ما فيه عروض محدودة الوقت حاليًا، تابعنا قريبًا.</p>
   </section>
 
-  <section id="compare">
+  <section id="grid-section" class="reveal">
     <div class="section-head">
-      <h2><svg class="icon icon-24"><use href="#icon-scale"></use></svg>وين أرخص؟</h2>
-      <p class="section-sub" id="compareSub">اكتب اسم أي منتج وقارن سعره بين المتاجر الثلاثة فورًا</p>
-    </div>
-    <div class="compare-search-wrap">
-      <svg class="icon icon-16 search-icon"><use href="#icon-search"></use></svg>
-      <input type="text" id="compareSearchInput" list="compareProductsList" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="مثلاً: سماعة، شنطة، مقلاة...">
-      <datalist id="compareProductsList"></datalist>
-    </div>
-    <div class="compare-box" id="compareBox"></div>
-    <p class="empty-state" id="compareEmpty" hidden><svg class="icon icon-20"><use href="#icon-search"></use></svg>ما لقينا منتج بهذا الاسم — جرب كلمة ثانية.</p>
-  </section>
-
-  <section id="grid-section">
-    <div class="section-head">
-      <h2><svg class="icon icon-24 icon-fill" id="gridTitleIconUse"><use href="#icon-star"></use></svg><span id="gridTitle">منتجات تستاهل</span></h2>
+      <h2><svg class="icon icon-24" id="gridTitleIconUse"><use href="#icon-grid"></use></svg><span id="gridTitle">جميع المنتجات</span></h2>
       <span class="result-count" id="resultCount"></span>
       <button class="clear-filter-btn" id="clearFilterBtn" hidden><svg class="icon icon-16"><use href="#icon-close"></use></svg>رجوع للرئيسية</button>
     </div>
-    <div class="filter-bar">
-      <div class="filter-chips" id="storeFilterChips">
-        <button type="button" class="filter-chip active" data-store="all">كل المتاجر</button>
-        <button type="button" class="filter-chip" data-store="amazon">Amazon</button>
-        <button type="button" class="filter-chip" data-store="shein">SHEIN</button>
-        <button type="button" class="filter-chip" data-store="trendyol">Trendyol</button>
-      </div>
-      <div class="filter-chips" id="priceFilterChips">
-        <button type="button" class="filter-chip active" data-price="all">أي سعر</button>
-        <button type="button" class="filter-chip" data-price="under100">تحت 100</button>
-        <button type="button" class="filter-chip" data-price="100-300">100–300</button>
-        <button type="button" class="filter-chip" data-price="over300">فوق 300</button>
-      </div>
-      <div class="sort-select-wrap">
-        <svg class="icon icon-16"><use href="#icon-scale"></use></svg>
-        <select id="sortSelect">
-          <option value="best">الأفضل</option>
-          <option value="cheap">الأرخص</option>
-          <option value="rating">الأعلى تقييمًا</option>
-        </select>
+    <div class="filter-toolbar">
+      <button type="button" class="filter-open-btn" id="filterOpenBtn" aria-haspopup="dialog" aria-controls="filterSheet">
+        <svg class="icon icon-16"><use href="#icon-sliders"></use></svg><span>فلترة وترتيب</span>
+        <span class="filter-count" id="filterCount" hidden>0</span>
+      </button>
+      <div class="active-pills" id="activePills"></div>
+    </div>
+
+    <div class="fsheet-overlay" id="filterSheet" hidden>
+      <div class="fsheet" role="dialog" aria-modal="true" aria-labelledby="fsheetTitle">
+        <div class="fsheet-handle" id="fsheetHandle"><span></span></div>
+        <div class="fsheet-head">
+          <h3 id="fsheetTitle"><svg class="icon icon-20"><use href="#icon-sliders"></use></svg>فلترة وترتيب</h3>
+          <button type="button" class="fsheet-reset" id="filterResetBtn">مسح الكل</button>
+          <button type="button" class="fsheet-close" id="filterCloseBtn" aria-label="إغلاق"><svg class="icon icon-16"><use href="#icon-close"></use></svg></button>
+        </div>
+
+        <div class="fsheet-body">
+          <div class="fsheet-group">
+            <div class="fsheet-label">ترتيب حسب</div>
+            <div class="seg" id="sortSeg">
+              <span class="seg-thumb" aria-hidden="true"></span>
+              <button type="button" class="active" data-sort="best">الأفضل</button>
+              <button type="button" data-sort="cheap">الأرخص</button>
+              <button type="button" data-sort="rating">الأعلى تقييمًا</button>
+            </div>
+            <select id="sortSelect" hidden>
+              <option value="best">الأفضل</option>
+              <option value="cheap">الأرخص</option>
+              <option value="rating">الأعلى تقييمًا</option>
+            </select>
+          </div>
+
+          <div class="fsheet-group">
+            <div class="fsheet-label">المتجر</div>
+            <div class="filter-chips tile-chips" id="storeFilterChips">
+              <button type="button" class="filter-chip active" data-store="all"><span class="chip-dot dot-all"></span>الكل</button>
+              <button type="button" class="filter-chip" data-store="amazon"><span class="chip-dot dot-amazon"></span>Amazon</button>
+              <button type="button" class="filter-chip" data-store="shein"><span class="chip-dot dot-shein"></span>SHEIN</button>
+            </div>
+          </div>
+
+          <div class="fsheet-group">
+            <div class="fsheet-label">السعر</div>
+            <div class="filter-chips tile-chips price-tiles" id="priceFilterChips">
+              <button type="button" class="filter-chip active" data-price="all"><b>أي سعر</b><small>كل المنتجات</small></button>
+              <button type="button" class="filter-chip" data-price="under100"><b>تحت 100</b><small>ريال</small></button>
+              <button type="button" class="filter-chip" data-price="100-300"><b>100 – 300</b><small>ريال</small></button>
+              <button type="button" class="filter-chip" data-price="over300"><b>فوق 300</b><small>ريال</small></button>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="fsheet-apply" id="filterApplyBtn">اعرض <b id="filterApplyCount">0</b> منتج</button>
       </div>
     </div>
+
     <div class="product-grid" id="productGrid"></div>
     <p class="empty-state" id="emptyState" hidden><svg class="icon icon-20"><use href="#icon-search"></use></svg>ما لقينا شي يطابق بحثك — جرب كلمة ثانية.</p>
   </section>
@@ -994,7 +1349,7 @@
     <div class="trust-grid">
       <div class="about-us">
         <h3>من نحن</h3>
-        <p>لقطها موقع سعودي يقارن أسعار المنتجات بين Amazon وSHEIN وTrendyol وNoon بمكان واحد، عشان تشتري بأقل سعر ممكن بدون ما تضيّع وقتك بالتنقل بين المتاجر.</p>
+        <p>لقطها موقع سعودي يجمع أفضل العروض من Amazon وSHEIN بمكان واحد، مرتبة حسب القسم عشان تلقى اللي تبيه بسرعة وبدون ما تضيّع وقتك.</p>
       </div>
 
       <div class="newsletter-box">
@@ -1017,6 +1372,13 @@
     <p class="copyright">© 2026 لقطها. جميع الحقوق محفوظة.</p>
   </div>
 </footer>
+
+<nav class="bottom-nav" id="bottomNav" aria-label="تنقل سريع">
+  <button type="button" class="bn-tab active" data-bn="home"><svg class="icon"><use href="#icon-home"></use></svg><span>الرئيسية</span></button>
+  <button type="button" class="bn-tab" data-bn="cats"><svg class="icon"><use href="#icon-grid"></use></svg><span>الأقسام</span></button>
+  <button type="button" class="bn-tab" data-bn="today"><svg class="icon icon-fill"><use href="#icon-fire"></use></svg><span>اللقطات</span></button>
+  <button type="button" class="bn-tab" data-bn="fav"><span class="bn-ico"><svg class="icon"><use href="#icon-heart-line"></use></svg><span class="fav-dot" id="bnFavCount" hidden>0</span></span><span>المفضلة</span></button>
+</nav>
 
 <div class="cat-drawer-overlay" id="catDrawerOverlay" hidden>
   <div class="cat-drawer" role="dialog" aria-modal="true" aria-labelledby="catDrawerTitle">
@@ -1050,9 +1412,9 @@ const AVAILABILITY_META = {
 };
 const STORE_CLASS = { amazon:'store-amazon', shein:'store-shein', trendyol:'store-trendyol', noon:'store-noon' };
 let CATEGORIES = [
-  {key:'electronics', label:'إلكترونيات', icon:'electronics', desc:'من السماعات إلى الساعات الذكية، نلقطلك أقوى عروض الإلكترونيات من Amazon وSHEIN وTrendyol في مكان واحد. نقارن الأسعار عنك، ونختار الأفضل قيمة مقابل السعر — يبقى لك بس تضغط وتشتري.'},
+  {key:'electronics', label:'إلكترونيات', icon:'electronics', desc:'من السماعات إلى الساعات الذكية، نلقطلك أقوى عروض الإلكترونيات من Amazon وSHEIN في مكان واحد. نقارن الأسعار عنك، ونختار الأفضل قيمة مقابل السعر — يبقى لك بس تضغط وتشتري.'},
   {key:'fashion', label:'الموضة', icon:'fashion', desc:'شنط، أحذية، نظارات — كل قطعة نختارها نتأكد إنها تستاهل سعرها. نتابع تخفيضات الموضة أول بأول عشان توفر بدون ما تضحي بالجودة.'},
-  {key:'home', label:'المنزل', icon:'home', desc:'من أدوات المطبخ إلى أثاث المكتب، نلقطلك المنتجات اللي فعلاً تسهّل يومك، بأفضل سعر متوفر بين المتاجر الثلاثة.'},
+  {key:'home', label:'المنزل', icon:'home', desc:'من أدوات المطبخ إلى أثاث المكتب، نلقطلك المنتجات اللي فعلاً تسهّل يومك، بأفضل سعر متوفر بين المتاجر.'},
   {key:'beauty', label:'الجمال', icon:'beauty', desc:'عطور ومنتجات عناية مختارة بعناية، بأسعار نقارنها لك أول بأول عشان توفر وقتك وفلوسك.'},
   {key:'auto', label:'السيارات', icon:'auto', desc:'إكسسوارات وأدوات سيارة عملية بأسعار منافسة — نلقطلك الأفضل قبل لا تخلص.'},
 ];
@@ -1072,7 +1434,7 @@ async function loadCategoriesFromSupabase(){
 let PRODUCTS = [
   { id:1, name:'سماعة بلوتوث X200', cat:'electronics', store:'shein', price:99, rating:4.4,
     visual:{icon:'electronics', bg:'linear-gradient(135deg,#1e2a3a,#0f1620)'},
-    reason:'خيار ممتاز للاستخدام اليومي، بطارية تدوم طويل وسعرها الأقل بين المتاجر الثلاثة حاليًا.',
+    reason:'خيار ممتاز للاستخدام اليومي، بطارية تدوم طويل وسعرها الأقل بين المتاجر حاليًا.',
     features:['بطارية تدوم حتى 20 ساعة','مقاومة للماء (IPX5)'],
     alt:{amazon:129, shein:99, trendyol:109} },
   { id:2, name:'مقلاة هوائية 5.5 لتر', cat:'home', store:'shein', price:259, rating:4.5,
@@ -1097,7 +1459,7 @@ let PRODUCTS = [
     alt:{amazon:149, shein:139, trendyol:159} },
   { id:6, name:'عطر رجالي 100 مل', cat:'beauty', store:'amazon', price:219, rating:4.4,
     visual:{icon:'perfume', bg:'linear-gradient(135deg,#3a2c10,#1f170a)'},
-    reason:'ثبات جيد طوال اليوم، ومتوفر في المتاجر الثلاثة بفروقات سعر بسيطة.',
+    reason:'ثبات جيد طوال اليوم، ومتوفر في المتاجر بفروقات سعر بسيطة.',
     features:['ثبات يتجاوز 8 ساعات','علبة هدية جاهزة'],
     alt:{amazon:219, shein:229, trendyol:239} },
   { id:7, name:'كرسي مكتب مريح', cat:'home', store:'amazon', price:399, rating:4.5,
@@ -1198,6 +1560,8 @@ function cardHTML(p, extra=''){
         ${availBadge}
         ${productVisualHTML(p)}
         <span class="rating-badge">${starRating(p.rating)}</span>
+        <span class="store-badge ${STORE_CLASS[p.store]}">${STORE_NAMES[p.store]}</span>
+        <button type="button" class="fav-badge${isFav(p.id) ? ' on' : ''}" data-fav="${p.id}" aria-pressed="${isFav(p.id)}" aria-label="أضف للمفضلة"><svg class="icon"><use href="#icon-${isFav(p.id) ? 'heart' : 'heart-line'}"></use></svg></button>
         <button type="button" class="share-badge" data-share="${p.id}" title="مشاركة"><svg class="icon"><use href="#icon-share"></use></svg></button>
       </div>
       <div class="card-body">
@@ -1205,7 +1569,6 @@ function cardHTML(p, extra=''){
         ${extra}
         <div class="card-price-row">
           <span class="price-block">${oldPrice}<span class="card-price">${p.price} ريال</span></span>
-          <span class="store-chip ${STORE_CLASS[p.store]}">${STORE_NAMES[p.store]}</span>
         </div>
       </div>
     </div>`;
@@ -1224,57 +1587,6 @@ function renderToday(){
     top = [...PRODUCTS].sort((a,b)=>discountPct(b)-discountPct(a)).slice(0,5);
   }
   document.getElementById('todayShelf').innerHTML = top.map(p=>cardHTML(p)).join('');
-}
-
-function renderCompare(p){
-  const entries = Object.entries(p.alt).filter(([,v])=>v!=null);
-  const max = Math.max(...entries.map(([,v])=>v));
-  const min = Math.min(...entries.map(([,v])=>v));
-  const rows = entries.map(([store,price])=>{
-    const isBest = price===min;
-    const width = Math.round((price/max)*100);
-    const badge = isBest ? '<span class="best-badge"><svg class="icon icon-14 icon-fill"><use href="#icon-star"></use></svg>الأرخص</span>' : '';
-    return `
-      <div class="compare-row ${isBest?'best':''}">
-        <span class="store-label ${STORE_CLASS[store]}">${STORE_NAMES[store]}</span>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:${width}%"></div>
-          <span class="price-label">${price} ريال ${badge}</span>
-        </div>
-      </div>`;
-  }).join('');
-  document.getElementById('compareBox').innerHTML = rows;
-  document.getElementById('compareBox').hidden = false;
-  document.getElementById('compareEmpty').hidden = true;
-  document.getElementById('compareSub').textContent = 'مقارنة سعر «' + p.name + '» في المتاجر الثلاثة الآن';
-}
-
-function initCompareSearch(){
-  const datalist = document.getElementById('compareProductsList');
-  datalist.innerHTML = PRODUCTS.map(p=>`<option value="${p.name}">`).join('');
-  const input = document.getElementById('compareSearchInput');
-  const defaultProduct = PRODUCTS.find(x=>x.id===1) || PRODUCTS[0];
-  if(!defaultProduct) return;
-  input.value = defaultProduct.name;
-  renderCompare(defaultProduct);
-
-  input.addEventListener('input', ()=>{
-    const q = input.value.trim();
-    if(!q){
-      renderCompare(defaultProduct);
-      return;
-    }
-    const exact = PRODUCTS.find(p=>p.name.toLowerCase()===q.toLowerCase());
-    const partial = PRODUCTS.find(p=>p.name.includes(q));
-    const match = exact || partial;
-    if(match){
-      renderCompare(match);
-    } else {
-      document.getElementById('compareBox').hidden = true;
-      document.getElementById('compareEmpty').hidden = false;
-      document.getElementById('compareSub').textContent = 'اكتب اسم أي منتج وقارن سعره بين المتاجر الثلاثة فورًا';
-    }
-  });
 }
 
 function renderCategories(){
@@ -1321,7 +1633,7 @@ function crossFade(hideEls, showEls){
   }, 150);
 }
 
-const ALT_PAGES = ['categoryPage', 'privacyPage', 'termsPage', 'contactPage'];
+const ALT_PAGES = ['categoryPage', 'privacyPage', 'termsPage', 'contactPage', 'favPage'];
 
 function currentAltPage(){
   return ALT_PAGES.map(id=>document.getElementById(id)).find(el=>!el.hidden) || null;
@@ -1372,7 +1684,7 @@ function showCategoryPage(catKey){
 }
 
 // ===== التنقل عبر الرابط (يخلي زر الرجوع بالجوال يرجع داخل الموقع بدل ما يطلع منه) =====
-const PAGE_ROUTES = { '#privacy':'privacyPage', '#terms':'termsPage', '#contact':'contactPage' };
+const PAGE_ROUTES = { '#privacy':'privacyPage', '#terms':'termsPage', '#contact':'contactPage', '#fav':'favPage' };
 
 function baseUrl(){ return location.pathname + location.search; }
 
@@ -1403,9 +1715,11 @@ function route(){
   }
   if(currentModalId !== null) closeModalUI();
 
-  if(PAGE_ROUTES[h]){ showAltPage(PAGE_ROUTES[h]); return; }
+  if(PAGE_ROUTES[h]){ if(h === '#fav') renderFavPage(); setBottomNav(h === '#fav' ? 'fav' : ''); showAltPage(PAGE_ROUTES[h]); return; }
   const cm = h.match(/^#cat\/(.+)$/);
-  if(cm){ showCategoryPage(decodeURIComponent(cm[1])); return; }
+  if(cm){ const k = decodeURIComponent(cm[1]); setStripActive(k); showCategoryPage(k); return; }
+  setStripActive('all');
+  if(typeof setBottomNav === 'function') setBottomNav('home');
   returnHome();
 }
 
@@ -1481,7 +1795,7 @@ document.getElementById('disclosureLink').addEventListener('click', ()=>{
   document.getElementById('modalBody').innerHTML = `
     <div style="padding:8px 4px;">
       <h3 style="margin-bottom:12px;">كيف نربح من الموقع؟</h3>
-      <p style="color:var(--text-dim);line-height:1.9;">هذا الموقع يشارك روابط تسويق بالعمولة (Affiliate) مع Amazon وSHEIN وTrendyol وNoon. عند شرائك عبر هذه الروابط قد نحصل على عمولة، بدون أي تكلفة إضافية عليك.</p>
+      <p style="color:var(--text-dim);line-height:1.9;">هذا الموقع يشارك روابط تسويق بالعمولة (Affiliate) مع Amazon وSHEIN. عند شرائك عبر هذه الروابط قد نحصل على عمولة، بدون أي تكلفة إضافية عليك.</p>
       <button class="modal-cta" id="disclosureCloseBtn" style="margin-top:20px;">تمام</button>
     </div>`;
   document.getElementById('modalOverlay').hidden = false;
@@ -1561,11 +1875,10 @@ document.addEventListener('keydown', (e)=>{
 
 function setFilteringMode(active){
   const todaySec = document.getElementById('today');
-  const compareSec = document.getElementById('compare');
   const dealsSec = document.getElementById('deals');
   const clearBtn = document.getElementById('clearFilterBtn');
   todaySec.hidden = active;
-  compareSec.hidden = active;
+  document.getElementById('extraShelves').hidden = active;
   dealsSec.hidden = active;
   clearBtn.hidden = !active;
 }
@@ -1611,12 +1924,13 @@ function isFilterActive(){
 }
 
 function refreshGrid(){
-  const title = filterState.query ? 'نتائج البحث: "' + filterState.query + '"' : 'منتجات تستاهل';
-  const icon = filterState.query ? 'search' : 'star';
+  const title = filterState.query ? 'نتائج البحث: "' + filterState.query + '"' : 'جميع المنتجات';
+  const icon = filterState.query ? 'search' : 'grid';
   document.getElementById('gridTitle').textContent = title;
   setGridIcon(icon);
   renderGrid(computeFilteredList());
   setFilteringMode(isFilterActive());
+  if(typeof updateFilterUI === 'function') updateFilterUI();
 }
 
 function renderDeals(){
@@ -1739,6 +2053,7 @@ function openModal(id){
   document.getElementById('modalOverlay').hidden = false;
   lockScroll();
   currentModalId = id;
+  try{ pushRecent(id); }catch(e){}
   document.getElementById('modalShareBtn').addEventListener('click', ()=>shareProduct(p));
 
   const galleryWrap = document.getElementById('modalGalleryWrap');
@@ -1838,7 +2153,7 @@ async function shareProduct(p){
   text += '\n💰 ' + p.price + ' ريال';
   if(disc > 0) text += ' (خصم ' + disc + '%)';
   text += '\n⭐ ' + p.rating.toFixed(1);
-  text += '\n\nقارن السعر بين المتاجر على لقطها:\n' + shareUrl;
+  text += '\n\nشوف اللقطة على لقطها:\n' + shareUrl;
 
   if(navigator.share){
     try{
@@ -1914,19 +2229,389 @@ document.querySelectorAll('.quick-chips button').forEach(btn=>{
     searchInput.dispatchEvent(new Event('input'));
   });
 });
+// البحث مخفي، ويطلع لما يضغط الزائر زر البحث فوق
+const searchWrapEl = searchInput.closest('.search-wrap');
+function openSearch(){
+  if(location.hash && !/^#p\d+$/.test(location.hash)) navigate('');
+  searchWrapEl.classList.add('open');
+  document.getElementById('headerSearchBtn').classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  setTimeout(()=>searchInput.focus(), 80);
+}
+function closeSearch(){
+  if(searchInput.value.trim()) return; // لو فيه كلمة بحث نخليه ظاهر
+  searchWrapEl.classList.remove('open');
+  document.getElementById('headerSearchBtn').classList.remove('active');
+}
 document.getElementById('headerSearchBtn').addEventListener('click', ()=>{
-  document.getElementById('home').scrollIntoView({behavior:'smooth'});
-  searchInput.focus();
+  if(searchWrapEl.classList.contains('open') && !searchInput.value.trim()) closeSearch();
+  else openSearch();
 });
+searchInput.addEventListener('blur', ()=>setTimeout(closeSearch, 150));
+searchInput.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ searchInput.blur(); } });
+
+
+// ===== واجهة المتجر: شريط الأقسام + بانر اللقطات + مربعات الأقسام =====
+function shuffled(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+function renderCatStrip(){
+  const el = document.getElementById('catStrip');
+  if(!el) return;
+  el.innerHTML = '<button type="button" data-strip="all" class="active">الكل</button>' +
+    CATEGORIES.map(c=>`<button type="button" data-strip="${c.key}">${c.label}</button>`).join('');
+  el.onclick = (e)=>{
+    const b = e.target.closest('[data-strip]');
+    if(!b) return;
+    if(b.dataset.strip === 'all') navigate('');
+    else navigate('#cat/' + b.dataset.strip);
+  };
+}
+function setStripActive(key){
+  document.querySelectorAll('#catStrip [data-strip]').forEach(b=>{
+    b.classList.toggle('active', b.dataset.strip === (key || 'all'));
+  });
+}
+
+function renderCatTiles(){
+  const el = document.getElementById('catTiles');
+  if(!el) return;
+  el.innerHTML = CATEGORIES.map(c=>{
+    const withImg = PRODUCTS.filter(p=>p.cat===c.key && p.image_url);
+    const pick = withImg.length ? withImg[Math.floor(Math.random()*withImg.length)] : null;
+    const visual = pick
+      ? `<div class="cat-tile-img"><img src="${pick.image_url}" alt="" loading="lazy" onerror="this.parentNode.classList.add('no-img');this.outerHTML='<svg class=&quot;icon&quot;><use href=&quot;#icon-${c.icon}&quot;></use></svg>'"></div>`
+      : `<div class="cat-tile-img no-img"><svg class="icon"><use href="#icon-${c.icon}"></use></svg></div>`;
+    return `<button type="button" class="cat-tile" data-tile="${c.key}">${visual}<span>${c.label}</span></button>`;
+  }).join('');
+  el.onclick = (e)=>{
+    const b = e.target.closest('[data-tile]');
+    if(b) navigate('#cat/' + b.dataset.tile);
+  };
+}
+
+let promoIndex = 0, promoTimer = null, promoCount = 0;
+function renderPromo(){
+  const wrap = document.getElementById('promo');
+  const track = document.getElementById('promoTrack');
+  const dots = document.getElementById('promoDots');
+  if(!wrap || !track) return;
+  const pool = PRODUCTS.filter(p=>p.image_url && !AVAILABILITY_META[p.availability]);
+  const list = shuffled(pool.length ? pool : PRODUCTS).slice(0, 6);
+  promoCount = list.length;
+  if(promoCount === 0){ wrap.hidden = true; return; }
+  wrap.hidden = false;
+  track.innerHTML = list.map(p=>{
+    const disc = discountPct(p);
+    const old = disc > 0 ? `<span class="promo-old">${maxStorePrice(p)} ريال</span><span class="promo-off">خصم ${disc}%</span>` : '';
+    const second = (p.gallery||[]).find(u => u && u !== p.image_url);
+    const media = second
+      ? `<div class="promo-media two"><div>${productVisualHTML(p)}</div><div><img src="${second}" alt="" loading="lazy" onerror="this.parentNode.remove()"></div></div>`
+      : `<div class="promo-media"><div>${productVisualHTML(p)}</div></div>`;
+    return `
+      <div class="promo-slide" data-promo="${p.id}" role="group" aria-label="${p.name}">
+        ${media}
+        <div class="promo-overlay">
+          <div class="promo-text">
+            <span class="promo-kicker"><svg class="icon icon-fill"><use href="#icon-fire"></use></svg>لقطة من ${STORE_NAMES[p.store]}</span>
+            <div class="promo-name">${p.name}</div>
+            <div class="promo-price-row"><span class="promo-price">${p.price} ريال</span>${old}</div>
+            <button type="button" class="promo-cta">شوف اللقطة<svg class="icon icon-16"><use href="#icon-chevron"></use></svg></button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  dots.innerHTML = list.map((_,i)=>`<button type="button" aria-label="لقطة ${i+1}" data-dot="${i}"></button>`).join('');
+  const multi = promoCount > 1;
+  dots.hidden = !multi;
+  document.getElementById('promoPrev').hidden = !multi;
+  document.getElementById('promoNext').hidden = !multi;
+  goPromo(0);
+  startPromo();
+}
+function goPromo(i){
+  if(promoCount === 0) return;
+  promoIndex = (i + promoCount) % promoCount;
+  // الاتجاه عربي (RTL): الشرائح تتحرك لليمين
+  document.getElementById('promoTrack').style.transform = `translateX(${promoIndex * 100}%)`;
+  document.querySelectorAll('#promoDots [data-dot]').forEach((d,k)=>d.classList.toggle('active', k===promoIndex));
+}
+function startPromo(){
+  clearInterval(promoTimer);
+  if(promoCount > 1) promoTimer = setInterval(()=>goPromo(promoIndex+1), 4500);
+}
+function stopPromo(){ clearInterval(promoTimer); }
+
+(function initPromoControls(){
+  const wrap = document.getElementById('promo');
+  if(!wrap) return;
+  document.getElementById('promoNext').addEventListener('click', (e)=>{ e.stopPropagation(); goPromo(promoIndex+1); startPromo(); });
+  document.getElementById('promoPrev').addEventListener('click', (e)=>{ e.stopPropagation(); goPromo(promoIndex-1); startPromo(); });
+  document.getElementById('promoDots').addEventListener('click', (e)=>{
+    const d = e.target.closest('[data-dot]');
+    if(d){ e.stopPropagation(); goPromo(Number(d.dataset.dot)); startPromo(); }
+  });
+  document.getElementById('promoTrack').addEventListener('click', (e)=>{
+    const slide = e.target.closest('[data-promo]');
+    if(slide) navigate('#p' + slide.dataset.promo);
+  });
+  wrap.addEventListener('mouseenter', stopPromo);
+  wrap.addEventListener('mouseleave', startPromo);
+  // السحب بالإصبع في الجوال
+  let x0 = null;
+  wrap.addEventListener('touchstart', (e)=>{ x0 = e.touches[0].clientX; stopPromo(); }, {passive:true});
+  wrap.addEventListener('touchend', (e)=>{
+    if(x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if(Math.abs(dx) > 40) goPromo(promoIndex + (dx > 0 ? 1 : -1));
+    x0 = null; startPromo();
+  });
+  document.addEventListener('visibilitychange', ()=>{ document.hidden ? stopPromo() : startPromo(); });
+})();
+
+
+// ===== المتاجر المعروضة حاليًا بالموقع (أضف 'trendyol' أو 'noon' هنا لما تبي ترجعهم) =====
+const ACTIVE_STORES = ['amazon', 'shein'];
+function applyActiveStores(){
+  PRODUCTS = PRODUCTS.filter(p => ACTIVE_STORES.includes(p.store));
+  PRODUCTS.forEach(p => {
+    ['alt','links'].forEach(k => {
+      if(!p[k]) return;
+      Object.keys(p[k]).forEach(st => { if(!ACTIVE_STORES.includes(st)) delete p[k][st]; });
+    });
+  });
+}
+
+// ===== الشريط السفلي في الجوال =====
+function setBottomNav(key){
+  document.querySelectorAll('#bottomNav .bn-tab').forEach(b=>b.classList.toggle('active', b.dataset.bn===key));
+}
+document.getElementById('bottomNav').addEventListener('click', (e)=>{
+  const b = e.target.closest('.bn-tab');
+  if(!b) return;
+  const k = b.dataset.bn;
+  if(k === 'home'){ navigate(''); window.scrollTo({top:0, behavior:'smooth'}); setBottomNav('home'); }
+  else if(k === 'cats'){ openCatPanel(); }
+  else if(k === 'today'){
+    navigate('');
+    setBottomNav('today');
+    setTimeout(()=>document.getElementById('today').scrollIntoView({behavior:'smooth'}), 60);
+  }
+  else if(k === 'fav'){ navigate('#fav'); }
+});
+
+// ===== الفلترة الحديثة =====
+const filterSheet = document.getElementById('filterSheet');
+const SORT_LABELS = { cheap:'الأرخص', rating:'الأعلى تقييمًا' };
+const PRICE_LABELS = { under100:'تحت 100 ريال', '100-300':'100 – 300 ريال', over300:'فوق 300 ريال' };
+
+function openFilterSheet(){
+  filterSheet.hidden = false;
+  lockScroll();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>filterSheet.classList.add('open')));
+  setTimeout(()=>document.getElementById('filterApplyBtn').focus({preventScroll:true}), 350);
+}
+function closeFilterSheet(){
+  if(filterSheet.hidden) return;
+  filterSheet.classList.remove('open');
+  const sheet = filterSheet.querySelector('.fsheet');
+  sheet.style.transform = '';
+  setTimeout(()=>{ filterSheet.hidden = true; unlockScroll(); }, prefersReducedMotion ? 0 : 320);
+}
+function moveSegThumb(){
+  const btns = [...document.querySelectorAll('#sortSeg button')];
+  const i = Math.max(0, btns.findIndex(b=>b.dataset.sort===filterState.sort));
+  btns.forEach((b,k)=>b.classList.toggle('active', k===i));
+  // الاتجاه عربي: الحركة لليسار تكون بقيمة سالبة
+  document.querySelector('#sortSeg .seg-thumb').style.transform = `translateX(${-i * 100}%)`;
+}
+function clickChip(groupId, attr, val){
+  const b = document.querySelector(`#${groupId} [data-${attr}="${val}"]`);
+  if(b) b.click();
+}
+function setSort(val){
+  const sel = document.getElementById('sortSelect');
+  sel.value = val;
+  sel.dispatchEvent(new Event('change'));
+}
+function updateFilterUI(){
+  const n = (filterState.store!=='all') + (filterState.price!=='all') + (filterState.sort!=='best');
+  const countEl = document.getElementById('filterCount');
+  countEl.hidden = n === 0;
+  countEl.textContent = n;
+  document.getElementById('filterOpenBtn').classList.toggle('has-active', n > 0);
+  document.getElementById('filterApplyCount').textContent = computeFilteredList().length;
+  moveSegThumb();
+  const pills = [];
+  if(filterState.store!=='all') pills.push(['store', STORE_NAMES[filterState.store]]);
+  if(filterState.price!=='all') pills.push(['price', PRICE_LABELS[filterState.price]]);
+  if(filterState.sort!=='best') pills.push(['sort', 'ترتيب: ' + SORT_LABELS[filterState.sort]]);
+  document.getElementById('activePills').innerHTML = pills.map(([k,label])=>
+    `<span class="active-pill">${label}<button type="button" data-unpill="${k}" aria-label="إزالة ${label}"><svg class="icon"><use href="#icon-close"></use></svg></button></span>`
+  ).join('');
+}
+
+document.getElementById('filterOpenBtn').addEventListener('click', openFilterSheet);
+document.getElementById('filterCloseBtn').addEventListener('click', closeFilterSheet);
+document.getElementById('filterApplyBtn').addEventListener('click', ()=>{
+  closeFilterSheet();
+  setTimeout(()=>document.getElementById('grid-section').scrollIntoView({behavior:'smooth'}), 120);
+});
+filterSheet.addEventListener('click', (e)=>{ if(e.target === filterSheet) closeFilterSheet(); });
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeFilterSheet(); });
+document.getElementById('sortSeg').addEventListener('click', (e)=>{
+  const b = e.target.closest('[data-sort]');
+  if(b) setSort(b.dataset.sort);
+});
+document.getElementById('filterResetBtn').addEventListener('click', ()=>{
+  clickChip('storeFilterChips','store','all');
+  clickChip('priceFilterChips','price','all');
+  setSort('best');
+});
+document.getElementById('activePills').addEventListener('click', (e)=>{
+  const b = e.target.closest('[data-unpill]');
+  if(!b) return;
+  if(b.dataset.unpill==='store') clickChip('storeFilterChips','store','all');
+  if(b.dataset.unpill==='price') clickChip('priceFilterChips','price','all');
+  if(b.dataset.unpill==='sort') setSort('best');
+});
+// سحب اللوحة لتحت عشان تقفل (بالجوال)
+(function(){
+  const handle = document.getElementById('fsheetHandle');
+  const sheet = filterSheet.querySelector('.fsheet');
+  let y0 = null, dy = 0;
+  handle.addEventListener('touchstart', (e)=>{ y0 = e.touches[0].clientY; dy = 0; sheet.style.transition = 'none'; }, {passive:true});
+  handle.addEventListener('touchmove', (e)=>{
+    if(y0 === null) return;
+    dy = Math.max(0, e.touches[0].clientY - y0);
+    sheet.style.transform = `translateY(${dy}px)`;
+  }, {passive:true});
+  handle.addEventListener('touchend', ()=>{
+    sheet.style.transition = '';
+    if(dy > 80) closeFilterSheet(); else sheet.style.transform = '';
+    y0 = null;
+  });
+})();
+
+// ===== المفضلة (تنحفظ على جهاز الزائر) =====
+const FAV_KEY = 'laqtha_fav_v1', RECENT_KEY = 'laqtha_recent_v1';
+function readIds(key){ try{ const v = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(v) ? v.map(Number) : []; }catch(e){ return []; } }
+function writeIds(key, ids){ try{ localStorage.setItem(key, JSON.stringify(ids)); }catch(e){} }
+let FAV_IDS = readIds(FAV_KEY);
+function isFav(id){ return FAV_IDS.includes(Number(id)); }
+function updateFavCounters(){
+  const n = FAV_IDS.filter(id => PRODUCTS.some(p => p.id === id)).length;
+  ['headerFavCount','bnFavCount'].forEach(i=>{ const el = document.getElementById(i); if(el){ el.hidden = n === 0; el.textContent = n; } });
+}
+function toggleFav(id){
+  id = Number(id);
+  const on = !isFav(id);
+  FAV_IDS = on ? [id, ...FAV_IDS] : FAV_IDS.filter(x => x !== id);
+  writeIds(FAV_KEY, FAV_IDS);
+  document.querySelectorAll(`[data-fav="${id}"]`).forEach(b=>{
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on);
+    b.querySelector('use').setAttribute('href', on ? '#icon-heart' : '#icon-heart-line');
+    b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+  });
+  updateFavCounters();
+  showToast(on ? 'انحفظت في المفضلة ♥' : 'انشالت من المفضلة');
+  if(!document.getElementById('favPage').hidden) renderFavPage();
+}
+function renderFavPage(){
+  const list = FAV_IDS.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+  document.getElementById('favGrid').innerHTML = list.map(p => cardHTML(p)).join('');
+  document.getElementById('favEmpty').hidden = list.length > 0;
+  document.getElementById('favCount').textContent = list.length ? list.length + ' لقطة محفوظة' : '';
+}
+// نلتقط ضغطة القلب قبل ما توصل للكرت (عشان ما تفتح نافذة المنتج)
+document.addEventListener('click', (e)=>{
+  const b = e.target.closest('[data-fav]');
+  if(!b) return;
+  e.stopPropagation(); e.preventDefault();
+  toggleFav(b.dataset.fav);
+}, true);
+document.getElementById('headerFavBtn').addEventListener('click', ()=>navigate('#fav'));
+document.getElementById('favBackBtn').addEventListener('click', goBack);
+document.getElementById('favBrowseBtn').addEventListener('click', ()=>navigate(''));
+
+// ===== شاهدتها مؤخرًا =====
+function pushRecent(id){
+  id = Number(id);
+  const ids = [id, ...readIds(RECENT_KEY).filter(x => x !== id)].slice(0, 12);
+  writeIds(RECENT_KEY, ids);
+  renderRecent();
+}
+function renderRecent(){
+  const list = readIds(RECENT_KEY).map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+  document.getElementById('recentSec').hidden = list.length < 2;
+  document.getElementById('recentShelf').innerHTML = list.map(p => cardHTML(p)).join('');
+}
+document.getElementById('recentClear').addEventListener('click', ()=>{ writeIds(RECENT_KEY, []); renderRecent(); });
+
+// ===== رفوف تسويقية (من بياناتك الحقيقية فقط) =====
+function renderCuratedShelves(){
+  const shelves = [];
+  const under = PRODUCTS.filter(p => p.price < 100 && !AVAILABILITY_META[p.availability]);
+  if(under.length >= 3) shelves.push({ key:'under100', title:'لقطات تحت 100 ريال', icon:'tag', list: shuffled(under).slice(0, 12), action:()=>clickChip('priceFilterChips','price','under100') });
+  ACTIVE_STORES.forEach(st=>{
+    const list = PRODUCTS.filter(p => p.store === st && !AVAILABILITY_META[p.availability]);
+    if(list.length >= 3) shelves.push({ key:'store-'+st, title:'لقطات ' + STORE_NAMES[st], dot:st, list: shuffled(list).slice(0, 12), action:()=>clickChip('storeFilterChips','store',st) });
+  });
+  const wrap = document.getElementById('curatedShelves');
+  wrap.innerHTML = shelves.map(sh => `
+    <section class="shelf-sec reveal" data-shelf="${sh.key}">
+      <div class="section-head">
+        <h2>${sh.dot ? `<span class="chip-dot dot-${sh.dot}"></span>` : `<svg class="icon icon-24"><use href="#icon-${sh.icon}"></use></svg>`}${sh.title}</h2>
+        <button type="button" class="see-all" data-see="${sh.key}">عرض الكل<svg class="icon icon-14"><use href="#icon-chevron"></use></svg></button>
+      </div>
+      <div class="shelf-scroll">${sh.list.map(p => cardHTML(p)).join('')}</div>
+    </section>`).join('');
+  wrap.onclick = (e)=>{
+    const b = e.target.closest('[data-see]');
+    if(!b) return;
+    const sh = shelves.find(x => x.key === b.dataset.see);
+    if(!sh) return;
+    sh.action();
+    setTimeout(()=>document.getElementById('grid-section').scrollIntoView({behavior:'smooth'}), 60);
+  };
+  observeReveals();
+}
+
+// ===== ظهور الأقسام بنعومة عند النزول =====
+let revealObserver = null;
+function observeReveals(){
+  if(!('IntersectionObserver' in window)) return;
+  document.documentElement.classList.add('reveal-ready');
+  if(!revealObserver){
+    revealObserver = new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); revealObserver.unobserve(en.target); } });
+    }, { rootMargin:'0px 0px -60px 0px' });
+  }
+  document.querySelectorAll('.reveal:not(.in)').forEach(el=>revealObserver.observe(el));
+}
+
+// ===== هياكل تحميل (Skeleton) قبل وصول المنتجات =====
+function showSkeletons(){
+  const cards = n => Array.from({length:n}, ()=>'<div class="sk sk-card"></div>').join('');
+  const promo = document.getElementById('promo');
+  if(promo){ promo.hidden = false; document.getElementById('promoTrack').innerHTML = '<div class="sk sk-banner" style="flex:0 0 100%"></div>'; }
+  document.getElementById('todayShelf').innerHTML = cards(6);
+  document.getElementById('productGrid').innerHTML = cards(10);
+}
 
 function renderAll(){
   // كل قسم يشتغل لحاله: لو صار خطأ في قسم، باقي الأقسام تكمل عادي
-  [renderToday, initCompareSearch, renderCategories, refreshGrid, renderDeals].forEach(fn=>{
+  [applyActiveStores, renderCatStrip, renderPromo, renderCatTiles, renderToday, renderRecent, renderCuratedShelves, updateFavCounters, renderCategories, refreshGrid, renderDeals].forEach(fn=>{
     try{ fn(); }catch(err){ console.error('خطأ في ' + fn.name + ':', err); }
   });
 }
 
 async function initApp(){
+  try{ showSkeletons(); }catch(e){}
   await Promise.all([loadProductsFromSupabase(), loadCategoriesFromSupabase()]);
   renderAll();
   route();
